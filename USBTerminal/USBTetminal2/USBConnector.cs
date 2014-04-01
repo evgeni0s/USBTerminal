@@ -38,7 +38,7 @@ namespace USBTetminal2
         private Settings settings = Settings.Default;
         #endregion
 
-        //Test commit
+        //Test commit!
         public USBConnector()
         {
             // When data is recieved through the port, call this method
