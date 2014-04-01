@@ -1,0 +1,27 @@
+﻿<Border x:Class="USBTetminal2.Controls.ToolBar.ToolBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:commands="clr-namespace:USBTetminal2.Commands"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="500" MaxWidth="520" BorderBrush="Gray" BorderThickness="5" CornerRadius="0,0,70,20" Margin="10,0" >
+    <Border.Resources>
+        <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml"/>
+    </Border.Resources>
+    <Border.Background>
+        <ImageBrush AlignmentX="Left" ImageSource="/USBTetminal2;component/Res/Metal_plate520.jpg" Stretch="None"/>
+    </Border.Background>
+
+    <Border DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType={x:Type Border}, Mode=FindAncestor}}">
+        <Grid>
+            <StackPanel Orientation="Horizontal" Width="Auto" Margin="20,0">
+                <!--Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"-->
+                <Button Width="50" Height="35" Content="LEGEND" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowLegend}"/>
+                <Button Width="50" Height="35" Margin="15,0,0,0" Content="POINTS" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}"/>
+                <Button Width="50" Height="35" Margin="15,0,0,0" Content="RESET" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}"/>
+            </StackPanel>
+        </Grid>
+
+    </Border>
+</Border>

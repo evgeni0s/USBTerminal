@@ -1,0 +1,174 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--<Style  x:Key="thumbStyle" TargetType="{x:Type Thumb}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Cursor" Value="SizeNS" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>-->
+
+
+
+    <DataTemplate x:Key="legendTemplate" >
+        <Grid HorizontalAlignment="Stretch">
+            <!--uncomment to enable color effect <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                 
+                    <GradientStop Offset="1.0"  Color="{Binding Brush.Color}"  />
+                    <GradientStop Offset="0.1" Color="Transparent" />
+                </LinearGradientBrush>
+            </Grid.Background>-->
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+
+            </Grid.ColumnDefinitions>
+            <Path Grid.RowSpan="2" Data="M115,329 C123,324 127,337 133,333" Margin="0,0,5,0" HorizontalAlignment="Left" Height="8.9"  Stretch="Fill" Stroke="{Binding Brush}"  UseLayoutRounding="False" VerticalAlignment="Center" Width="20" StrokeThickness="3"/>
+            <StackPanel HorizontalAlignment="Right" Name="ReflectedVisual" Grid.Column="1" Orientation="Horizontal" >
+                <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"  FontWeight="Bold" FontSize="12" Foreground="Black"></TextBlock>
+                <CheckBox IsChecked="{Binding IsChecked}" VerticalAlignment="Center" Margin="10,0,5,0"></CheckBox>
+            </StackPanel>
+
+            <Rectangle Grid.Column="1" Grid.Row="1" Height="{Binding Path=ActualHeight, ElementName=ReflectedVisual}" HorizontalAlignment="Right"  Width="{Binding Path=ActualWidth, ElementName=ReflectedVisual}">
+                <Rectangle.Fill>
+
+                    <!-- Creates the reflection. -->
+                    <VisualBrush Opacity="0.75" Stretch="None" Visual="{Binding ElementName=ReflectedVisual}">
+                        <VisualBrush.RelativeTransform>
+                            <!-- Flip the reflection. -->
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="1" ScaleY="-1" />
+                                <TranslateTransform  Y="1" />
+                                <SkewTransform AngleX="352"></SkewTransform>
+                            </TransformGroup>
+                        </VisualBrush.RelativeTransform>
+                    </VisualBrush>
+                </Rectangle.Fill>
+
+                <Rectangle.OpacityMask>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Color="#FF000000" Offset="0.0" />
+                        <GradientStop Color="#33000000" Offset="0.5" />
+                        <GradientStop Color="#00000000" Offset="0.75" />
+                    </LinearGradientBrush>
+                </Rectangle.OpacityMask>
+
+                <Rectangle.BitmapEffect>
+                    <BlurBitmapEffect Radius="1.5" />
+                </Rectangle.BitmapEffect>
+
+            </Rectangle>
+
+        </Grid>
+
+
+
+
+        <!--<DataTemplate.Triggers>
+            <Trigger  Property="IsSelected" Value="True">
+                <Setter TargetName="ReflectedVisual" Property="BorderBrush"  Value="Brown"/>
+                <Setter TargetName="ReflectedVisual" Property="CornerRadius"  Value="3"/>
+                <Setter TargetName="ReflectedVisual" Property="BorderThickness"  Value="3"/>
+            </Trigger>
+        </DataTemplate.Triggers>-->
+    </DataTemplate>
+
+    <Style x:Key="ButtonStyle1" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid Background="Transparent">
+                        <Path Data="M96,180 C183.0265,178.36055 242.20029,172.28545 233,207 C74.999939,225.00015 96,180 96,180 z" Stretch="Fill" UseLayoutRounding="False">
+                            <Path.Fill>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                                    <GradientStop Color="#00FF0606"/>
+                                    <GradientStop Color="#DAFB0000" Offset="0.749"/>
+                                    <GradientStop Color="Black" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Path.Fill>
+                        </Path>
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="Transparent">
+                                <Path Data="M96,180 C183.0265,178.36055 242.20029,172.28545 233,207 C74.999939,225.00015 96,180 96,180 z" Stretch="Fill" UseLayoutRounding="False">
+                                    <Path.Fill>
+                                        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                                            <GradientStop Color="#00FF0606" Offset="1"/>
+                                            <GradientStop Color="#DAFB0000" Offset="0.749"/>
+                                            <GradientStop Color="Black"/>
+                                        </LinearGradientBrush>
+                                    </Path.Fill>
+                                </Path>
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style x:Key="FlatButtonStyle" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border  CornerRadius="5" BorderBrush="#1E1E1E" BorderThickness="1,1,2,2">
+                        <Border.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <LinearGradientBrush.RelativeTransform>
+                                    <RotateTransform Angle="14"/>
+                                </LinearGradientBrush.RelativeTransform>
+                                <GradientStop Color="#FFEDEDED" Offset="0.312"/>
+                                <GradientStop Color="#FF9F9F9F"/>
+                                <GradientStop Color="#FF9B9B9B" Offset="0.983"/>
+                                <GradientStop Color="#FEFFFFFF" Offset="0.583"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border  CornerRadius="5"  Margin="2,2,0,0">
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <RotateTransform Angle="14"/>
+                                        </LinearGradientBrush.RelativeTransform>
+                                        <GradientStop Color="#FFEDEDED" Offset="0.312"/>
+                                        <GradientStop Color="#FF9F9F9F"/>
+                                        <GradientStop Color="#FF9B9B9B" Offset="0.983"/>
+                                        <GradientStop Color="#FEFFFFFF" Offset="0.583"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+</ResourceDictionary>
