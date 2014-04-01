@@ -38,6 +38,7 @@ namespace USBTetminal2
         private Settings settings = Settings.Default;
         #endregion
 
+        //Second TEST commit
         //Test commit!
         public USBConnector()
         {
