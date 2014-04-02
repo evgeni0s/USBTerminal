@@ -51,7 +51,7 @@ namespace USBTetminal2
             comport.StopBits = StopBits.One;
             comport.Parity = Parity.None;
             comport.WriteTimeout = SerialPort.InfiniteTimeout;
-
+            //I have made this commit to ensure that gitignore nightmare is over!
         }
 
         private void comport_PinChanged(object sender, SerialPinChangedEventArgs e)
