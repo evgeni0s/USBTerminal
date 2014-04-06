@@ -82,6 +82,7 @@
     <Compile Include="USBConnector.cs" />
     <Compile Include="Utils\CommonBroadcastTypes.cs" />
     <Compile Include="Utils\DataConverter.cs" />
+    <Compile Include="Graphs\MyExtensions.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\VisibilityToCheckedConverter.cs" />
     <Compile Include="ViewModelBase.cs" />

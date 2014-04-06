@@ -17,7 +17,8 @@ using USBTetminal2.Commands;
 using USBTetminal2.Controls.Legend;
 using USBTetminal2.Graphs;
 using USBTetminal2.Protocol;
-using USBTetminal2.Utils;
+using USBTetminal2.Grahps;
+using Microsoft.Research.DynamicDataDisplay;
 
 namespace USBTetminal2
 {
@@ -26,7 +27,8 @@ namespace USBTetminal2
 
         #region fields
         private ObservableCollection<LegendViewModel> legendsList;
-        private CustomSerialPort selectedPort;
+        private CustomSerialPort _selectedPort;
+        private ChartPlotter _plotter;
         private string errMSG;
         MainWindow _mainWindow;
         #endregion
@@ -34,6 +36,7 @@ namespace USBTetminal2
         public MainWindowViewModel()
         {
             _mainWindow = App.Current.MainWindow as MainWindow;
+            _plotter = _mainWindow.mPlotter;
 
             initializeCommandBindings();
             initTestCases();
@@ -77,17 +80,17 @@ namespace USBTetminal2
         {
             get
             {
-                return selectedPort;
+                return _selectedPort;
             }
             set
             {
-                if (selectedPort != null && selectedPort.IsOpen)
-                    selectedPort.Close();
+                if (_selectedPort != null && _selectedPort.IsOpen)
+                    _selectedPort.Close();
                 if (value != null && !value.IsOpen)
                     value.Open();             //////FIX EXCEPTION!! Доступ к порту закрыт. Возникает если к порту подключена другая программа
-                RemoveListener(selectedPort);
+                RemoveListener(_selectedPort);
                 AddListener(value);
-                selectedPort = value;
+                _selectedPort = value;
                 OnPropertyChanged("SelectedPort");
             }
         }
@@ -97,17 +100,17 @@ namespace USBTetminal2
         private void initPseudoBroadCast()
         {
             AddListener(new FrameManager());
-            AddListener(new GraphsManager());
+            AddListener(new GraphsManager(_plotter));
             // +SELECTED PORT WILL ADD ITSELF for test purposes
         }
 
         private void initTestCases()
         {
-            List<Legend> legends = new List<Legend>()
+            List<USBTetminal2.Controls.Legend.Legend> legends = new List<USBTetminal2.Controls.Legend.Legend>()
            {
-                new Legend("Колобок", true, Brushes.Red),
-                 new Legend("CLR via C#", true, Brushes.Blue),
-                  new Legend("Война и мир", false, Brushes.Green)
+                new USBTetminal2.Controls.Legend.Legend("Колобок", true, Brushes.Red),
+                 new USBTetminal2.Controls.Legend.Legend("CLR via C#", true, Brushes.Blue),
+                  new USBTetminal2.Controls.Legend.Legend("Война и мир", false, Brushes.Green)
                };
 
             LegendsList = new ObservableCollection<LegendViewModel>(legends.Select(l => new LegendViewModel(l)));
@@ -371,7 +374,7 @@ namespace USBTetminal2
             if (broadCastSubscribers.Contains(listener))
             broadCastSubscribers.Remove(listener);
         }
-        private void NotifyAllBroadcastListeners(Utils.CommonBroadcastType msgType, object data)
+        private void NotifyAllBroadcastListeners(Grahps.CommonBroadcastType msgType, object data)
         {
             foreach(ISimpleBroadcastListener listener in broadCastSubscribers)
             {

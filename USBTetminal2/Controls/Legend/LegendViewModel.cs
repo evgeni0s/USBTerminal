@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using USBTetminal2.Utils;
+using USBTetminal2.Grahps;
 
 namespace USBTetminal2.Controls.Legend
 {
@@ -51,12 +51,12 @@ namespace USBTetminal2.Controls.Legend
 
 
         #region BroadCastRegion
-        public void SendMessage(Utils.CommonBroadcastType msgType, object data)
+        public void SendMessage(Grahps.CommonBroadcastType msgType, object data)
         {
             int i = 0;
             i++;
         }
-        public void ReciveMessage(Utils.CommonBroadcastType smgType, object data)
+        public void ReciveMessage(Grahps.CommonBroadcastType smgType, object data)
         {
             int i = 0;
             i++;

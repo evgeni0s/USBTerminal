@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace USBTetminal2.Utils
+namespace USBTetminal2.Grahps
 {
     public enum CommonBroadcastType
     {

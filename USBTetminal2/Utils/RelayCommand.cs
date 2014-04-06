@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace USBTetminal2.Utils
+namespace USBTetminal2.Grahps
 {
    public class RelayCommand : ICommand
     {
