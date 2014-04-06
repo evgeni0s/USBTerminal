@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using USBTetminal2.Commands;
 using USBTetminal2.Controls.Legend;
+using USBTetminal2.Graphs;
 using USBTetminal2.Protocol;
 using USBTetminal2.Utils;
 
@@ -36,7 +37,11 @@ namespace USBTetminal2
 
             initializeCommandBindings();
             initTestCases();
+            initPseudoBroadCast();
+
         }
+
+
 
 
 
@@ -79,7 +84,9 @@ namespace USBTetminal2
                 if (selectedPort != null && selectedPort.IsOpen)
                     selectedPort.Close();
                 if (value != null && !value.IsOpen)
-                    value.Open();
+                    value.Open();             //////FIX EXCEPTION!! Доступ к порту закрыт. Возникает если к порту подключена другая программа
+                RemoveListener(selectedPort);
+                AddListener(value);
                 selectedPort = value;
                 OnPropertyChanged("SelectedPort");
             }
@@ -87,7 +94,12 @@ namespace USBTetminal2
         #endregion
 
 
-
+        private void initPseudoBroadCast()
+        {
+            AddListener(new FrameManager());
+            AddListener(new GraphsManager());
+            // +SELECTED PORT WILL ADD ITSELF for test purposes
+        }
 
         private void initTestCases()
         {
@@ -120,11 +132,15 @@ namespace USBTetminal2
         #region PlotGraphCommand
         private void onPlotGraph(object sender, ExecutedRoutedEventArgs e)
         {
-            List<int> points = (List<int>)e.Parameter;
-            if (points != null)
-            {
+
+            CommonBroadcastType type = CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS;
+            NotifyAllBroadcastListeners(type, e.Parameter);
+
+            //List<int> points = (List<int>)e.Parameter;
+            //if (points != null)
+            //{
  
-            }                                                                                                                                           
+            //}                                                                                                                                           
         }
 
         private void onPlotGraphCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -139,29 +155,32 @@ namespace USBTetminal2
 
         private void onDataRecived(object sender, ExecutedRoutedEventArgs e)
         {
+            CommonBroadcastType type = CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE;
+
+            NotifyAllBroadcastListeners(type, SelectedPort.RecivedData);
+            //byte[] data = SelectedPort.RecivedData;
            
-            byte[] data = SelectedPort.RecivedData;
-           
-            AbstractFrame frame = (AbstractFrame)getSelectedFrame(data[1]);
-            bool frameIsCorrect = frame.tryPrase(data);
-            if (frameIsCorrect)
-            {
-                //Frame knows about what action is
-                frame.executeActionForThisFrame();
-            }
+            //AbstractFrame frame = (AbstractFrame)getSelectedFrame(data[1]);
+            //bool frameIsCorrect = frame.tryPrase(data);
+            //if (frameIsCorrect)
+            //{
+            //    //Frame knows about what action is
+            //    frame.executeActionForThisFrame();
+            //}
         }
 
-        private AbstractFrame getSelectedFrame(byte commandType)
-        {
-            switch (commandType)
-            {
-                case 6:
-                    return new MeasurmentFrame();
-                default: 
-                    return new TestFrame();
-            }
 
-        }
+        //private AbstractFrame getSelectedFrame(byte commandType)
+        //{
+        //    switch (commandType)
+        //    {
+        //        case 6:
+        //            return new MeasurmentFrame();
+        //        default: 
+        //            return new TestFrame();
+        //    }
+
+        //}
 
         //LineGraph mGraph;
         //private void plotGraph(CompositeDataSource dataSource)
@@ -340,6 +359,28 @@ namespace USBTetminal2
             }
 
         }
+
+
+        private List<ISimpleBroadcastListener> broadCastSubscribers  = new List<ISimpleBroadcastListener>();
+        private void AddListener(ISimpleBroadcastListener listener)
+        {
+            broadCastSubscribers.Add(listener);
+        }
+        private void RemoveListener(ISimpleBroadcastListener listener)
+        {
+            if (broadCastSubscribers.Contains(listener))
+            broadCastSubscribers.Remove(listener);
+        }
+        private void NotifyAllBroadcastListeners(Utils.CommonBroadcastType msgType, object data)
+        {
+            foreach(ISimpleBroadcastListener listener in broadCastSubscribers)
+            {
+                listener.ReciveMessage(msgType, data);
+            }
+        }
+
+      
+
         #endregion
     }
 }

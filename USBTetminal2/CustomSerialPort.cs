@@ -19,7 +19,7 @@ using USBTetminal2.Commands;
 
 namespace USBTetminal2
 {
-    public class CustomSerialPort : SerialPort
+    public class CustomSerialPort : SerialPort, ISimpleBroadcastListener
     {
 
         MainWindow context;
@@ -28,7 +28,7 @@ namespace USBTetminal2
         {
             DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
             PinChanged += new SerialPinChangedEventHandler(comport_PinChanged);
-            
+
             //Standart connection
             BaudRate = 9600;
             DataBits = 8;
@@ -37,13 +37,14 @@ namespace USBTetminal2
             context = (MainWindow)App.Current.MainWindow;
         }
 
-        
+
         /// <summary>
         /// THIS CLASS DOES ALL THE CONNECTION JOB
         /// </summary>
         /// <param name="Name"> Setting name will automatically connect to this name</param>
 
-        public CustomSerialPort(string Name) : this()
+        public CustomSerialPort(string Name)
+            : this()
         {
             PortName = Name;
         }
@@ -52,7 +53,7 @@ namespace USBTetminal2
 
         private void comport_PinChanged(object sender, SerialPinChangedEventArgs e)
         {
-           
+
         }
 
         /// <summary>
@@ -63,15 +64,27 @@ namespace USBTetminal2
         private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
 
-            buffer = new byte[BytesToRead];
-            Read(buffer, 0, BytesToRead);
-            Application.Current.Dispatcher.Invoke(() => 
-                LogOnUiThread("Data recived on " + PortName)
+            //buffer = new byte[BytesToRead];
+            //Read(buffer, 0, BytesToRead);
+            //Application.Current.Dispatcher.Invoke(() => 
+            //    LogOnUiThread("Data recived on " + PortName)
+            //    );
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                LogOnUiThread("Data recived on " + PortName);
+                buffer = new byte[BytesToRead];
+                Read(buffer, 0, BytesToRead);
+                CustomCommands.DataRecived.Execute(buffer, App.Current.MainWindow);
+            }
+
                 );
+
+
         }
 
 
- 
+
 
         //Here is a wired Error: calling thread must be STA (single thread appartment)
         //Starting multiple threads to update UI
@@ -82,7 +95,7 @@ namespace USBTetminal2
             {
                 CustomCommands.ErrorReport.Execute(msg, context);
             }
-            CustomCommands.DataRecived.Execute(buffer, context);
+           
 
 
 
@@ -90,7 +103,7 @@ namespace USBTetminal2
 
         public override string ToString()
         {
-            return PortName; 
+            return PortName;
         }
 
 
@@ -111,5 +124,11 @@ namespace USBTetminal2
         /// </summary>
         public byte[] RecivedData
         { get { return buffer; } }
+
+        public void ReciveMessage(Utils.CommonBroadcastType smgType, object data)
+        {
+            int i = 0;
+            i++;
+        }
     }
 }

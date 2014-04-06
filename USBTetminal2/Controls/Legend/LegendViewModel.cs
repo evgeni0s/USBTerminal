@@ -48,5 +48,19 @@ namespace USBTetminal2.Controls.Legend
                 OnPropertyChanged("Brush");
             }
         }
+
+
+        #region BroadCastRegion
+        public void SendMessage(Utils.CommonBroadcastType msgType, object data)
+        {
+            int i = 0;
+            i++;
+        }
+        public void ReciveMessage(Utils.CommonBroadcastType smgType, object data)
+        {
+            int i = 0;
+            i++;
+        }
+        #endregion
     }
 }

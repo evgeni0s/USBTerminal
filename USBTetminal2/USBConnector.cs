@@ -152,9 +152,12 @@ namespace USBTetminal2
                 {
                     CustomCommands.ErrorReport.Execute(b.ToString(), null);
                 }
-               
+
 
         }
+
+
+
 
     }
 }

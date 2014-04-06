@@ -71,12 +71,16 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Graphs\CustomLineGraph.cs" />
+    <Compile Include="Graphs\GraphsManager.cs" />
+    <Compile Include="ISimpleBroadcast.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Protocol\IdentificatorFrame.cs" />
     <Compile Include="Protocol\AbstractFrame.cs" />
     <Compile Include="Protocol\MeasurmentFrame.cs" />
+    <Compile Include="Protocol\FrameManager.cs" />
     <Compile Include="Protocol\TestFrame.cs" />
     <Compile Include="USBConnector.cs" />
+    <Compile Include="Utils\CommonBroadcastTypes.cs" />
     <Compile Include="Utils\DataConverter.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\VisibilityToCheckedConverter.cs" />
