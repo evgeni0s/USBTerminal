@@ -125,7 +125,7 @@ namespace USBTetminal2
         public byte[] RecivedData
         { get { return buffer; } }
 
-        public void ReciveMessage(Grahps.CommonBroadcastType smgType, object data)
+        public void ReciveMessage(CommonBroadcastType smgType, object data)
         {
             int i = 0;
             i++;

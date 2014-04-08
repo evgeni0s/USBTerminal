@@ -15,11 +15,30 @@ namespace USBTetminal2.Commands
             initializeShowPoints();
             initializeReset();
             initializeRemoveLegendCommand();
+            initializeLegendContainerVisibilityCommand();
             initializeConnectCommand();
             initializeErrorReport();
             initializeDataRecived();
             initializePlotGraph();
             initializeAddNewLegend();
+            initializeRemoveGraph();
+            initializeChangeMarkersVisibility();
+            initializeShowSetingsDialog();
+        }
+
+        private static void initializeShowSetingsDialog()
+        {
+            _showSetingsDialogCommand = new RoutedCommand("ShowSetingsDialog", typeof(CustomCommands));
+        }
+
+        private static void initializeChangeMarkersVisibility()
+        {
+            _changeMarkersVisibilityCommand = new RoutedCommand("ChangeMarkersVisibility", typeof(CustomCommands));
+        }
+
+        private static void initializeRemoveGraph()
+        {
+            _removeGraphCommand = new RoutedCommand("RemoveGraph", typeof(CustomCommands));
         }
 
         private static void initializeAddNewLegend()
@@ -55,6 +74,11 @@ namespace USBTetminal2.Commands
         private static void initializeRemoveLegendCommand()
         {
             _removeLegendCommand = new RoutedCommand("RemoveLegend", typeof(CustomCommands));
+        }
+
+        private static void initializeLegendContainerVisibilityCommand()
+        {
+            _legendContainerVisibilityCommand = new RoutedCommand("LegendContainerVisibility", typeof(CustomCommands));
         }
 
         private static void initializeDataRecived()
@@ -94,6 +118,11 @@ namespace USBTetminal2.Commands
             get { return CustomCommands._removeLegendCommand; }
         }
 
+        public static RoutedCommand LegendContainerVisibility
+        {
+            get { return CustomCommands._legendContainerVisibilityCommand; }
+        }
+
         public static RoutedCommand Connect
         {
             get { return CustomCommands._connectCommand; }
@@ -114,15 +143,36 @@ namespace USBTetminal2.Commands
             get { return CustomCommands._plotGraphCommand; }
         }
 
+        public static RoutedCommand RemoveGraph
+        {
+            get { return CustomCommands._removeGraphCommand; }
+        }
+
+        public static RoutedCommand ChangeMarkersVisibility
+        {
+            get { return CustomCommands._changeMarkersVisibilityCommand; }
+        }
+
+        public static RoutedCommand ShowSetingsDialogCommand
+        {
+            get { return CustomCommands._showSetingsDialogCommand; }
+        }
+
 
         static RoutedCommand _showLegend;
         static RoutedCommand _resetCommand;
         static RoutedCommand _showPointsCommand;
         static RoutedCommand _removeLegendCommand;
+        static RoutedCommand _legendContainerVisibilityCommand;
         static RoutedCommand _connectCommand;
         static RoutedCommand _errorReportCommand;
         static RoutedCommand _dataRecivedCommand;
         static RoutedCommand _plotGraphCommand;
         private static RoutedCommand _addNewLegendCommand;
+
+        public static RoutedCommand _removeGraphCommand;
+        private static RoutedCommand _changeMarkersVisibilityCommand;
+        private static RoutedCommand _showSetingsDialogCommand;
+        
     }
 }

@@ -1,17 +1,24 @@
 ﻿<Border x:Class="USBTetminal2.Controls.Legend.LegendListView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:dict="clr-namespace:USBTetminal2"
-             xmlns:commands="clr-namespace:USBTetminal2.Commands"
-             mc:Ignorable="d" 
-             BorderBrush="#4F6FFF" BorderThickness="1,1,4,4" CornerRadius="10" Padding="3"
-             d:DesignHeight="300" d:DesignWidth="300" Loaded="onLoaded" MinHeight="20">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:commands="clr-namespace:USBTetminal2.Commands"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:dict="clr-namespace:USBTetminal2"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        MinHeight="20"
+        BorderBrush="#4F6FFF"
+        BorderThickness="1,1,4,4"
+        CornerRadius="10"
+        Loaded="onLoaded"
+        Padding="3"
+        Visibility="{Binding ContainerVisibility}"
+        d:DesignHeight="300"
+        d:DesignWidth="300"
+        mc:Ignorable="d">
     <Border.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml"/>
+                <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="itemstyle" TargetType="{x:Type ListViewItem}">
                 <EventSetter Event="MouseDoubleClick" Handler="HandleDoubleClick" />
@@ -20,33 +27,60 @@
     </Border.Resources>
 
     <Border.Background>
-        <SolidColorBrush Opacity="0.3" Color="White"/>
+        <SolidColorBrush Opacity="0.3" Color="White" />
     </Border.Background>
     <Grid>
-        <ListView x:Name="legendListView" ItemsSource="{Binding LegendsList}" 
+        <ListView x:Name="legendListView"
                   HorizontalContentAlignment="Stretch"
                   Background="Transparent"
-                  BorderThickness="0" >
+                  BorderThickness="0"
+                  ItemsSource="{Binding LegendsList}">
 
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,2">
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition MinWidth="100"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition />
+                            <ColumnDefinition MinWidth="100" />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Path Grid.RowSpan="2" Data="M115,329 C123,324 127,337 133,333" Margin="0,0,5,0" HorizontalAlignment="Left" Height="8.9"  Stretch="Fill" Stroke="{Binding LineColor}"  UseLayoutRounding="False" VerticalAlignment="Center" Width="20" StrokeThickness="3"/>
+                        <Path Grid.RowSpan="2"
+                              Width="20"
+                              Height="8.9"
+                              Margin="0,0,5,0"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Data="M115,329 C123,324 127,337 133,333"
+                              Stretch="Fill"
+                              Stroke="{Binding LineColor}"
+                              StrokeThickness="3"
+                              UseLayoutRounding="False" />
 
-                        <TextBlock Grid.Column="1" Padding="0,2,0,0" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"  FontWeight="Bold" FontSize="12" Foreground="Black"></TextBlock>
-                        <!--<Button Grid.Column="2"  HorizontalAlignment="Right" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.RemoveLegend}">
-                            <Image Source="Res/Delete_Icon_small.png" Height="20" SnapsToDevicePixels="True" Width="Auto"/>
-                        </Button>-->
-                        <CheckBox  Grid.Column="3" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" Margin="10,0,5,0"></CheckBox>
+                        <TextBlock Grid.Column="1"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="Black"
+                                   Padding="0,2,0,0"
+                                   Text="{Binding Description,
+                                                  UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Grid.Column="2"
+                                HorizontalAlignment="Right"
+                                Command="{x:Static commands:CustomCommands.RemoveLegend}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource FlatButtonStyle}">
+                            <Image Width="Auto"
+                                   Height="20"
+                                   SnapsToDevicePixels="True"
+                                   Source="/USBTetminal2;component/Res/Delete_Icon_small.png" />
+                        </Button>
+                        <CheckBox Grid.Column="3"
+                                  Margin="10,0,5,0"
+                                  VerticalAlignment="Center"
+                                  IsChecked="{Binding IsChecked}" />
 
 
 
@@ -54,9 +88,12 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Thumb x:Name="resizer" Height="5" Margin="0,0,0,-7" Opacity="0" Cursor="SizeNS" 
-         
-                 DragDelta ="ThumbDragDelta"
-                  VerticalAlignment="Bottom"></Thumb>
+        <Thumb x:Name="resizer"
+               Height="5"
+               Margin="0,0,0,-7"
+               VerticalAlignment="Bottom"
+               Cursor="SizeNS"
+               DragDelta="ThumbDragDelta"
+               Opacity="0" />
     </Grid>
 </Border>

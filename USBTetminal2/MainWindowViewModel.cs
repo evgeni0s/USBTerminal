@@ -17,7 +17,6 @@ using USBTetminal2.Commands;
 using USBTetminal2.Controls.Legend;
 using USBTetminal2.Graphs;
 using USBTetminal2.Protocol;
-using USBTetminal2.Grahps;
 using Microsoft.Research.DynamicDataDisplay;
 
 namespace USBTetminal2
@@ -138,8 +137,51 @@ namespace USBTetminal2
             createCommandBinding(CustomCommands.DataRecived, onDataRecived, onDataRecivedCanExecute);
             createCommandBinding(CustomCommands.PlotGraph, onPlotGraph, onPlotGraphCanExecute);
             createCommandBinding(CustomCommands.AddNewLegend, onAddNewLegend, onAddNewLegendCanExecute);
+            createCommandBinding(CustomCommands.RemoveGraph, onRemoveGraphLegend, onRemoveGraphCanExecute);
+            createCommandBinding(CustomCommands.ChangeMarkersVisibility, onChangeMarkersVisibility, onChangeMarkersVisibilityCanExecute);
+            createCommandBinding(CustomCommands.LegendContainerVisibility, onLegendContainerVisibility, onLegendContainerVisibilityCanExecute);
         }
 
+        #region LegendContainerVisibility
+        private void onLegendContainerVisibility(object sender, ExecutedRoutedEventArgs e)
+        {
+            CommonBroadcastType type = CommonBroadcastType.USER_CHANGED_LEGEND_CONTAINER_VISIBILITY;
+            NotifyAllBroadcastListeners(type, e.Parameter);
+        }
+
+        private void onLegendContainerVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
+
+
+
+
+        #region ChangeMarkersVisibilityCommand
+        private void onChangeMarkersVisibility(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("Command: ChangeMarkersVisibility not implemented!");
+        }
+
+        private void onChangeMarkersVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
+
+        #region RemoveGraphCommand
+        private void onRemoveGraphLegend(object sender, ExecutedRoutedEventArgs e)
+        {
+            CommonBroadcastType type = CommonBroadcastType.DELETE_GRAPH;
+            NotifyAllBroadcastListeners(type, e.Parameter);
+        }
+
+        private void onRemoveGraphCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Parameter != null;
+        }
+        #endregion
 
         #region AddNewLegendCommand
 
@@ -321,7 +363,8 @@ namespace USBTetminal2
         #region ShowPointsCommand
         private void onShowPoints(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("Command: ShowPoints");
+            CommonBroadcastType type = CommonBroadcastType.CHANGE_MARKERS_VISIBILITY;
+            NotifyAllBroadcastListeners(type, e.Parameter);
         }
 
         private void onShowPointsCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -333,7 +376,8 @@ namespace USBTetminal2
         #region ResetCommand
         public void onResetExecute(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("Command: Reset");
+            CommonBroadcastType type = CommonBroadcastType.CLEAR_ALL;
+            NotifyAllBroadcastListeners(type, e.Parameter);
         }
 
         private void onResetCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -345,7 +389,8 @@ namespace USBTetminal2
         #region RemoveLegendCommand
         private void onRemoveLegend(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("Remove Legend is not implemented jet!");
+            CommonBroadcastType type = CommonBroadcastType.DELETE_LEGEND;
+            NotifyAllBroadcastListeners(type, e.Parameter);
         }
 
         private void onRemoveLegendCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -399,7 +444,7 @@ namespace USBTetminal2
             if (broadCastSubscribers.Contains(listener))
             broadCastSubscribers.Remove(listener);
         }
-        private void NotifyAllBroadcastListeners(Grahps.CommonBroadcastType msgType, object data)
+        private void NotifyAllBroadcastListeners(CommonBroadcastType msgType, object data)
         {
             foreach(ISimpleBroadcastListener listener in broadCastSubscribers)
             {

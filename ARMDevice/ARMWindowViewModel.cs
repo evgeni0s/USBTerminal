@@ -199,7 +199,7 @@ namespace ARMDevice
                 TestFrame frame = new TestFrame();
                 for (int i = 0; i < 10; i++)
                 {
-                    byte[] data = frame.Request(USBTetminal2.Protocol.TestFrame.FrameType.GeneratePoints);
+                    byte[] data = frame.Request(TestFrame.FrameType.GeneratePoints);
                     SelectedPort.SendData(data);
                     Thread.Sleep(50);
                 }

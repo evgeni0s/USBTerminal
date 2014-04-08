@@ -102,7 +102,7 @@
 
 
 
-        <chart:ChartPlotter   Grid.Column="2" Grid.Row="2"  Margin="10"  Grid.RowSpan="4" x:Name="mPlotter" >
+        <chart:ChartPlotter   Grid.Column="2" Grid.Row="2"  Margin="10"  Grid.RowSpan="4" x:Name="mPlotter" LegendVisible="False">
             <!--<chart:ChartPlotter.Background>
                 <SolidColorBrush Color="White" Opacity="1"/>
             </chart:ChartPlotter.Background>-->

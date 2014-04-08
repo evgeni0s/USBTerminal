@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace USBTetminal2.Grahps
+namespace USBTetminal2
 {
    public class RelayCommand : ICommand
     {
@@ -55,5 +55,30 @@ namespace USBTetminal2.Grahps
         {
             _execute(parameter);
         }
+
+        /*how to use
+         * 
+         * Command="{Binding RemoveLegend}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+         *         RelayCommand _removeLegend;
+         public ICommand RemoveLegend
+         {
+             get
+             {
+                 if (_removeLegend == null)
+                 {
+                     _removeLegend = new RelayCommand(param => this.onRemoveLegendExecute(param),
+                         param => true);
+                 }
+                 return _removeLegend;
+             }
+         }
+
+         private void onRemoveLegendExecute(Object sender)
+         {
+             int i = 0;
+             i++;
+         }
+        
+         */
     }
 }

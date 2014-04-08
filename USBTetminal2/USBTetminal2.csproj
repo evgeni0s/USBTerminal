@@ -61,6 +61,10 @@
       <DependentUpon>LegendListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Legend\LegendListViewModel.cs" />
+    <Compile Include="Controls\Settings\SettingsDialog.xaml.cs">
+      <DependentUpon>SettingsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\SettingsViewModel.cs" />
     <Compile Include="Controls\ToolBar\ToolBarView.xaml.cs">
       <DependentUpon>ToolBarView.xaml</DependentUpon>
     </Compile>
@@ -69,7 +73,6 @@
     <Compile Include="CustomSerialPort.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Graphs\CustomLineGraph.cs" />
     <Compile Include="Graphs\GraphsManager.cs" />
     <Compile Include="ISimpleBroadcast.cs" />
     <Compile Include="MainWindowViewModel.cs" />
@@ -88,6 +91,10 @@
     <Page Include="Controls\Legend\LegendListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Settings\SettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ToolBar\ToolBarView.xaml">
       <Generator>MSBuild:Compile</Generator>

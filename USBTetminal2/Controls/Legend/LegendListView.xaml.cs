@@ -125,5 +125,8 @@ namespace USBTetminal2.Controls.Legend
        //     list.ItemsSource = context.Items;
           //  Visibility = System.Windows.Visibility.Collapsed;
         }
+
+
+
     }
 }

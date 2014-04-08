@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Input;
+using USBTetminal2.Commands;
+using System.Windows;
 
 namespace USBTetminal2.Controls.Legend
 {
@@ -34,7 +37,7 @@ namespace USBTetminal2.Controls.Legend
             {
                 _graph = graph;
                 Description = graph.LineGraph.Description.ToString();
-                LineColor = graph.LineGraph.Stroke as SolidColorBrush;
+                LineColor = graph.LineGraph.Stroke as SolidColorBrush; 
                 IsChecked = true;
             }
 
@@ -69,17 +72,40 @@ namespace USBTetminal2.Controls.Legend
                     OnPropertyChanged("LineColor");
                 }
             }
+
+            public LineAndMarker<MarkerPointsGraph> Graph
+            {
+                get
+                {
+                    return _graph;
+                }
+            }
         }
 
         #endregion
 
 
-
+        Visibility _containerVisibility = Visibility.Visible;
         public LegendListViewModel()
         {
             //
         }
 
+
+        public Visibility ContainerVisibility
+        {
+            get
+            {
+                if (LegendsList.Count <= 0)
+                    return Visibility.Collapsed;
+                return _containerVisibility;
+            }
+            set 
+            {
+                _containerVisibility = value;
+                OnPropertyChanged("ContainerVisibility");
+            }
+        }
 
         private ObservableCollection<LegendListItem> _legendsList = new ObservableCollection<LegendListItem>();
         public ObservableCollection<LegendListItem> LegendsList
@@ -90,13 +116,9 @@ namespace USBTetminal2.Controls.Legend
             }
             set
             {
+                OnPropertyChanged("ContainerVisibility");
                 _legendsList = value;
             }
-        }
-
-        public void Clear()
-        {
-            LegendsList = new ObservableCollection<LegendListItem>();
         }
 
         private void addNewLegend(object data)
@@ -106,24 +128,60 @@ namespace USBTetminal2.Controls.Legend
             var graph = (LineAndMarker<MarkerPointsGraph>)data;
             LegendListItem legend = new LegendListItem(graph);
             LegendsList.Add(legend);
+            OnPropertyChanged("ContainerVisibility");
         }
 
-        public void ReciveMessage(Grahps.CommonBroadcastType smgType, object data)
+
+        private void deleteLegend(object data)
+        {
+            if (data.GetType() != typeof(LegendListItem))
+                return;
+            LegendListItem item = (LegendListItem)data;
+            LegendsList.Remove((LegendListItem)data);
+            OnPropertyChanged("ContainerVisibility");
+            CustomCommands.RemoveGraph.Execute(item.Graph, App.Current.MainWindow);
+        }
+
+
+        private void clearAll()
+        {
+            LegendsList.Clear();// = new ObservableCollection<LegendListItem>();
+            OnPropertyChanged("ContainerVisibility");
+        }
+
+
+        private void switchLegendVisibility()
+        {
+            if (ContainerVisibility == Visibility.Collapsed)
+                ContainerVisibility = Visibility.Visible;
+
+            else if(ContainerVisibility == Visibility.Visible)
+                ContainerVisibility = Visibility.Collapsed;
+        }
+
+        public void ReciveMessage(CommonBroadcastType smgType, object data)
         {
             switch (smgType)
             {
-                case USBTetminal2.Grahps.CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE:
-                    break;
-                case USBTetminal2.Grahps.CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS:
-                    break;
-                case USBTetminal2.Grahps.CommonBroadcastType.ADD_LEGEND_TO_GRAPH:
+                case CommonBroadcastType.ADD_LEGEND_TO_GRAPH:
                     addNewLegend(data);
                     break;
-                case USBTetminal2.Grahps.CommonBroadcastType.msg3:
+                case CommonBroadcastType.DELETE_LEGEND:
+                    deleteLegend(data);
+                    break;
+                case CommonBroadcastType.CLEAR_ALL:
+                    clearAll();
+                    break;
+                case CommonBroadcastType.USER_CHANGED_LEGEND_CONTAINER_VISIBILITY:
+                    switchLegendVisibility();
                     break;
                 default:
                     break;
             }
         }
+
+
+
+
     }
 }

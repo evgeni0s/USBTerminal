@@ -31,19 +31,19 @@ namespace USBTetminal2.Protocol
 
 
 
-        public void ReciveMessage(Grahps.CommonBroadcastType smgType, object data)
+        public void ReciveMessage(CommonBroadcastType smgType, object data)
         {
             switch (smgType)
             {
-                case USBTetminal2.Grahps.CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE:
+                case CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE:
                     AbstractFrame frame = getFrameFromData(data);
                     byte[] byteData = (byte[])data;
                     frame.tryPrase(byteData);
                     frame.executeActionForThisFrame();
                     break;
-                case USBTetminal2.Grahps.CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS:
+                case CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS:
                     break;
-                case USBTetminal2.Grahps.CommonBroadcastType.msg3:
+                case CommonBroadcastType.msg3:
                     break;
                 default:
                     break;

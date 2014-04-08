@@ -17,9 +17,10 @@
         <Grid>
             <StackPanel Orientation="Horizontal" Width="Auto" Margin="20,0">
                 <!--Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"-->
-                <Button Width="50" Height="35" Content="LEGEND" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowLegend}"/>
-                <Button Width="50" Height="35" Margin="15,0,0,0" Content="POINTS" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}"/>
-                <Button Width="50" Height="35" Margin="15,0,0,0" Content="RESET" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}"/>
+                <Button Width="60" Height="35" Content="LEGEND" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.LegendContainerVisibility}"/>
+                <Button Width="60" Height="35" Margin="15,0,0,0" Content="POINTS" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}"/>
+                <Button Width="60" Height="35" Margin="15,0,0,0" Content="RESET" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}"/>
+                <Button Width="60" Height="35" Margin="15,0,0,0" Content="SETTINGS" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}"/>
             </StackPanel>
         </Grid>
 

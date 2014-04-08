@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using USBTetminal2.Commands;
+using System.Windows.Data;
+using System.Windows;
 
 namespace USBTetminal2.Graphs
 {
@@ -18,7 +20,7 @@ namespace USBTetminal2.Graphs
     /// access to Markers. 
     /// Markers - ??? ))) points on graph or legend shit. Don't remember)
     /// </summary>
-    public class GraphsManager: ISimpleBroadcastListener
+    public class GraphsManager : ISimpleBroadcastListener
     {
         List<LineAndMarker<MarkerPointsGraph>> GraphsCollection = new List<LineAndMarker<MarkerPointsGraph>>();
         ChartPlotter _plotter;
@@ -26,19 +28,26 @@ namespace USBTetminal2.Graphs
         public GraphsManager(ChartPlotter plotter)
         {
             _plotter = plotter;
-            _plotter.Legend.Visibility = System.Windows.Visibility.Collapsed;//Disabled default ledend so that I could use my custom
+            hideDefaultLegend();//Disabled default ledend so that I could use my custom
+            
         }
 
-        public void ReciveMessage(Grahps.CommonBroadcastType smgType, object data)
+
+        public void ReciveMessage(CommonBroadcastType smgType, object data)
         {
             switch (smgType)
             {
-                case USBTetminal2.Grahps.CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE:
+                case CommonBroadcastType.DELETE_GRAPH:
+                    removeGraph(data);
                     break;
-                case USBTetminal2.Grahps.CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS:
+                case CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS:
                     buildGraphFromYPoints(data);
                     break;
-                case USBTetminal2.Grahps.CommonBroadcastType.msg3:
+                case CommonBroadcastType.CLEAR_ALL:
+                    clearAll();
+                    break;
+                case CommonBroadcastType.CHANGE_MARKERS_VISIBILITY:
+                    changeMarkersVisibility();
                     break;
                 default:
                     break;
@@ -47,7 +56,81 @@ namespace USBTetminal2.Graphs
 
 
 
+
+
+
         #region private methods
+
+        /// <summary>
+        /// Needs to be updated regulary
+        /// </summary>
+        private void hideDefaultLegend()
+        {
+            _plotter.Legend.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// try to show all markers who have visible solid lines
+        /// if they are already visible - hide all
+        /// </summary>
+        private void changeMarkersVisibility()
+        {
+            bool allMarkersAreVisible = GraphsCollection.Where(pair => pair.LineGraph.Visibility == Visibility.Visible).//for thouse graphs who's  solid lines are visible,
+                                                         All(pair => pair.MarkerGraph.Visibility == Visibility.Visible);//check if all their markers are visible as well
+            if (allMarkersAreVisible)
+            {
+                //GraphsCollection.Where(pair => pair.LineGraph.Visibility == Visibility.Visible)
+                //                .Select(pair => pair.MarkerGraph.Visibility = Visibility.Collapsed);
+
+                foreach (var pair in GraphsCollection)
+                {
+                    if (pair.LineGraph.Visibility == Visibility.Visible)
+                    {
+                        pair.MarkerGraph.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+            else 
+            {
+                foreach (var pair in GraphsCollection)
+                {
+                    if (pair.LineGraph.Visibility == Visibility.Visible)
+                    {
+                        pair.MarkerGraph.Visibility = Visibility.Visible;
+                    }
+                }
+                //GraphsCollection.Where(pair => pair.LineGraph.Visibility == Visibility.Visible)  //for thouse graphs who's  solid lines are visible,
+                //                .Select(pair => pair.MarkerGraph.Visibility = Visibility.Visible);//show marker lines
+            }
+        }
+
+
+        private void clearAll()
+        {
+            foreach (var pair in GraphsCollection)
+            {
+                _plotter.Children.Remove(pair.LineGraph);
+                _plotter.Children.Remove(pair.MarkerGraph);
+            }
+            GraphsCollection.Clear();
+            hideDefaultLegend();
+        }
+
+        private void removeGraph(object data)
+        {
+            if (data.GetType() != typeof(LineAndMarker<MarkerPointsGraph>))
+                return;
+            LineAndMarker<MarkerPointsGraph> pair = (LineAndMarker<MarkerPointsGraph>)data;
+            if (!GraphsCollection.Contains(pair))
+                return;
+            //graph and markers are removed from collection and children
+            _plotter.Children.Remove(pair.LineGraph);
+            _plotter.Children.Remove(pair.MarkerGraph);
+            GraphsCollection.Remove(pair);
+            hideDefaultLegend();
+        }
+
+
         //Colverts object data -> List<double>
         private void buildGraphFromYPoints(object data)
         {
@@ -78,7 +161,7 @@ namespace USBTetminal2.Graphs
         //{
         //    var graph = _plotter.AddLineGraph(dataSource, new Pen(randomBrush(), 2), new CirclePointMarker { Size = 5, Fill = Brushes.Red }, new PenDescription(getRandomName()));
         //    GraphsCollection.Add(graph);
-            
+
         //}
 
         int graphNumber = 0;
@@ -145,7 +228,7 @@ namespace USBTetminal2.Graphs
         {
 
             // Compute x array of 1001 points from 0 to 100 with 1 step
-            double[] x = Enumerable.Range(0, yPoints.Count).Select(i => i/1.0).ToArray();
+            double[] x = Enumerable.Range(0, yPoints.Count).Select(i => i / 1.0).ToArray();
             return new List<double>(x);
         }
 
