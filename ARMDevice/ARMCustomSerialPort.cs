@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using USBTetminal2.Protocol;
 
 namespace ARMDevice
 {
@@ -87,6 +88,13 @@ namespace ARMDevice
         {
             // Send the binary data out the port
             Write(data, 0, data.Length);
+        }
+
+        public void SendData(string data)
+        {
+            TestFrame frame = new TestFrame();
+            byte[] bytes = frame.HexStringToByteArray(data);
+            SendData(bytes);
         }
 
         /// <summary>

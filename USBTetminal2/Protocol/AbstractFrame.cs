@@ -55,7 +55,7 @@ namespace USBTetminal2.Protocol
         {
             s = s.Replace(" ", "");
             if (s.Length < 2)
-                return new byte[]{Convert.ToByte(s, 16)};
+                return new byte[] { Convert.ToByte(s, 16) };
             byte[] buffer = new byte[s.Length / 2];
             for (int i = 0; i < s.Length; i += 2)
                 buffer[i / 2] = (byte)Convert.ToByte(s.Substring(i, 2), 16);//16 - type
@@ -76,19 +76,45 @@ namespace USBTetminal2.Protocol
 
 
         /// <summary>
-        /// FOR DEBUG PURPOSES ONLY. Allows to display request string
+        /// ToString("X") - Converts to hexadecimal string
+        /// http://social.msdn.microsoft.com/Forums/en-US/95c0e098-ff1c-4892-ab65-51fb60c9d5e5/hex-dec-dec-hex?forum=csharplanguage
         /// </summary>
-        public void print() 
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public string IntArrayToHexString(IEnumerable<int> data)
         {
-          string[] b = Request().Select(x => Convert.ToString(x, 2).PadLeft(8, '0')).ToArray();
-          foreach (string line in b)
-          {
-              CustomCommands.ErrorReport.Execute(line, null);
-          }
-        
+            StringBuilder builder = new StringBuilder();
+            foreach (int x in data)
+            {
+                string twoByteString = x.ToString("X");
+                while (twoByteString.Length < 4)// adds 0's to the begining. Ex. 32 -> 0032 or ff4 - 0ff4
+                {
+                    twoByteString = twoByteString.Insert(0, "0");
+                }
+
+                builder.Append(twoByteString);
+            }
+            return builder.ToString();
+
         }
 
 
-       
+
+
+        /// <summary>
+        /// FOR DEBUG PURPOSES ONLY. Allows to display request string
+        /// </summary>
+        public void print()
+        {
+            string[] b = Request().Select(x => Convert.ToString(x, 2).PadLeft(8, '0')).ToArray();
+            foreach (string line in b)
+            {
+                CustomCommands.ErrorReport.Execute(line, null);
+            }
+
+        }
+
+
+
     }
 }

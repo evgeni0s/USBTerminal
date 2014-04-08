@@ -1,4 +1,9 @@
-﻿/*Main application logic
+﻿/*ARM Device project is a simulator to test frames
+ For simulation "NULL port" is required. 
+ * App to create virtual pipe is called
+http://www.hhdsoftware.com/free-virtual-serial-ports
+ 
+ Main application logic
  portList - list of all available ports
  selectedPort - currently opened port
  frameList - list of frame types
@@ -12,6 +17,7 @@ using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -37,7 +43,10 @@ namespace ARMDevice
         {
             _armWindow = App.Current.MainWindow as ARMWindow;
             initializeCommandBindings();
+         // 01 06 00 12 00 2B 00 24 0A 6C AA
         }
+
+
 
         #region public properties
         public ObservableCollection<ARMCustomSerialPort> Ports
@@ -157,6 +166,12 @@ namespace ARMDevice
         private void onDataRecived(object sender, ExecutedRoutedEventArgs e)
         {
             AbstractFrame frame = (AbstractFrame)getSelectedFrame();
+            if (frame == null)
+            {
+                ARMCustomCommands.ErrorReport.Execute("Data Recived, but frame is still not selected", App.Current.MainWindow);
+                return;
+            }
+
             byte[] data = SelectedPort.RecivedData;
             frame.tryPrase(data);
 
@@ -177,7 +192,18 @@ namespace ARMDevice
 
         private void onSendCustomFrame(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("Custom Frame not inmplemented!");
+            if (e.Parameter.ToString() != "777")
+                SelectedPort.SendData(e.Parameter.ToString());
+            else//suepruser
+            {
+                TestFrame frame = new TestFrame();
+                for (int i = 0; i < 10; i++)
+                {
+                    byte[] data = frame.Request(USBTetminal2.Protocol.TestFrame.FrameType.GeneratePoints);
+                    SelectedPort.SendData(data);
+                    Thread.Sleep(50);
+                }
+            }
         }
         #endregion
 

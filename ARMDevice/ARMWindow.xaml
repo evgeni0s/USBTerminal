@@ -20,7 +20,8 @@
         <TextBox >Select port</TextBox>
         <ListView x:Name="ports" Grid.Row="1" 
                   ItemsSource="{Binding Ports, UpdateSourceTrigger=PropertyChanged}" 
-                  SelectedItem="{Binding SelectedPort, UpdateSourceTrigger=PropertyChanged}"> 
+                  SelectedItem="{Binding SelectedPort, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedIndex="5"> 
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Port Name"  Width="100"
@@ -34,7 +35,7 @@
             <!--Second-->
         <TextBlock Grid.Column="1">Out Box</TextBlock>
         <!--<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding OutBoxText, UpdateSourceTrigger=PropertyChanged}"></TextBox>-->
-        <ListView x:Name="frames" Grid.Row="1" Grid.Column="1"  ItemsSource="{Binding Frames}">
+        <ListView x:Name="frames" Grid.Row="1" Grid.Column="1"  ItemsSource="{Binding Frames}" SelectedIndex="2">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Standart Frame"  Width="200"

@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*Got no time to learn Prism pattern. 
+ So I've made my own broadcasting framework:
+ -All commands are executed in MainViewModel
+ -MainViewModel.AddListener(ListenerClass) - adds any viewmodel to broadcasting space
+ -MainViewModel.NotifyAllBroadcastListeners - sends message to all listeners
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

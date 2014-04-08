@@ -35,13 +35,17 @@ namespace USBTetminal2
             StopBits = StopBits.One;
             Parity = Parity.None;
             context = (MainWindow)App.Current.MainWindow;
+
+            //Poor null port drivers suggest to RtsEnable = true; 
+            //Else I get exception “The parameter is incorrect.” when sending data
+          //  RtsEnable = true;
         }
 
 
         /// <summary>
         /// THIS CLASS DOES ALL THE CONNECTION JOB
         /// </summary>
-        /// <param name="Name"> Setting name will automatically connect to this name</param>
+        /// <param name="Name">Name is an address to connect</param>
 
         public CustomSerialPort(string Name)
             : this()
@@ -57,37 +61,25 @@ namespace USBTetminal2
         }
 
         /// <summary>
-        /// What ever is recived - is stored here
+        /// What ever is recived - is stored in this class
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-
-            //buffer = new byte[BytesToRead];
-            //Read(buffer, 0, BytesToRead);
-            //Application.Current.Dispatcher.Invoke(() => 
-            //    LogOnUiThread("Data recived on " + PortName)
-            //    );
-
             Application.Current.Dispatcher.Invoke(() =>
             {
                 LogOnUiThread("Data recived on " + PortName);
                 buffer = new byte[BytesToRead];
                 Read(buffer, 0, BytesToRead);
                 CustomCommands.DataRecived.Execute(buffer, App.Current.MainWindow);
-            }
-
-                );
-
-
+            });
         }
 
 
 
 
         //Here is a wired Error: calling thread must be STA (single thread appartment)
-        //Starting multiple threads to update UI
         private void LogOnUiThread(string msg)
         {
             //Crashes when not on UI thread
@@ -107,10 +99,18 @@ namespace USBTetminal2
         }
 
 
-        public void SendData(byte[] data)
+        public  void SendData(byte[] data)
         {
             // Send the binary data out the port
-            Write(data, 0, data.Length);
+
+                Thread thread = new Thread(() => {
+                   // ReadTimeout = 2500;
+                    //WriteTimeout = 2500;
+                    bool rtsEnable = RtsEnable;
+                    Write(data, 0, data.Length);
+                });
+                thread.Start();
+           
         }
 
         ~CustomSerialPort()
@@ -130,5 +130,23 @@ namespace USBTetminal2
             int i = 0;
             i++;
         }
+
+        #region convertors and utils ...not used for now
+        //They solve encoding problem if it ever appears
+        //http://stackoverflow.com/questions/472906/converting-a-string-to-byte-array
+        private byte[] GetBytes(string str)
+        {
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+
+        private string GetString(byte[] bytes)
+        {
+            char[] chars = new char[bytes.Length / sizeof(char)];
+            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+            return new string(chars);
+        }
+        #endregion
     }
 }

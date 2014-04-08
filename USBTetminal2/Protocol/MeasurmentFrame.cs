@@ -102,5 +102,6 @@ namespace USBTetminal2.Protocol
         {
             CustomCommands.PlotGraph.Execute(points, App.Current.MainWindow);
         }
+
     }
 }

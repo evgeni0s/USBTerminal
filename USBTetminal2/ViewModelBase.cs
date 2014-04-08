@@ -69,10 +69,6 @@ namespace USBTetminal2
         }
         #endregion
 
-        ///An attempt to create broadcast template for a short time
-        //#region BroadCastRegion
-        //public virtual void SendMessage(Utils.CommonBroadcastType msgType, object data);
-        //public virtual void ReciveMessage(Utils.CommonBroadcastType smgType, object data);
-        //#endregion
+
     }
 }

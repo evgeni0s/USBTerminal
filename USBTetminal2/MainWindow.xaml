@@ -50,7 +50,7 @@
         </DataGrid>
 
         <TextBox x:Name="console" Grid.Row="3" Text="{Binding ErrMSG}" TextWrapping="Wrap" AcceptsReturn="True"/>
-        <TextBox x:Name="portName" x:FieldModifier="public" Grid.Row="3" Text="COM3" TextWrapping="Wrap" AcceptsReturn="True" Background="Red" Foreground="White" FontSize="18" Height="36" Width="100" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="portName" x:FieldModifier="public" Grid.Row="3" Text="COM6" TextWrapping="Wrap" AcceptsReturn="True" Background="Red" Foreground="White" FontSize="18" Height="36" Width="100" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
         <Button Click="onSetPort" Grid.Row="3" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="50">Set</Button>
 
         <Border x:Name="legendContainer"  Canvas.ZIndex="1"  Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" Width="Auto" BorderBrush="#4F6FFF" BorderThickness="1,1,4,4" CornerRadius="10" Padding="3" MinHeight="20" >
