@@ -60,9 +60,9 @@ namespace USBTetminal2
 
         private void ThumbDragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
-            double newHeight = e.VerticalChange + legendContainer.ActualHeight;
-            if (newHeight > legendContainer.MinHeight)
-                legendContainer.Height = newHeight;
+            //double newHeight = e.VerticalChange + legendContainer.ActualHeight;
+            //if (newHeight > legendContainer.MinHeight)
+            //    legendContainer.Height = newHeight;
         }
 
         private void onlistLoaded(object sender, RoutedEventArgs e)

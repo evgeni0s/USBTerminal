@@ -19,6 +19,12 @@ namespace USBTetminal2.Commands
             initializeErrorReport();
             initializeDataRecived();
             initializePlotGraph();
+            initializeAddNewLegend();
+        }
+
+        private static void initializeAddNewLegend()
+        {
+            _addNewLegendCommand = new RoutedCommand("AddNewLegend", typeof(CustomCommands));
         }
 
         private static void initializeErrorReport()
@@ -61,6 +67,12 @@ namespace USBTetminal2.Commands
             _plotGraphCommand = new RoutedCommand("PlotGraph", typeof(CustomCommands));
         }
 
+
+
+        public static RoutedCommand AddNewLegend
+        {
+            get { return CustomCommands._addNewLegendCommand; }
+        }
 
         public static RoutedCommand ShowLegend
         {
@@ -111,5 +123,6 @@ namespace USBTetminal2.Commands
         static RoutedCommand _errorReportCommand;
         static RoutedCommand _dataRecivedCommand;
         static RoutedCommand _plotGraphCommand;
+        private static RoutedCommand _addNewLegendCommand;
     }
 }

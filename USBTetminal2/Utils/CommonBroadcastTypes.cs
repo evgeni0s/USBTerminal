@@ -10,6 +10,7 @@ namespace USBTetminal2.Grahps
     {
         DECODE_BYTE_ARRAY_FROM_DEVICE,
         BUILD_GRAPH_FROM_Y_POINTS,
+        ADD_LEGEND_TO_GRAPH,
         msg3
     }
 }

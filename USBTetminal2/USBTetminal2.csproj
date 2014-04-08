@@ -57,11 +57,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Legend\CustomLegend.xaml.cs">
-      <DependentUpon>CustomLegend.xaml</DependentUpon>
+    <Compile Include="Controls\Legend\LegendListView.xaml.cs">
+      <DependentUpon>LegendListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Legend\Legend.cs" />
-    <Compile Include="Controls\Legend\LegendViewModel.cs" />
+    <Compile Include="Controls\Legend\LegendListViewModel.cs" />
     <Compile Include="Controls\ToolBar\ToolBarView.xaml.cs">
       <DependentUpon>ToolBarView.xaml</DependentUpon>
     </Compile>
@@ -86,7 +85,7 @@
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\VisibilityToCheckedConverter.cs" />
     <Compile Include="ViewModelBase.cs" />
-    <Page Include="Controls\Legend\CustomLegend.xaml">
+    <Page Include="Controls\Legend\LegendListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -19,14 +19,14 @@ namespace USBTetminal2.Controls.Legend
     /// <summary>
     /// Interaction logic for CustomLegend.xaml
     /// </summary>
-    public partial class CustomLegend : Border
+    public partial class LegendListView : Border
     {
 
       //  LegendModel context;
-        public CustomLegend()
+        public LegendListView()
         {
             InitializeComponent();
-          //  context = new LegendModel();
+           // context = new LegendModel();
            // DataContext = context;
         }
        
@@ -44,22 +44,22 @@ namespace USBTetminal2.Controls.Legend
          //   list.ItemsSource = context.items; 
         }
 
-      //  public void addLegend(USBTetminal2.LegendModel.LegendItemModel item)
-     //   {
+        //public void addLegend(LegendItemModel item)
+        //{
 
-         //   Binding binding = new Binding();
-         //   binding.Source = item;
-         //   binding.Path = new PropertyPath("IsChecked");
+        //    Binding binding = new Binding();
+        //    binding.Source = item;
+        //    binding.Path = new PropertyPath("IsChecked");
 
-         //   binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-         //   VisibilityToCheckedConverter converter = new VisibilityToCheckedConverter();
-         //   binding.Converter = converter;
-         //   binding.Mode = BindingMode.TwoWay;
-         //   BindingOperations.SetBinding(item.lineAndMarker.LineGraph, LineGraph.VisibilityProperty, binding);
-         ////   BindingOperations.SetBinding(item.lineAndMarker.MarkerGraph, MarkerPointsGraph.VisibilityProperty, binding);
-         //    context.Items.Add(item);
-         //    Visibility = System.Windows.Visibility.Visible;
-     //   }
+        //    binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+        //    VisibilityToCheckedConverter converter = new VisibilityToCheckedConverter();
+        //    binding.Converter = converter;
+        //    binding.Mode = BindingMode.TwoWay;
+        //    BindingOperations.SetBinding(item.lineAndMarker.LineGraph, LineGraph.VisibilityProperty, binding);
+        //    //   BindingOperations.SetBinding(item.lineAndMarker.MarkerGraph, MarkerPointsGraph.VisibilityProperty, binding);
+        //    context.Items.Add(item);
+        //    Visibility = System.Windows.Visibility.Visible;
+        //}
 
        // private USBTetminal2.LegendModel.LegendItemModel modelForEditing;
         //private ListViewItem trackForEditing

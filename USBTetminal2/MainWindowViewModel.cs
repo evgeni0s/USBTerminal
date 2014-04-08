@@ -26,9 +26,10 @@ namespace USBTetminal2
     {
 
         #region fields
-        private ObservableCollection<LegendViewModel> legendsList;
+       // private ObservableCollection<CLegendItemViewModel> legendsList;
         private CustomSerialPort _selectedPort;
         private ChartPlotter _plotter;
+        private LegendListViewModel _legendListViewModel;
         private string errMSG;
         MainWindow _mainWindow;
         #endregion
@@ -39,7 +40,6 @@ namespace USBTetminal2
             _plotter = _mainWindow.mPlotter;
 
             initializeCommandBindings();
-            initTestCases();
             initPseudoBroadCast();
 
         }
@@ -49,16 +49,16 @@ namespace USBTetminal2
 
 
         #region public properties
-        public ObservableCollection<LegendViewModel> LegendsList
-        {
-            get
-            {
-                if (legendsList == null)
-                    legendsList = new ObservableCollection<LegendViewModel>();
-                return legendsList;
-            }
-            set { legendsList = value; }
-        }
+        //public ObservableCollection<CLegendItemViewModel> LegendsList
+        //{
+        //    get
+        //    {
+        //        if (legendsList == null)
+        //            legendsList = new ObservableCollection<CLegendItemViewModel>();
+        //        return legendsList;
+        //    }
+        //    set { legendsList = value; }
+        //}
 
         public string ErrMSG
         {
@@ -94,6 +94,23 @@ namespace USBTetminal2
                 OnPropertyChanged("SelectedPort");
             }
         }
+
+        public LegendListViewModel LegendListDataContext
+        {
+            get
+            {
+                if (_legendListViewModel == null)
+                {
+                    _legendListViewModel = new LegendListViewModel();
+                     AddListener(_legendListViewModel);
+                }
+                return _legendListViewModel;
+            }
+            set
+            {
+                _legendListViewModel = value;
+            }
+        }
         #endregion
 
 
@@ -101,21 +118,11 @@ namespace USBTetminal2
         {
             AddListener(new FrameManager());
             AddListener(new GraphsManager(_plotter));
-            // +SELECTED PORT WILL ADD ITSELF for test purposes
+            // +SELECTED PORT WILL ADD ITSELF
+            // +LegendLisDataContext WILL ADD ITSELF
         }
 
-        private void initTestCases()
-        {
-            List<USBTetminal2.Controls.Legend.Legend> legends = new List<USBTetminal2.Controls.Legend.Legend>()
-           {
-                new USBTetminal2.Controls.Legend.Legend("Колобок", true, Brushes.Red),
-                 new USBTetminal2.Controls.Legend.Legend("CLR via C#", true, Brushes.Blue),
-                  new USBTetminal2.Controls.Legend.Legend("Война и мир", false, Brushes.Green)
-               };
-
-            LegendsList = new ObservableCollection<LegendViewModel>(legends.Select(l => new LegendViewModel(l)));
-
-        }
+      
 
 
 
@@ -130,7 +137,25 @@ namespace USBTetminal2
             createCommandBinding(CustomCommands.Connect, onConnect, onConnectCanExecute);
             createCommandBinding(CustomCommands.DataRecived, onDataRecived, onDataRecivedCanExecute);
             createCommandBinding(CustomCommands.PlotGraph, onPlotGraph, onPlotGraphCanExecute);
+            createCommandBinding(CustomCommands.AddNewLegend, onAddNewLegend, onAddNewLegendCanExecute);
         }
+
+
+        #region AddNewLegendCommand
+
+
+        private void onAddNewLegend(object sender, ExecutedRoutedEventArgs e)
+        {
+            CommonBroadcastType type = CommonBroadcastType.ADD_LEGEND_TO_GRAPH;
+            NotifyAllBroadcastListeners(type, e.Parameter);
+        }
+
+        private void onAddNewLegendCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Parameter != null && e.Parameter.GetType() == typeof(LineAndMarker<MarkerPointsGraph>);
+        }
+        #endregion
+
 
         #region PlotGraphCommand
         private void onPlotGraph(object sender, ExecutedRoutedEventArgs e)
@@ -320,7 +345,7 @@ namespace USBTetminal2
         #region RemoveLegendCommand
         private void onRemoveLegend(object sender, ExecutedRoutedEventArgs e)
         {
-            legendsList.RemoveAt(0);
+            MessageBox.Show("Remove Legend is not implemented jet!");
         }
 
         private void onRemoveLegendCanExecute(object sender, CanExecuteRoutedEventArgs e)

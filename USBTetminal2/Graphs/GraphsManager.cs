@@ -26,6 +26,7 @@ namespace USBTetminal2.Graphs
         public GraphsManager(ChartPlotter plotter)
         {
             _plotter = plotter;
+            _plotter.Legend.Visibility = System.Windows.Visibility.Collapsed;//Disabled default ledend so that I could use my custom
         }
 
         public void ReciveMessage(Grahps.CommonBroadcastType smgType, object data)
@@ -68,14 +69,22 @@ namespace USBTetminal2.Graphs
 
             //Dymamic Data  Dispaly works with this source
             CompositeDataSource dataSource = xPoints.ToChartDataSource(yPoints);
-            buildGraphFromDataSource(dataSource);
-
+            var graph = _plotter.AddLineGraph(dataSource, new Pen(randomBrush(), 2), new CirclePointMarker { Size = 5, Fill = Brushes.Red }, new PenDescription(getRandomName()));
+            GraphsCollection.Add(graph);
+            CustomCommands.AddNewLegend.Execute(graph, App.Current.MainWindow);
         }
 
-        private void buildGraphFromDataSource(CompositeDataSource dataSource)
+        //private void buildGraphFromDataSource(CompositeDataSource dataSource)
+        //{
+        //    var graph = _plotter.AddLineGraph(dataSource, new Pen(randomBrush(), 2), new CirclePointMarker { Size = 5, Fill = Brushes.Red }, new PenDescription(getRandomName()));
+        //    GraphsCollection.Add(graph);
+            
+        //}
+
+        int graphNumber = 0;
+        private string getRandomName()
         {
-            var graph = _plotter.AddLineGraph(dataSource, new Pen(randomBrush(), 2), new CirclePointMarker { Size = 5, Fill = Brushes.Red }, new PenDescription("High Limit"));
-            GraphsCollection.Add(graph);
+            return "Graph " + graphNumber++;
         }
 
         /// <summary>
@@ -98,7 +107,7 @@ namespace USBTetminal2.Graphs
         /// <param name="saturation">From 0 to 1</param>
         /// <param name="value">From 0 to 1</param>
         /// <returns></returns>
-        public static Color ColorFromHSV(double hue, double saturation, double value)
+        public Color ColorFromHSV(double hue, double saturation, double value)
         {
             int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
             double f = hue / 60 - Math.Floor(hue / 60);
