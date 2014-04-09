@@ -38,8 +38,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\USBTerminal\USBTerminal\Libs\DynamicDataDisplay.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Graph, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.0\Libraries\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -57,6 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Console\ConsoleWindow.xaml.cs">
+      <DependentUpon>ConsoleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Console\ConsoleWindowViewModel.cs" />
     <Compile Include="Controls\Legend\LegendListView.xaml.cs">
       <DependentUpon>LegendListView.xaml</DependentUpon>
     </Compile>
@@ -85,9 +99,14 @@
     <Compile Include="Utils\CommonBroadcastTypes.cs" />
     <Compile Include="Utils\DataConverter.cs" />
     <Compile Include="Graphs\MyExtensions.cs" />
+    <Compile Include="Utils\ExcelHelper.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\VisibilityToCheckedConverter.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Page Include="Controls\Console\ConsoleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Legend\LegendListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

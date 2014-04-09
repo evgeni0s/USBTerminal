@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:dict="clr-namespace:USBTetminal2"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         MinHeight="20"
         BorderBrush="#4F6FFF"
         BorderThickness="1,1,4,4"
@@ -38,7 +39,12 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="0,2">
+                    <Grid Margin="0,2" Background="#00AAAAAA">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{x:Static commands:CustomCommands.LoadDataToGrid}" CommandParameter="{Binding GraphPoints}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <Grid.RowDefinitions>
                             <RowDefinition />
                         </Grid.RowDefinitions>

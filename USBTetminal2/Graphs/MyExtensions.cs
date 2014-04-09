@@ -1,4 +1,5 @@
-﻿using Microsoft.Research.DynamicDataDisplay.DataSources;
+﻿using Microsoft.Research.DynamicDataDisplay;
+using Microsoft.Research.DynamicDataDisplay.DataSources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,11 @@ namespace USBTetminal2.Graphs
             yData.SetYMapping(y => y);
             result = xData.Join(yData);
             return result;
+        }
+
+        public static EnumerableDataSource<Point> GetPoints(this ChartPlotter plotter, LineGraph graph)
+        {
+            return (EnumerableDataSource<Point>)graph.DataSource;
         }
     }
 }

@@ -2,6 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="SettingsDialog" Height="300" Width="300">
+    <!--Диалог может быть таким
+    http://stackoverflow.com/questions/6351612/wpf-mvvm-modal-overlay-dialog-only-over-a-view-not-window
+    ...серым модальным-->
     <Grid>
         
     </Grid>

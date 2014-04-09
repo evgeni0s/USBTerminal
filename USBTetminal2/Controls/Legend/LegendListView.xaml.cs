@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Research.DynamicDataDisplay;
+using USBTetminal2.Commands;
 
 namespace USBTetminal2.Controls.Legend
 {
@@ -126,7 +127,10 @@ namespace USBTetminal2.Controls.Legend
           //  Visibility = System.Windows.Visibility.Collapsed;
         }
 
-
+        //private void onLegendClicked(object sender, MouseButtonEventArgs e)
+        //{
+        //    CustomCommands.LoadDataToGrid.Execute(((FrameworkElement)sender).DataContext, App.Current.MainWindow);
+        //}
 
     }
 }

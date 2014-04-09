@@ -252,6 +252,9 @@ namespace USBTetminal2.Graphs
         #endregion
 
 
+
+
+
         #region for debug only
         private void showPoints(object data)
         {

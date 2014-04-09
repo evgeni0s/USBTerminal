@@ -18,6 +18,7 @@ using USBTetminal2.Controls.Legend;
 using USBTetminal2.Graphs;
 using USBTetminal2.Protocol;
 using Microsoft.Research.DynamicDataDisplay;
+using Microsoft.Research.DynamicDataDisplay.DataSources;
 
 namespace USBTetminal2
 {
@@ -48,16 +49,6 @@ namespace USBTetminal2
 
 
         #region public properties
-        //public ObservableCollection<CLegendItemViewModel> LegendsList
-        //{
-        //    get
-        //    {
-        //        if (legendsList == null)
-        //            legendsList = new ObservableCollection<CLegendItemViewModel>();
-        //        return legendsList;
-        //    }
-        //    set { legendsList = value; }
-        //}
 
         public string ErrMSG
         {
@@ -86,7 +77,8 @@ namespace USBTetminal2
                 if (_selectedPort != null && _selectedPort.IsOpen)
                     _selectedPort.Close();
                 if (value != null && !value.IsOpen)
-                    value.Open();             //////FIX EXCEPTION!! Доступ к порту закрыт. Возникает если к порту подключена другая программа
+                        value.Open();
+                    //////FIX EXCEPTION!! Доступ к порту закрыт. Возникает если к порту подключена другая программа
                 RemoveListener(_selectedPort);
                 AddListener(value);
                 _selectedPort = value;
@@ -108,8 +100,24 @@ namespace USBTetminal2
             set
             {
                 _legendListViewModel = value;
+                OnPropertyChanged("LegendListDataContext");
             }
         }
+
+        //
+        public LegendListViewModel.LegendListItem LastSelectedLegend
+        {
+            get
+            {
+                return _lastSelectedLegend;
+            }
+            set
+            {
+                _lastSelectedLegend = value;
+
+            }
+        }
+
         #endregion
 
 
@@ -122,10 +130,6 @@ namespace USBTetminal2
         }
 
       
-
-
-
-
         private void initializeCommandBindings()
         {
             createCommandBinding(CustomCommands.Reset, onResetExecute, onResetCanExecute);
@@ -140,166 +144,41 @@ namespace USBTetminal2
             createCommandBinding(CustomCommands.RemoveGraph, onRemoveGraphLegend, onRemoveGraphCanExecute);
             createCommandBinding(CustomCommands.ChangeMarkersVisibility, onChangeMarkersVisibility, onChangeMarkersVisibilityCanExecute);
             createCommandBinding(CustomCommands.LegendContainerVisibility, onLegendContainerVisibility, onLegendContainerVisibilityCanExecute);
+            createCommandBinding(CustomCommands.ShowSettingsDialog, onShowSettingsDialog, onShowSettingsDialogCanExecute);
+            createCommandBinding(CustomCommands.LoadDataToGrid, onLoadDataToGrid, onLoadDataToGridCanExecute);
         }
 
-        #region LegendContainerVisibility
-        private void onLegendContainerVisibility(object sender, ExecutedRoutedEventArgs e)
+
+        #region LegendSelectedCommand
+        private void onLoadDataToGrid(object sender, ExecutedRoutedEventArgs e)
         {
-            CommonBroadcastType type = CommonBroadcastType.USER_CHANGED_LEGEND_CONTAINER_VISIBILITY;
-            NotifyAllBroadcastListeners(type, e.Parameter);
+            IEnumerable<IPointDataSource> rawData = (IEnumerable<IPointDataSource>)e.Parameter;
+            //Got 2 arrays here need to bind to Grid
         }
 
-        private void onLegendContainerVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void onLoadDataToGridCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            e.CanExecute = e.Parameter != null; // &e.Parameter.GetType() == typeof(IEnumerable<IPointDataSource>); unfortunatly GetType() says "runtime type" 
         }
         #endregion
 
 
 
 
-        #region ChangeMarkersVisibilityCommand
-        private void onChangeMarkersVisibility(object sender, ExecutedRoutedEventArgs e)
-        {
-            MessageBox.Show("Command: ChangeMarkersVisibility not implemented!");
-        }
-
-        private void onChangeMarkersVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-        #endregion
-
-        #region RemoveGraphCommand
-        private void onRemoveGraphLegend(object sender, ExecutedRoutedEventArgs e)
-        {
-            CommonBroadcastType type = CommonBroadcastType.DELETE_GRAPH;
-            NotifyAllBroadcastListeners(type, e.Parameter);
-        }
-
-        private void onRemoveGraphCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = e.Parameter != null;
-        }
-        #endregion
-
-        #region AddNewLegendCommand
-
-
-        private void onAddNewLegend(object sender, ExecutedRoutedEventArgs e)
-        {
-            CommonBroadcastType type = CommonBroadcastType.ADD_LEGEND_TO_GRAPH;
-            NotifyAllBroadcastListeners(type, e.Parameter);
-        }
-
-        private void onAddNewLegendCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = e.Parameter != null && e.Parameter.GetType() == typeof(LineAndMarker<MarkerPointsGraph>);
-        }
-        #endregion
-
-
-        #region PlotGraphCommand
-        private void onPlotGraph(object sender, ExecutedRoutedEventArgs e)
-        {
-
-            CommonBroadcastType type = CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS;
-            NotifyAllBroadcastListeners(type, e.Parameter);
-
-            //List<int> points = (List<int>)e.Parameter;
-            //if (points != null)
-            //{
- 
-            //}                                                                                                                                           
-        }
-
-        private void onPlotGraphCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = e.Parameter != null && e.Parameter.GetType() == typeof(List<int>);
-        }
-        #endregion
-
-
-
-        #region DataRecivedCommand
-
-        private void onDataRecived(object sender, ExecutedRoutedEventArgs e)
-        {
-            CommonBroadcastType type = CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE;
-
-            NotifyAllBroadcastListeners(type, SelectedPort.RecivedData);
-            //byte[] data = SelectedPort.RecivedData;
-           
-            //AbstractFrame frame = (AbstractFrame)getSelectedFrame(data[1]);
-            //bool frameIsCorrect = frame.tryPrase(data);
-            //if (frameIsCorrect)
-            //{
-            //    //Frame knows about what action is
-            //    frame.executeActionForThisFrame();
-            //}
-        }
-
-
-        //private AbstractFrame getSelectedFrame(byte commandType)
-        //{
-        //    switch (commandType)
-        //    {
-        //        case 6:
-        //            return new MeasurmentFrame();
-        //        default: 
-        //            return new TestFrame();
-        //    }
-
-        //}
-
-        //LineGraph mGraph;
-        //private void plotGraph(CompositeDataSource dataSource)
-        //{
-        //    mGraph = new LineGraph();
-        //    mGraph.DataSource = dataSource;
-        //    //Binding binding = new Binding();
-        //    //binding.Path = new PropertyPath("TimeData");
-        //    //binding.Source = tableData;
-        //    //binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-        //    //BindingOperations.SetBinding(mGraph, LineGraph.DataSourceProperty, binding);
-        //    //Add checkBox
-        //    LineLegendItem legendItem = (LineLegendItem)mGraph.Description.LegendItem;
-        //    DataTemplate legendItemNewTemplate = FindResource("legendTemplate") as DataTemplate;
-        //    legendItem.ContentTemplate = legendItemNewTemplate;
-
-        //    mPlotter.Children.Add(mGraph);
-        //}
-
-        private void onDataRecivedCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = e.Parameter != null && SelectedPort.RecivedData.Length > 2;//2 - second byte and points to frame type
-        }
-
-        #endregion
-
-
-        #region commands
-        //ICommand m_removeLegendCommand;
-        //public ICommand RemoveLegendCommand
-        //{
-        //    get
-        //    {
-        //        if (m_removeLegendCommand == null)
-        //        {
-        //            m_removeLegendCommand = new RelayCommand(
-        //                (param) => RemoveLegend(param));
-        //        }
-        //        return m_removeLegendCommand;
-        //    }
-        //}
-
-        //private void RemoveLegend(object param)
-        //{
-
-        //}
-        #endregion
 
         #region Command Implementation
+
+        #region ShowSettingsCommand
+        private void onShowSettingsDialog(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("ShowSettingsDialog is not implemented");
+        }
+
+        private void onShowSettingsDialogCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
 
         #region ConnectCommand
 
@@ -399,6 +278,89 @@ namespace USBTetminal2
         }
         #endregion
 
+        #region LegendContainerVisibility
+        private void onLegendContainerVisibility(object sender, ExecutedRoutedEventArgs e)
+        {
+            CommonBroadcastType type = CommonBroadcastType.USER_CHANGED_LEGEND_CONTAINER_VISIBILITY;
+            NotifyAllBroadcastListeners(type, e.Parameter);
+        }
+
+        private void onLegendContainerVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
+
+        #region ChangeMarkersVisibilityCommand
+        private void onChangeMarkersVisibility(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("Command: ChangeMarkersVisibility not implemented!");
+        }
+
+        private void onChangeMarkersVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
+
+        #region RemoveGraphCommand
+        private void onRemoveGraphLegend(object sender, ExecutedRoutedEventArgs e)
+        {
+            CommonBroadcastType type = CommonBroadcastType.DELETE_GRAPH;
+            NotifyAllBroadcastListeners(type, e.Parameter);
+        }
+
+        private void onRemoveGraphCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Parameter != null;
+        }
+        #endregion
+
+        #region AddNewLegendCommand
+
+
+        private void onAddNewLegend(object sender, ExecutedRoutedEventArgs e)
+        {
+            CommonBroadcastType type = CommonBroadcastType.ADD_LEGEND_TO_GRAPH;
+            NotifyAllBroadcastListeners(type, e.Parameter);
+        }
+
+        private void onAddNewLegendCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Parameter != null && e.Parameter.GetType() == typeof(LineAndMarker<MarkerPointsGraph>);
+        }
+        #endregion
+
+        #region PlotGraphCommand
+        private void onPlotGraph(object sender, ExecutedRoutedEventArgs e)
+        {
+
+            CommonBroadcastType type = CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS;
+            NotifyAllBroadcastListeners(type, e.Parameter);                                                                                                                                     
+        }
+
+        private void onPlotGraphCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Parameter != null && e.Parameter.GetType() == typeof(List<int>);
+        }
+        #endregion
+
+        #region DataRecivedCommand
+
+        private void onDataRecived(object sender, ExecutedRoutedEventArgs e)
+        {
+            CommonBroadcastType type = CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE;
+            NotifyAllBroadcastListeners(type, SelectedPort.RecivedData);
+        }
+
+
+        private void onDataRecivedCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Parameter != null && SelectedPort.RecivedData.Length > 2;//2 - second byte and points to frame type
+        }
+
+        #endregion
+
         protected void createCommandBinding(ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute)
         {
             var binding = new CommandBinding(command, executed, canExecute);
@@ -406,6 +368,27 @@ namespace USBTetminal2
         }
         #endregion
 
+        #region simple broadcast 
+        private List<ISimpleBroadcastListener> broadCastSubscribers = new List<ISimpleBroadcastListener>();
+        private LegendListViewModel.LegendListItem _lastSelectedLegend;
+        private void AddListener(ISimpleBroadcastListener listener)
+        {
+            broadCastSubscribers.Add(listener);
+        }
+        private void RemoveListener(ISimpleBroadcastListener listener)
+        {
+            if (broadCastSubscribers.Contains(listener))
+                broadCastSubscribers.Remove(listener);
+        }
+        private void NotifyAllBroadcastListeners(CommonBroadcastType msgType, object data)
+        {
+            foreach (ISimpleBroadcastListener listener in broadCastSubscribers)
+            {
+                listener.ReciveMessage(msgType, data);
+            }
+        }
+
+        #endregion
 
         #region for debug only
         /// <summary>
@@ -432,28 +415,6 @@ namespace USBTetminal2
             }
 
         }
-
-
-        private List<ISimpleBroadcastListener> broadCastSubscribers  = new List<ISimpleBroadcastListener>();
-        private void AddListener(ISimpleBroadcastListener listener)
-        {
-            broadCastSubscribers.Add(listener);
-        }
-        private void RemoveListener(ISimpleBroadcastListener listener)
-        {
-            if (broadCastSubscribers.Contains(listener))
-            broadCastSubscribers.Remove(listener);
-        }
-        private void NotifyAllBroadcastListeners(CommonBroadcastType msgType, object data)
-        {
-            foreach(ISimpleBroadcastListener listener in broadCastSubscribers)
-            {
-                listener.ReciveMessage(msgType, data);
-            }
-        }
-
-      
-
         #endregion
     }
 }

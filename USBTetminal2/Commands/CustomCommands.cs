@@ -7,6 +7,7 @@ using System.Windows.Input;
 
 namespace USBTetminal2.Commands
 {
+    //Note: need to write util for adding and removeing commands automatically
     static class CustomCommands
     {
         static CustomCommands()
@@ -23,12 +24,18 @@ namespace USBTetminal2.Commands
             initializeAddNewLegend();
             initializeRemoveGraph();
             initializeChangeMarkersVisibility();
-            initializeShowSetingsDialog();
+            initializeShowSettingsDialog();
+            initializeLoadDataToGrid();
         }
 
-        private static void initializeShowSetingsDialog()
+        private static void initializeLoadDataToGrid()
         {
-            _showSetingsDialogCommand = new RoutedCommand("ShowSetingsDialog", typeof(CustomCommands));
+            _loadDataToGridCommand = new RoutedCommand("LoadDataToGrid", typeof(CustomCommands));
+        }
+
+        private static void initializeShowSettingsDialog()
+        {
+            _showSettingsDialogCommand = new RoutedCommand("ShowSettingsDialog", typeof(CustomCommands));
         }
 
         private static void initializeChangeMarkersVisibility()
@@ -91,8 +98,6 @@ namespace USBTetminal2.Commands
             _plotGraphCommand = new RoutedCommand("PlotGraph", typeof(CustomCommands));
         }
 
-
-
         public static RoutedCommand AddNewLegend
         {
             get { return CustomCommands._addNewLegendCommand; }
@@ -153,11 +158,15 @@ namespace USBTetminal2.Commands
             get { return CustomCommands._changeMarkersVisibilityCommand; }
         }
 
-        public static RoutedCommand ShowSetingsDialogCommand
+        public static RoutedCommand ShowSettingsDialog
         {
-            get { return CustomCommands._showSetingsDialogCommand; }
+            get { return CustomCommands._showSettingsDialogCommand; }
         }
 
+        public static RoutedCommand LoadDataToGrid
+        {
+            get { return CustomCommands._loadDataToGridCommand; }
+        }
 
         static RoutedCommand _showLegend;
         static RoutedCommand _resetCommand;
@@ -168,11 +177,11 @@ namespace USBTetminal2.Commands
         static RoutedCommand _errorReportCommand;
         static RoutedCommand _dataRecivedCommand;
         static RoutedCommand _plotGraphCommand;
-        private static RoutedCommand _addNewLegendCommand;
-
-        public static RoutedCommand _removeGraphCommand;
-        private static RoutedCommand _changeMarkersVisibilityCommand;
-        private static RoutedCommand _showSetingsDialogCommand;
+        static RoutedCommand _addNewLegendCommand;
+        static RoutedCommand _removeGraphCommand;
+        static RoutedCommand _changeMarkersVisibilityCommand;
+        static RoutedCommand _showSettingsDialogCommand;
+        static RoutedCommand _loadDataToGridCommand;
         
     }
 }

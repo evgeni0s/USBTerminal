@@ -11,6 +11,8 @@ using System.Windows.Media;
 using System.Windows.Input;
 using USBTetminal2.Commands;
 using System.Windows;
+using System.Windows.Controls;
+using Microsoft.Research.DynamicDataDisplay.DataSources;
 
 namespace USBTetminal2.Controls.Legend
 {
@@ -78,6 +80,15 @@ namespace USBTetminal2.Controls.Legend
                 get
                 {
                     return _graph;
+                }
+            }
+
+            public IEnumerable<IPointDataSource> GraphPoints
+            {
+                get
+                {
+                   CompositeDataSource rawData = (CompositeDataSource)_graph.LineGraph.DataSource;
+                   return rawData.DataParts;
                 }
             }
         }
