@@ -41,16 +41,16 @@
         </Button>
 
 
-        <DataGrid x:Name="mGrid"  ItemsSource="{Binding MyList}" Grid.Row="2" AutoGenerateColumns="False" Background="Transparent" Width="Auto">
+        <DataGrid x:Name="mGrid"  ItemsSource="{Binding GraphData}" Grid.Row="2" AutoGenerateColumns="False" Background="Transparent" Width="Auto">
             <DataGrid.Columns>
 
-                <DataGridTextColumn Header="Keys" IsReadOnly="True" Binding="{Binding Path=Item1}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Values" IsReadOnly="True" Binding="{Binding Path=Item2}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Keys" IsReadOnly="True" Binding="{Binding Path=X}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Values" IsReadOnly="True" Binding="{Binding Path=Y}"></DataGridTextColumn>
             </DataGrid.Columns>
 
         </DataGrid>
 
-        <TextBox x:Name="console" Grid.Row="3" Text="{Binding ErrMSG}" TextWrapping="Wrap" AcceptsReturn="True"/>
+        <TextBox x:Name="console" Grid.Row="3" Height="200" VerticalAlignment="Bottom" Text="{Binding ErrMSG}" TextWrapping="Wrap" AcceptsReturn="True"/>
         <TextBox x:Name="portName" x:FieldModifier="public" Grid.Row="3" Text="COM6" TextWrapping="Wrap" AcceptsReturn="True" Background="Red" Foreground="White" FontSize="18" Height="36" Width="100" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
         <Button Click="onSetPort" Grid.Row="3" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="50">Set</Button>
 

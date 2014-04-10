@@ -83,12 +83,12 @@ namespace USBTetminal2.Controls.Legend
                 }
             }
 
-            public IEnumerable<IPointDataSource> GraphPoints
+            public CompositeDataSource GraphPoints
             {
                 get
                 {
                    CompositeDataSource rawData = (CompositeDataSource)_graph.LineGraph.DataSource;
-                   return rawData.DataParts;
+                   return rawData;
                 }
             }
         }

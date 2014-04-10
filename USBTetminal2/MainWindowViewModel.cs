@@ -30,6 +30,9 @@ namespace USBTetminal2
         private CustomSerialPort _selectedPort;
         private ChartPlotter _plotter;
         private LegendListViewModel _legendListViewModel;
+        private ObservableCollection<Point> _graphData;
+
+
         private string errMSG;
         MainWindow _mainWindow;
         #endregion
@@ -41,7 +44,6 @@ namespace USBTetminal2
 
             initializeCommandBindings();
             initPseudoBroadCast();
-
         }
 
 
@@ -104,7 +106,7 @@ namespace USBTetminal2
             }
         }
 
-        //
+        //not used for now
         public LegendListViewModel.LegendListItem LastSelectedLegend
         {
             get
@@ -117,6 +119,41 @@ namespace USBTetminal2
 
             }
         }
+
+        public ObservableCollection<Point> GraphData
+        {
+            get 
+            {
+                if (_graphData == null)
+                    return new ObservableCollection<Point>();
+                return  _graphData; 
+            }
+            set 
+            { 
+                _graphData = value;
+                OnPropertyChanged("GraphData");
+            }
+        }
+
+        //public EnumerableDataSource<double> XValues
+        //{
+        //    get
+        //    {
+        //        if (_rawData == null)
+        //            return new EnumerableDataSource<double>(new double[]{0});
+        //        return _rawData.DataParts.ElementAt(0) as EnumerableDataSource<double>;
+        //    }
+        //}
+
+        //public EnumerableDataSource<double> YValues
+        //{
+        //    get
+        //    {
+        //        if (_rawData == null || _rawData.DataParts.Count() < 1)
+        //            return new EnumerableDataSource<double>(new double[] { 0 });
+        //        return _rawData.DataParts.ElementAt(1) as EnumerableDataSource<double>;
+        //    }
+        //}
 
         #endregion
 
@@ -152,7 +189,14 @@ namespace USBTetminal2
         #region LegendSelectedCommand
         private void onLoadDataToGrid(object sender, ExecutedRoutedEventArgs e)
         {
-            IEnumerable<IPointDataSource> rawData = (IEnumerable<IPointDataSource>)e.Parameter;
+            CompositeDataSource dataSource = (CompositeDataSource)e.Parameter;
+            GraphData = new ObservableCollection<Point>(dataSource.GetPoints());
+            OnPropertyChanged("GraphData");
+
+           //EnumerableDataSource<double> test =  _rawData.DataParts.ElementAt(1) as EnumerableDataSource<double>;
+            //var someValues = _rawData.GetPoints();
+            //var someValues1 = _rawData.DataParts.ElementAt(0).GetPoints();
+            //var someValues2 = _rawData.DataParts.ElementAt(1).GetPoints();
             //Got 2 arrays here need to bind to Grid
         }
 
