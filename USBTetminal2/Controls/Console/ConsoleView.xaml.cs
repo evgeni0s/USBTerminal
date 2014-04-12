@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace USBTetminal2.Controls.Console
+namespace USBTetminal2.Controls
 {
     /// <summary>
-    /// Interaction logic for ConsoleWindow.xaml
+    /// Interaction logic for ConsoleView.xaml
     /// </summary>
-    public partial class ConsoleWindow : Window
+    public partial class ConsoleView : UserControl
     {
-        public ConsoleWindow()
+        public ConsoleView()
         {
             InitializeComponent();
         }

@@ -72,7 +72,7 @@ namespace USBTetminal2
 
         private void onSetPort(object sender, RoutedEventArgs e)
         {
-            CustomCommands.Connect.Execute(portName.Text, null);
+          //  CustomCommands.Connect.Execute(portName.Text, null);
         }
 
         //FOR DEBUG ONLY

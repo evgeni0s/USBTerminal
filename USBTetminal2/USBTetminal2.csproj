@@ -67,10 +67,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Console\ConsoleWindow.xaml.cs">
-      <DependentUpon>ConsoleWindow.xaml</DependentUpon>
+    <Compile Include="Controls\Console\ConsoleView.xaml.cs">
+      <DependentUpon>ConsoleView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Console\ConsoleWindowViewModel.cs" />
+    <Compile Include="Controls\Console\CustomRichTextBox.xaml.cs">
+      <DependentUpon>CustomRichTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Console\CustomRun.cs" />
     <Compile Include="Controls\Legend\LegendListView.xaml.cs">
       <DependentUpon>LegendListView.xaml</DependentUpon>
     </Compile>
@@ -87,6 +90,7 @@
     <Compile Include="CustomSerialPort.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Graphs\GraphAxisHelper.cs" />
     <Compile Include="Graphs\GraphsManager.cs" />
     <Compile Include="ISimpleBroadcast.cs" />
     <Compile Include="MainWindowViewModel.cs" />
@@ -103,7 +107,11 @@
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\VisibilityToCheckedConverter.cs" />
     <Compile Include="ViewModelBase.cs" />
-    <Page Include="Controls\Console\ConsoleWindow.xaml">
+    <Page Include="Controls\Console\ConsoleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Console\CustomRichTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

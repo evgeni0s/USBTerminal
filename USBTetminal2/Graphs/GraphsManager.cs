@@ -24,13 +24,18 @@ namespace USBTetminal2.Graphs
     {
         List<LineAndMarker<MarkerPointsGraph>> GraphsCollection = new List<LineAndMarker<MarkerPointsGraph>>();
         ChartPlotter _plotter;
-        Random hue = new Random(255); //Part of HSV spectrum
+        Random hue = new Random(255); //Part of HSV spectrum 
+        const Visibility DEFAULT_MARKER_VILIBILITY = Visibility.Collapsed;
         public GraphsManager(ChartPlotter plotter)
         {
             _plotter = plotter;
+
+            _plotter.DefaultSettings();
             hideDefaultLegend();//Disabled default ledend so that I could use my custom
             
         }
+
+
 
 
         public void ReciveMessage(CommonBroadcastType smgType, object data)
@@ -153,6 +158,7 @@ namespace USBTetminal2.Graphs
             //Dymamic Data  Dispaly works with this source
             CompositeDataSource dataSource = xPoints.ToChartDataSource(yPoints);
             var graph = _plotter.AddLineGraph(dataSource, new Pen(randomBrush(), 2), new CirclePointMarker { Size = 5, Fill = Brushes.Red }, new PenDescription(getRandomName()));
+            graph.MarkerGraph.Visibility = DEFAULT_MARKER_VILIBILITY;
             GraphsCollection.Add(graph);
             CustomCommands.AddNewLegend.Execute(graph, App.Current.MainWindow);
         }

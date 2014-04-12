@@ -1,0 +1,177 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace USBTetminal2.Controls
+{
+    /// <summary>
+    /// Best solution so far for managing complex text functionality is 
+    /// RichTextBox with Inlines. Inlines accept text formating and event handling
+    /// Inlines cannot be declared outside RTB
+    /// 
+    /// RTB has no properties which I could use for binding
+    /// 
+    /// Small hack to bring RTB into life
+    /// http://stackoverflow.com/questions/1053533/how-can-i-prevent-input-controls-from-stealing-the-space-character-from-the-text/1509554#1509554?newreg=4c844a22811d4f01a0a1119e72fe8e69
+    /// </summary>
+    public partial class CustomRichTextBox : RichTextBox
+    {
+        private List<Key> keysRequireFix = new List<Key>() { Key.Space, Key.Enter, Key.Back, Key.Delete };
+
+        public CustomRichTextBox()
+        {
+            InitializeComponent(); 
+        }
+
+
+        #region processing key inputs
+        private void screwManualTextInput()
+        {
+            // this is where we handle the space and other keys wpf f*s up.
+            System.Windows.Input.InputManager.Current.PreNotifyInput +=
+                new NotifyInputEventHandler(PreNotifyInput);
+            // This is where we handle all the rest of the keys
+            TextCompositionManager.AddPreviewTextInputStartHandler(
+                Application.Current.MainWindow,
+                PreviewTextInputHandler);                                          ///OnPreviewKeyDown
+        }
+
+        private void PreNotifyInput(object sender, NotifyInputEventArgs e)
+        {
+            // I'm only interested in key down events
+            if (e.StagingItem.Input.RoutedEvent != Keyboard.KeyDownEvent)
+                return;
+            var args = e.StagingItem.Input as KeyEventArgs;
+            // I only care about the space key being pressed
+            // you might have to check for other characters
+            if (args == null || !keysRequireFix.Any(k => k == args.Key))
+                return;
+            // stop event processing here
+            args.Handled = true;
+            // this is my internal method for handling a keystroke
+            if (args.Key == Key.Space)
+                HanleKeystroke(" ");
+            else
+                HandleKeyAction(args.Key);
+        }
+
+        private void PreviewTextInputHandler(object sender, TextCompositionEventArgs e)
+        {
+            HanleKeystroke(e.Text);
+        }
+
+        //Sends text to inputField
+        private void HanleKeystroke(string p)
+        {
+            if (getPositionType(inputField) == CuretPositionType.Outside)
+                CaretPosition = inputField.ContentEnd;
+            CaretPosition.InsertTextInRun(p);
+        }
+
+
+        //Sends actions to inputField
+        private void HandleKeyAction(Key action)
+        {
+            switch (action)
+            {
+                case Key.Enter:
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                        CaretPosition.InsertTextInRun(Environment.NewLine);
+                    else
+                    addToReadonly();
+                    break;
+                case Key.Back:
+                    if (getPositionType(inputField) != CuretPositionType.Outside)
+                    {
+                        CaretPosition.DeleteTextInRun(1);
+                    }
+                    break;
+                case Key.Delete:
+
+                    break;
+            }
+        }
+        #endregion
+
+        //protected override void OnPreviewKeyDown(KeyEventArgs e)
+        //{
+        //    base.OnPreviewKeyDown(e);
+        //   // if (getPositionType(inputField != ))
+        //   // inputField.ManualPreviewKeyDown(e);
+        //    //  e.Handled = true;
+        //    // inputField
+        //}
+
+        #region action methods
+
+        private void addToReadonly()
+        {
+            Run run = inputField.getCopy(getNextStyle());
+            readOnlyItems.Inlines.Add(run);
+            inputField.Text = "";
+            ScrollToEnd();
+        }
+
+        #endregion
+
+        #region Tools
+        CustomRun.CustomType previousStyle = CustomRun.CustomType.Red;
+        private CustomRun.CustomType getNextStyle()
+        {
+            if (previousStyle == CustomRun.CustomType.Blue)
+            {
+                previousStyle = CustomRun.CustomType.Red;
+            }
+            else
+            {
+                previousStyle = CustomRun.CustomType.Blue;
+            }
+            return previousStyle;
+        }
+
+
+        private enum CuretPositionType
+        {
+            Start,
+            End,
+            Middle,
+            Outside
+        }
+
+        private CuretPositionType getPositionType(Run relativeTarget)
+        {
+            //     1  |   cursor   |  -1
+            //     cursor == start  -> start == 0  end == 1
+            //     cursor == end    -> start == 1  end == 0
+            int start = CaretPosition.CompareTo(relativeTarget.ContentStart);
+            int end = CaretPosition.CompareTo(relativeTarget.ContentEnd);
+            if (start == 1 && end == -1)
+                return CuretPositionType.Middle;
+            if (start == 0)
+                return CuretPositionType.Start;
+            if (end == 0)
+                return CuretPositionType.End;
+            return CuretPositionType.Outside;
+        }
+        #endregion
+
+
+        private void onLoaded(object sender, RoutedEventArgs e)
+        {
+
+            screwManualTextInput();
+        }
+
+    }
+}
