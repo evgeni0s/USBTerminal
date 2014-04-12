@@ -33,7 +33,7 @@ namespace USBTetminal2
         private Color[] LogMsgTypeColor = { Colors.Blue, Colors.Green, Colors.Black, Colors.Orange, Colors.Red };
 
         // Temp holder for whether a key was pressed
-        private bool KeyHandled = false;
+      //  private bool KeyHandled = false;
 
         private Settings settings = Settings.Default;
         #endregion

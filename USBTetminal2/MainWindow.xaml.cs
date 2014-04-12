@@ -15,13 +15,14 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using USBTetminal2.Commands;
 using USBTetminal2.Protocol;
+using MahApps.Metro.Controls;
 
 namespace USBTetminal2
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
 
 
@@ -30,7 +31,9 @@ namespace USBTetminal2
             InitializeComponent();
             DataContext = new MainWindowViewModel();
 
-            Title = "Terminal window. " + Thread.CurrentThread.ManagedThreadId;
+           // Title = "Terminal window. ";
+
+            
             //mPlotter.CopyScreenshotToClipboard // Can be usefull
             
 

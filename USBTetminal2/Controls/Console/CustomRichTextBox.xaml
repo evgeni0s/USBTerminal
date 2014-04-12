@@ -4,16 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:customRun ="clr-namespace:USBTetminal2.Controls"
+             Background="Black"
+             SelectionBrush="White"
              IsReadOnlyCaretVisible="True"
              IsReadOnly="True"
              mc:Ignorable="d" 
              Loaded="onLoaded"
+             PreviewMouseRightButtonDown="onPreviewMouseRightButtonDown"
              d:DesignHeight="300" d:DesignWidth="300">
     <FlowDocument>
-        <Paragraph x:Name="readOnlyItems" >
+        <Paragraph x:Name="readOnlyItems"  >
         </Paragraph>
         <Paragraph>
-            <customRun:CustomRun x:Name="inputField" Text="I am editable" Foreground="LimeGreen" />
+            <customRun:CustomRun x:Name="inputField" Text="I am editable" Foreground="LimeGreen" FontWeight="Bold" FontSize="13"/>
         </Paragraph>
     </FlowDocument>
 </RichTextBox>

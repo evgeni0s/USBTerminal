@@ -95,7 +95,10 @@ namespace USBTetminal2.Graphs
 
                 return newVisible;
             }
+
+#pragma warning disable 67
             public event EventHandler Changed;
+#pragma warning restore 67
         }
 
 

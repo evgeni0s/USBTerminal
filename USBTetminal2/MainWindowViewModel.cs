@@ -19,6 +19,8 @@ using USBTetminal2.Graphs;
 using USBTetminal2.Protocol;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
+using USBTetminal2.Controls;
+using USBTetminal2.Controls.Settings;
 
 namespace USBTetminal2
 {
@@ -31,7 +33,10 @@ namespace USBTetminal2
         private ChartPlotter _plotter;
         private LegendListViewModel _legendListViewModel;
         private ObservableCollection<Point> _graphData;
-
+        private ConsoleView _consoleView;
+        private SettingsView _settingsView;
+        private bool _isConsoleVisible;
+        private object _rightPanel;
 
         private string errMSG;
         MainWindow _mainWindow;
@@ -135,28 +140,67 @@ namespace USBTetminal2
             }
         }
 
-        //public EnumerableDataSource<double> XValues
-        //{
-        //    get
-        //    {
-        //        if (_rawData == null)
-        //            return new EnumerableDataSource<double>(new double[]{0});
-        //        return _rawData.DataParts.ElementAt(0) as EnumerableDataSource<double>;
-        //    }
-        //}
+        public bool IsConsoleVisible
+        {
+            get 
+            {
+                return _isConsoleVisible;
+            }
+            set
+            {
+                _isConsoleVisible = value;
+                OnPropertyChanged("IsConsoleVisible");
+            }
+        }
 
-        //public EnumerableDataSource<double> YValues
-        //{
-        //    get
-        //    {
-        //        if (_rawData == null || _rawData.DataParts.Count() < 1)
-        //            return new EnumerableDataSource<double>(new double[] { 0 });
-        //        return _rawData.DataParts.ElementAt(1) as EnumerableDataSource<double>;
-        //    }
-        //}
+        public double ConsoleWidth
+        {
+            get { return 150d; }
+        }
+        //Need to export this to XAML container
+        public object RightPanel
+        {
+            get
+            {
+                if (_rightPanel == null)
+                    _rightPanel = new object();
+                return _rightPanel;
+            }
+            set 
+            {
+                _rightPanel = value;
+                OnPropertyChanged("RightPanel");
+            }
+        }
 
         #endregion
 
+        #region private properties
+        //Temporary
+        public ConsoleView Console
+        {
+            get
+            {
+                if (_consoleView == null)
+                {
+                    _consoleView = new ConsoleView();
+                }
+                return _consoleView;
+            }
+        }
+        //Temporary
+        public SettingsView Settings
+        {
+            get
+            {
+                if (_settingsView == null)
+                {
+                    _settingsView = new SettingsView();
+                }
+                return _settingsView;
+            }
+        }
+        #endregion
 
         private void initPseudoBroadCast()
         {
@@ -183,8 +227,22 @@ namespace USBTetminal2
             createCommandBinding(CustomCommands.LegendContainerVisibility, onLegendContainerVisibility, onLegendContainerVisibilityCanExecute);
             createCommandBinding(CustomCommands.ShowSettingsDialog, onShowSettingsDialog, onShowSettingsDialogCanExecute);
             createCommandBinding(CustomCommands.LoadDataToGrid, onLoadDataToGrid, onLoadDataToGridCanExecute);
+            createCommandBinding(CustomCommands.ConsoleVisibility, onConsoleVisibility, onConsoleVisibilityCanExecute);
         }
 
+        #region ConsoleVisibilityCommand
+        private void onConsoleVisibility(object sender, ExecutedRoutedEventArgs e)
+        {
+            IsConsoleVisible = !IsConsoleVisible;
+            if (RightPanel.GetType() != typeof(ConsoleView))
+            RightPanel = Console;
+        }
+        private void onConsoleVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        #endregion
 
         #region LegendSelectedCommand
         private void onLoadDataToGrid(object sender, ExecutedRoutedEventArgs e)

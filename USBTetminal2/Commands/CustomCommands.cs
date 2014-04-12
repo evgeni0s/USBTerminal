@@ -13,19 +13,30 @@ namespace USBTetminal2.Commands
         static CustomCommands()
         {
             initializeShowLegendCommand();
-            initializeShowPoints();
-            initializeReset();
-            initializeRemoveLegendCommand();
             initializeLegendContainerVisibilityCommand();
-            initializeConnectCommand();
-            initializeErrorReport();
-            initializeDataRecived();
-            initializePlotGraph();
             initializeAddNewLegend();
+            initializeRemoveLegendCommand();
+
+            initializeShowPoints();
+            initializePlotGraph();
             initializeRemoveGraph();
+
             initializeChangeMarkersVisibility();
             initializeShowSettingsDialog();
+            initializeConsoleVisibility();
             initializeLoadDataToGrid();
+
+            initializeDataRecived();
+
+            initializeReset();
+            initializeConnectCommand();
+            initializeErrorReport();
+
+        }
+
+        private static void initializeConsoleVisibility()
+        {
+            _consoleVisibilityCommand = new RoutedCommand("ConsoleVisibility", typeof(CustomCommands));
         }
 
         private static void initializeLoadDataToGrid()
@@ -168,6 +179,10 @@ namespace USBTetminal2.Commands
             get { return CustomCommands._loadDataToGridCommand; }
         }
 
+        public static RoutedCommand ConsoleVisibility
+        {
+            get { return CustomCommands._consoleVisibilityCommand; }
+        }
         static RoutedCommand _showLegend;
         static RoutedCommand _resetCommand;
         static RoutedCommand _showPointsCommand;
@@ -182,6 +197,6 @@ namespace USBTetminal2.Commands
         static RoutedCommand _changeMarkersVisibilityCommand;
         static RoutedCommand _showSettingsDialogCommand;
         static RoutedCommand _loadDataToGridCommand;
-        
+        static RoutedCommand _consoleVisibilityCommand;
     }
 }

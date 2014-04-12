@@ -20,7 +20,8 @@
                 <Button Width="60" Height="35" Content="LEGEND" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.LegendContainerVisibility}"/>
                 <Button Width="60" Height="35" Margin="15,0,0,0" Content="POINTS" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}"/>
                 <Button Width="60" Height="35" Margin="15,0,0,0" Content="RESET" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}"/>
-                <Button Width="60" Height="35" Margin="15,0,0,0" Content="SETTINGS" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}"/>
+                <Button Width="60" Height="35" Margin="15,0,0,0" Content="SETTINGS" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowSettingsDialog}"/>
+                <Button Width="60" Height="35" Margin="15,0,0,0" Content="CONSOLE" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ConsoleVisibility}"/>
             </StackPanel>
         </Grid>
 

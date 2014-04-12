@@ -71,12 +71,25 @@ namespace USBTetminal2.Controls
             HanleKeystroke(e.Text);
         }
 
-        //Sends text to inputField
+        //Sends text from KEYBOARD to inputField. DO NOT USE FOR OTHER PURPOSES!!!
         private void HanleKeystroke(string p)
         {
             if (getPositionType(inputField) == CuretPositionType.Outside)
                 CaretPosition = inputField.ContentEnd;
+
+
+           // CaretPosition.InsertTextInRun(p);//Inserting text. Works but has issues with <- and -> . Acts Whiered
+          //  CaretPosition.GetInsertionPosition(LogicalDirection.Backward).InsertTextInRun(p);
+           // ScrollToEnd();
+
+            //THIS CODE IS STABLE!!!!
+            //http://www.java2s.com/Tutorial/CSharp/0470__Windows-Presentation-Foundation/ProgrammaticallyInsertTextintoaRichTextBox.htm
+            TextPointer tp = CaretPosition.GetPositionAtOffset(0, LogicalDirection.Forward);
             CaretPosition.InsertTextInRun(p);
+            CaretPosition = tp;
+            //STABLE REGION ENDS!
+
+            ScrollToEnd();
         }
 
 
@@ -88,17 +101,25 @@ namespace USBTetminal2.Controls
                 case Key.Enter:
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                         CaretPosition.InsertTextInRun(Environment.NewLine);
+                       // CaretPosition.InsertLineBreak();
                     else
                     addToReadonly();
                     break;
                 case Key.Back:
                     if (getPositionType(inputField) != CuretPositionType.Outside)
                     {
-                        CaretPosition.DeleteTextInRun(1);
+                        TextPointer tp = CaretPosition.GetPositionAtOffset(-1, LogicalDirection.Backward);
+                        tp.DeleteTextInRun(1);
+                       // CaretPosition.DeleteTextInRun(1);
+                       // CaretPosition = tp;
+                        //CaretPosition.GetInsertionPosition(LogicalDirection.Backward).DeleteTextInRun(1);
                     }
                     break;
                 case Key.Delete:
-
+                    if (getPositionType(inputField) != CuretPositionType.Outside)
+                    {
+                       CaretPosition.DeleteTextInRun(1);
+                    }
                     break;
             }
         }
@@ -121,6 +142,14 @@ namespace USBTetminal2.Controls
             readOnlyItems.Inlines.Add(run);
             inputField.Text = "";
             ScrollToEnd();
+        }
+
+        private void pasteFromClipboard()
+        {
+            if (getPositionType(inputField) != CuretPositionType.Outside)
+                CaretPosition.InsertTextInRun(Clipboard.GetText());//Inserting text
+            else
+                inputField.ContentEnd.InsertTextInRun(Clipboard.GetText());
         }
 
         #endregion
@@ -172,6 +201,13 @@ namespace USBTetminal2.Controls
 
             screwManualTextInput();
         }
+
+        private void onPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+           // Paste(); - Simple, but breaks Isreadonly logic
+        }
+
+
 
     }
 }
