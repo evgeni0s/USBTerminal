@@ -5,9 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:commands="clr-namespace:USBTetminal2.Commands"
              mc:Ignorable="d" 
-             d:DesignHeight="60" d:DesignWidth="500" MaxWidth="520" BorderBrush="Gray" BorderThickness="0" CornerRadius="0,0,70,20" Margin="10,0" Height="32" >
+             d:DesignHeight="60" d:DesignWidth="500" MaxWidth="520" BorderBrush="Gray" BorderThickness="0" CornerRadius="0,0,70,20" Margin="10,0" Height="32" Background="#FFD6D6D6" >
     <Border.Resources>
         <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml"/>
+        
     </Border.Resources>
     <!--this used to add metal pattern to background-->
     <!--<Border.Background>
@@ -18,11 +19,21 @@
         <Grid>
             <StackPanel Orientation="Horizontal" Width="Auto" Margin="20,0">
                 <!--Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"-->
-                <Button Width="60" Height="20" Content="LEGEND"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.LegendContainerVisibility}"/>
-                <Button Width="60" Height="20" Margin="15,0,0,0" Content="POINTS" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}"/>
-                <Button Width="60" Height="20" Margin="15,0,0,0" Content="RESET" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}"/>
-                <Button Width="60" Height="20" Margin="15,0,0,0" Content="SETTINGS" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowSettingsDialog}"/>
-                <Button Width="60" Height="20" Margin="15,0,0,0" Content="CONSOLE" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ConsoleVisibility}"/>
+                <Button Width="60" Height="20"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.LegendContainerVisibility}" Foreground="#FF075100">
+                    <TextBlock Text="Legend" FontFamily="Old English Text MT"/>
+                </Button>
+                <Button Width="60" Height="25" Margin="15,0,0,0"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}" Foreground="#FF00045D" FontSize="14">
+                    <TextBlock Text="Points" FontFamily="Showcard Gothic"/>
+                </Button>
+                <Button Width="60" Height="20" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}" Foreground="#FF5D4002">
+                    <TextBlock Text="Reset" FontFamily="Wide Latin"/>
+                </Button>
+                <Button Width="80" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowSettingsDialog}" Foreground="#FF570000">
+                    <TextBlock Text="Settings" FontFamily="Magneto" FontSize="16"/>
+                </Button>
+                <Button Width="80" Height="20" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ConsoleVisibility}" Foreground="#FF004291">
+                    <TextBlock Text="Console" FontFamily="Algerian" FontSize="16"/>
+                </Button>
             </StackPanel>
         </Grid>
 
