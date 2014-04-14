@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
+    <Grid AllowDrop="True" PreviewDrop="onFileDroped" Background="AntiqueWhite">
+        <Label x:Name="path" Height="30"  Background="Green" Content="Drop image region"/>
+        <!--<TextBox>hi!</TextBox>-->
     </Grid>
 </UserControl>

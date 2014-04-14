@@ -36,7 +36,9 @@ namespace USBTetminal2
         private ConsoleView _consoleView;
         private SettingsView _settingsView;
         private bool _isConsoleVisible;
+        private bool _isBottomVisible;
         private object _rightPanel;
+        private object _bottomPanel;
 
         private string errMSG;
         MainWindow _mainWindow;
@@ -153,10 +155,29 @@ namespace USBTetminal2
             }
         }
 
+        public bool IsBottomVisible
+        {
+            get 
+            {
+                return _isBottomVisible;
+            }
+            set
+            {
+                _isBottomVisible = value;
+                OnPropertyChanged("IsBottomVisible");
+            }
+        }
+
         public double ConsoleWidth
         {
             get { return 150d; }
         }
+
+        public double BottomHeight
+        {
+            get { return 150d; }
+        }
+
         //Need to export this to XAML container
         public object RightPanel
         {
@@ -170,6 +191,21 @@ namespace USBTetminal2
             {
                 _rightPanel = value;
                 OnPropertyChanged("RightPanel");
+            }
+        }
+
+        public object BottomPanel
+        {
+            get
+            {
+                if (_bottomPanel == null)
+                    _bottomPanel = new object();
+                return _bottomPanel;
+            }
+            set
+            {
+                _bottomPanel = value;
+                OnPropertyChanged("BottomPanel");
             }
         }
 
@@ -230,6 +266,11 @@ namespace USBTetminal2
             createCommandBinding(CustomCommands.ConsoleVisibility, onConsoleVisibility, onConsoleVisibilityCanExecute);
         }
 
+
+
+
+        #region Command Implementation
+
         #region ConsoleVisibilityCommand
         private void onConsoleVisibility(object sender, ExecutedRoutedEventArgs e)
         {
@@ -265,15 +306,12 @@ namespace USBTetminal2
         #endregion
 
 
-
-
-
-        #region Command Implementation
-
         #region ShowSettingsCommand
         private void onShowSettingsDialog(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("ShowSettingsDialog is not implemented");
+            IsBottomVisible = !IsBottomVisible;
+            if (BottomPanel.GetType() != typeof(SettingsView))
+                BottomPanel = Settings;
         }
 
         private void onShowSettingsDialogCanExecute(object sender, CanExecuteRoutedEventArgs e)

@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using USBTetminal2.Commands;
 using USBTetminal2.Protocol;
 using MahApps.Metro.Controls;
-
+//[assembly: CLSCompliant(true)] -> works, but I do not need it
 namespace USBTetminal2
 {
     /// <summary>
@@ -30,9 +30,7 @@ namespace USBTetminal2
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();
-
            // Title = "Terminal window. ";
-
             
             //mPlotter.CopyScreenshotToClipboard // Can be usefull
             
@@ -75,7 +73,11 @@ namespace USBTetminal2
 
         private void onSetPort(object sender, RoutedEventArgs e)
         {
-          //  CustomCommands.Connect.Execute(portName.Text, null);
+            CustomCommands.Connect.Execute(portName.Text, null);
+        }
+
+        private void testTCS()
+        { 
         }
 
         //FOR DEBUG ONLY

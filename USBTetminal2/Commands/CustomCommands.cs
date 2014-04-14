@@ -34,6 +34,8 @@ namespace USBTetminal2.Commands
 
         }
 
+
+
         private static void initializeConsoleVisibility()
         {
             _consoleVisibilityCommand = new RoutedCommand("ConsoleVisibility", typeof(CustomCommands));
@@ -183,6 +185,7 @@ namespace USBTetminal2.Commands
         {
             get { return CustomCommands._consoleVisibilityCommand; }
         }
+
         static RoutedCommand _showLegend;
         static RoutedCommand _resetCommand;
         static RoutedCommand _showPointsCommand;

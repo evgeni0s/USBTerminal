@@ -6,6 +6,16 @@
     http://stackoverflow.com/questions/6351612/wpf-mvvm-modal-overlay-dialog-only-over-a-view-not-window
     ...серым модальным-->
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Button Click="onClick">...</Button>
         
     </Grid>
 </Window>

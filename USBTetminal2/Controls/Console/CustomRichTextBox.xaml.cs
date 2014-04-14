@@ -43,7 +43,7 @@ namespace USBTetminal2.Controls
                 new NotifyInputEventHandler(PreNotifyInput);
             // This is where we handle all the rest of the keys
             TextCompositionManager.AddPreviewTextInputStartHandler(
-                Application.Current.MainWindow,
+                this,
                 PreviewTextInputHandler);                                          ///OnPreviewKeyDown
         }
 
@@ -56,6 +56,9 @@ namespace USBTetminal2.Controls
             // I only care about the space key being pressed
             // you might have to check for other characters
             if (args == null || !keysRequireFix.Any(k => k == args.Key))
+                return;
+
+            if (!IsFocused)
                 return;
             // stop event processing here
             args.Handled = true;

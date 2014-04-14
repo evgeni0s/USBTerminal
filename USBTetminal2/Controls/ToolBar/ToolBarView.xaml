@@ -18,21 +18,24 @@
     <Border DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType={x:Type Border}, Mode=FindAncestor}}">
         <Grid>
             <StackPanel Orientation="Horizontal" Width="Auto" Margin="20,0">
-                <!--Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"-->
-                <Button Width="60" Height="20"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.LegendContainerVisibility}" Foreground="#FF075100">
-                    <TextBlock Text="Legend" FontFamily="Old English Text MT"/>
+                <!--Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"  Showcard Gothic
+                OCR A Extended
+                -->
+                <Button Width="50" Height="22"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.LegendContainerVisibility}" Foreground="#FF075100" FontFamily="Tele-Marines">
+                    <TextBlock Text="Legend" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
                 </Button>
-                <Button Width="60" Height="25" Margin="15,0,0,0"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}" Foreground="#FF00045D" FontSize="14">
-                    <TextBlock Text="Points" FontFamily="Showcard Gothic"/>
+                <Button Width="50" Height="22" Margin="15,0,0,0"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}" Foreground="#FF00045D" FontSize="14">
+                    <TextBlock Text="Points" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
                 </Button>
-                <Button Width="60" Height="20" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}" Foreground="#FF5D4002">
-                    <TextBlock Text="Reset" FontFamily="Wide Latin"/>
+                <!--<TextBlock Text="Points" FontFamily="Magneto" FontSize="18"/>-->
+                <Button Width="50" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}" Foreground="#FF5D4002">
+                    <TextBlock Text="Reset" FontSize="16" FontFamily="Gloucester MT Extra Condensed"/>
                 </Button>
-                <Button Width="80" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowSettingsDialog}" Foreground="#FF570000">
-                    <TextBlock Text="Settings" FontFamily="Magneto" FontSize="16"/>
+                <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowSettingsDialog}" Foreground="#FF570000">
+                    <TextBlock Text="Settings" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
                 </Button>
-                <Button Width="80" Height="20" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ConsoleVisibility}" Foreground="#FF004291">
-                    <TextBlock Text="Console" FontFamily="Algerian" FontSize="16"/>
+                <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ConsoleVisibility}" Foreground="#FF004291">
+                    <TextBlock Text="Console" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
                 </Button>
             </StackPanel>
         </Grid>

@@ -33,6 +33,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <toolbar:ToolBarView x:Name="customToolbar" Height="35" Width="550" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Left" ></toolbar:ToolBarView>
 
@@ -46,23 +47,27 @@
         <DataGrid x:Name="mGrid" Height="Auto" MaxHeight="600"  ItemsSource="{Binding GraphData}" Grid.Row="1" AutoGenerateColumns="False" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
             <DataGrid.Columns>
 
-                <DataGridTextColumn Header="Keys" IsReadOnly="True" Width="*" Binding="{Binding Path=X}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Values" IsReadOnly="True" Width="*" Binding="{Binding Path=Y}"></DataGridTextColumn>
+                <DataGridTextColumn Header="msec" IsReadOnly="True" Width="*" Binding="{Binding Path=X}"></DataGridTextColumn>
+                <DataGridTextColumn Header="values" IsReadOnly="True" Width="*" Binding="{Binding Path=Y}"></DataGridTextColumn>
             </DataGrid.Columns>
 
         </DataGrid>
 
-        <TextBox Visibility="Collapsed" x:Name="console" Grid.Row="3" Height="200" VerticalAlignment="Bottom" Text="{Binding ErrMSG}" TextWrapping="Wrap" AcceptsReturn="True" />
-        <TextBox Visibility="Collapsed" x:Name="portName" x:FieldModifier="public" Grid.Row="3" Text="COM6" TextWrapping="Wrap" AcceptsReturn="True" Background="Red" Foreground="White" FontSize="18" Height="36" Width="100" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-        <Button Visibility="Collapsed" Click="onSetPort" Grid.Row="3" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="50">Set</Button>
+        <TextBox Visibility="Visible" x:Name="console" Grid.Row="1" Height="200" VerticalAlignment="Bottom" Text="{Binding ErrMSG}" TextWrapping="Wrap" AcceptsReturn="True" />
+        <TextBox Visibility="Visible" x:Name="portName" x:FieldModifier="public" Grid.Row="1" Text="COM6" TextWrapping="Wrap" AcceptsReturn="True" Background="Red" Foreground="White" FontSize="18" Height="36" Width="100" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <Button Visibility="Visible" Click="onSetPort" Grid.Row="1" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="50">Set</Button>
 
         <legend:LegendListView x:Name="customLegend" Grid.RowSpan="4" Grid.Column="1" Grid.Row="1" Margin="0,30,30,0" DataContext="{Binding LegendListDataContext}" HorizontalAlignment="Right" VerticalAlignment="Top" Canvas.ZIndex="1"/>
 
-        <chart:ChartPlotter Margin="10,0,0,0"  Grid.Column="1" Grid.Row="2" x:Name="mPlotter" VerticalAlignment="Stretch" LegendVisible="False"/>
+        <chart:ChartPlotter Margin="10,0,0,0"  Grid.Column="1" Grid.Row="1" x:Name="mPlotter" VerticalAlignment="Stretch" LegendVisible="False"/>
 
         <!--For some reasons I can't declare my console here because graphic XAML designer crashes-->
         <ContentControl x:Name="rightPanel" Margin="10,0,0,0" Grid.Column="2" Grid.Row="1" Content="{Binding RightPanel}"
                         Visibility="{Binding IsConsoleVisible, Converter={StaticResource boolToVis}}" Background="Brown" Width="{Binding ConsoleWidth}"/>
+        
+        <ContentControl x:Name="bottomPanel" Margin="10,10,0,0" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Content="{Binding BottomPanel}"
+                        Visibility="{Binding IsBottomVisible, Converter={StaticResource boolToVis}}" Background="Brown" Height="{Binding BottomHeight}"/>
+
 
     </Grid>
 </controls:MetroWindow>
