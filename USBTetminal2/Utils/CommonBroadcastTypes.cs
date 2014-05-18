@@ -16,6 +16,7 @@ namespace USBTetminal2
         CLEAR_ALL,
         CHANGE_MARKERS_VISIBILITY,
         USER_CHANGED_LEGEND_CONTAINER_VISIBILITY,
+        CONNECT_TO_DEVICE,
         msg3
     }
 }

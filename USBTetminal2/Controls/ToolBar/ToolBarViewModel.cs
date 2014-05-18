@@ -19,6 +19,7 @@ namespace USBTetminal2.Controls.ToolBar
         protected ToolBarViewModel()
         {
             _mainWindow = App.Current.MainWindow as MainWindow;
+            
         }
 
 

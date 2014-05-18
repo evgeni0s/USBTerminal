@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:commands="clr-namespace:USBTetminal2.Commands"
              mc:Ignorable="d" 
-             d:DesignHeight="60" d:DesignWidth="500" MaxWidth="520" BorderBrush="Gray" BorderThickness="0" CornerRadius="0,0,70,20" Margin="10,0" Height="32" Background="#FFD6D6D6" >
+             d:DesignHeight="60" d:DesignWidth="500" MaxWidth="520" BorderBrush="White" BorderThickness="2" CornerRadius="0,0,70,20" Margin="10,0" Height="32" >
     <Border.Resources>
         <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml"/>
         
@@ -15,7 +15,7 @@
         <ImageBrush AlignmentX="Left" ImageSource="/USBTetminal2;component/Res/Metal_plate520.jpg" Stretch="None"/>
     </Border.Background>-->
 
-    <Border DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType={x:Type Border}, Mode=FindAncestor}}">
+    <Border DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType={x:Type Border}, Mode=FindAncestor}}" >
         <Grid>
             <StackPanel Orientation="Horizontal" Width="Auto" Margin="20,0">
                 <!--Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"  Showcard Gothic

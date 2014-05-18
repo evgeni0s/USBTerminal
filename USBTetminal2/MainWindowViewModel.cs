@@ -88,8 +88,8 @@ namespace USBTetminal2
                 if (value != null && !value.IsOpen)
                         value.Open();
                     //////FIX EXCEPTION!! Доступ к порту закрыт. Возникает если к порту подключена другая программа
-                RemoveListener(_selectedPort);
-                AddListener(value);
+               // RemoveListener(_selectedPort);
+              //  AddListener(value);
                 _selectedPort = value;
                 OnPropertyChanged("SelectedPort");
             }
@@ -334,7 +334,7 @@ namespace USBTetminal2
             AbstractFrame tempFrame = new MeasurmentFrame();
             byte[] request = tempFrame.Request();
             string PortName = e.Parameter.ToString();
-            SelectedPort = new CustomSerialPort(PortName);
+          //  SelectedPort = new CustomSerialPort(PortName);
             SelectedPort.SendData(request);
            
         }
@@ -490,13 +490,13 @@ namespace USBTetminal2
         private void onDataRecived(object sender, ExecutedRoutedEventArgs e)
         {
             CommonBroadcastType type = CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE;
-            NotifyAllBroadcastListeners(type, SelectedPort.RecivedData);
+           // NotifyAllBroadcastListeners(type, SelectedPort.RecivedData);
         }
 
 
         private void onDataRecivedCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = e.Parameter != null && SelectedPort.RecivedData.Length > 2;//2 - second byte and points to frame type
+          //  e.CanExecute = e.Parameter != null && SelectedPort.RecivedData.Length > 2;//2 - second byte and points to frame type
         }
 
         #endregion

@@ -35,7 +35,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <toolbar:ToolBarView x:Name="customToolbar" Height="35" Width="550" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Left" ></toolbar:ToolBarView>
+        <toolbar:ToolBarView x:Name="customToolbar" Height="35" Width="550" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Left" Background="{StaticResource headerBarBG}" ></toolbar:ToolBarView>
 
         <Button Grid.Row="0" VerticalAlignment="Center" Width="150" Height="38" Command="{x:Static commands:CustomCommands.Connect}" Style="{StaticResource ButtonStyle1}">
             <Button.Content>
@@ -59,7 +59,7 @@
 
         <legend:LegendListView x:Name="customLegend" Grid.RowSpan="4" Grid.Column="1" Grid.Row="1" Margin="0,30,30,0" DataContext="{Binding LegendListDataContext}" HorizontalAlignment="Right" VerticalAlignment="Top" Canvas.ZIndex="1"/>
 
-        <chart:ChartPlotter Margin="10,0,0,0"  Grid.Column="1" Grid.Row="1" x:Name="mPlotter" VerticalAlignment="Stretch" LegendVisible="False"/>
+        <chart:ChartPlotter x:Name="mPlotter" Margin="10,0,0,0"  Grid.Column="1" Grid.Row="1"  VerticalAlignment="Stretch" LegendVisible="False"/>
 
         <!--For some reasons I can't declare my console here because graphic XAML designer crashes-->
         <ContentControl x:Name="rightPanel" Margin="10,0,0,0" Grid.Column="2" Grid.Row="1" Content="{Binding RightPanel}"

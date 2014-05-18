@@ -19,22 +19,22 @@ using USBTetminal2.Commands;
 
 namespace USBTetminal2
 {
-    public class CustomSerialPort : SerialPort, ISimpleBroadcastListener
+    public class CustomSerialPort : SerialPort//, ISimpleBroadcastListener
     {
 
         MainWindow context;
         byte[] buffer;
-        private CustomSerialPort()
+        public CustomSerialPort()
         {
             DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
             PinChanged += new SerialPinChangedEventHandler(comport_PinChanged);
 
             //Standart connection
-            BaudRate = 9600;
-            DataBits = 8;
-            StopBits = StopBits.One;
-            Parity = Parity.None;
-            context = (MainWindow)App.Current.MainWindow;
+            //BaudRate = 9600;
+            //DataBits = 8;
+            //StopBits = StopBits.One;
+            //Parity = Parity.None;
+            //context = (MainWindow)App.Current.MainWindow;
 
             //Poor null port drivers suggest to RtsEnable = true; 
             //Else I get exception “The parameter is incorrect.” when sending data
@@ -42,16 +42,16 @@ namespace USBTetminal2
         }
 
 
-        /// <summary>
-        /// THIS CLASS DOES ALL THE CONNECTION JOB
-        /// </summary>
-        /// <param name="Name">Name is an address to connect</param>
+        ///// <summary>
+        ///// THIS CLASS DOES ALL THE CONNECTION JOB
+        ///// </summary>
+        ///// <param name="Name">Name is an address to connect</param>
 
-        public CustomSerialPort(string Name)
-            : this()
-        {
-            PortName = Name;
-        }
+        //public CustomSerialPort(string Name)
+        //    : this()
+        //{
+        //    PortName = Name;
+        //}
 
 
 
@@ -122,14 +122,14 @@ namespace USBTetminal2
         /// <summary>
         /// Data From last transaction. May be storing here is not the best idea.... MEMORY LEAK PLACE!!!!!!
         /// </summary>
-        public byte[] RecivedData
-        { get { return buffer; } }
+        //public byte[] RecivedData
+        //{ get { return buffer; } }
 
-        public void ReciveMessage(CommonBroadcastType smgType, object data)
-        {
-            int i = 0;
-            i++;
-        }
+        //public void ReciveMessage(CommonBroadcastType smgType, object data)
+        //{
+        //    int i = 0;
+        //    i++;
+        //}
 
         #region convertors and utils ...not used for now
         //They solve encoding problem if it ever appears

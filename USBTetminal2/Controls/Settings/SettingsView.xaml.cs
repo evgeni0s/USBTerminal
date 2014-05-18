@@ -24,11 +24,5 @@ namespace USBTetminal2.Controls.Settings
         {
             InitializeComponent();
         }
-
-        private void onFileDroped(object sender, DragEventArgs e)
-        {
-            string filename = (string)((DataObject)e.Data).GetFileDropList()[0];
-            path.Content = filename;
-        }
     }
 }

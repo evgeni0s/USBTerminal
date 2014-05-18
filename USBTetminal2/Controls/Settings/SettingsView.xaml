@@ -3,10 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:port="clr-namespace:USBTetminal2"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid AllowDrop="True" PreviewDrop="onFileDroped" Background="AntiqueWhite">
-        <Label x:Name="path" Height="30"  Background="Green" Content="Drop image region"/>
+    <UserControl.Resources>
+        <ObjectDataProvider ObjectType="{x:Type port:CustomSerialPort}" MethodName="GetPortNames" x:Key="portNames"/>
+    </UserControl.Resources>
+    <Grid Background="#008C00" Opacity="0.5">
+        <ComboBox 
+            ItemsSource ="{Binding AvailablePorts}"
+            SelectedItem=""
+            Height="30" Width="80"/>
         <!--<TextBox>hi!</TextBox>-->
     </Grid>
 </UserControl>

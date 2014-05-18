@@ -27,6 +27,7 @@ namespace USBTetminal2.Controls.Legend
         public LegendListView()
         {
             InitializeComponent();
+       
            // context = new LegendModel();
            // DataContext = context;
         }
