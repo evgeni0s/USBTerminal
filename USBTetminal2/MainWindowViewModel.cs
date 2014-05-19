@@ -41,12 +41,12 @@ namespace USBTetminal2
         private object _bottomPanel;
 
         private string errMSG;
-        MainWindow _mainWindow;
+        Shell _mainWindow;
         #endregion
 
         public MainWindowViewModel()
         {
-            _mainWindow = App.Current.MainWindow as MainWindow;
+            _mainWindow = App.Current.MainWindow as Shell;
             _plotter = _mainWindow.mPlotter;
 
             initializeCommandBindings();

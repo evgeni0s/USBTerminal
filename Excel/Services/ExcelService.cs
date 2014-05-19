@@ -18,7 +18,7 @@ namespace Excel.Services
     {
         IMeasurementsFeedService _measurmentsService;
 
-        public readonly List<ExcelItem> ExcelItems { get; set; }
+        public  List<ExcelItem> ExcelItems { get; set; }
         public ExcelService(IMeasurementsFeedService measurmentsService)
         {
             _measurmentsService = measurmentsService;
@@ -56,13 +56,13 @@ namespace Excel.Services
 
         public void ExportTo()
         {
-            WPF_Dialogs.Dialogs.FolderBrowseDialog f = new WPF_Dialogs.Dialogs.FolderBrowseDialog();
-            WPF_Dialogs.EDialogResult result = f.showDialog();
-            if (result == WPF_Dialogs.EDialogResult.OK)
-            {
-                string filePath = f.SelectedPath + Properties.Settings.Default.ExportFilePrefix + DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss") + ".xlsx";
-                export(filePath);
-            }
+            //WPF_Dialogs.Dialogs.FolderBrowseDialog f = new WPF_Dialogs.Dialogs.FolderBrowseDialog();
+            //WPF_Dialogs.EDialogResult result = f.showDialog();
+            //if (result == WPF_Dialogs.EDialogResult.OK)
+            //{
+            //    string filePath = f.SelectedPath + Properties.Settings.Default.ExportFilePrefix + DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss") + ".xlsx";
+            //    export(filePath);
+            //}
         }
 
         private void export(string filePath)

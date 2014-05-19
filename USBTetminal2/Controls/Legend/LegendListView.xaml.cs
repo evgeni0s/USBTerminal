@@ -130,7 +130,7 @@ namespace USBTetminal2.Controls.Legend
 
         //private void onLegendClicked(object sender, MouseButtonEventArgs e)
         //{
-        //    CustomCommands.LoadDataToGrid.Execute(((FrameworkElement)sender).DataContext, App.Current.MainWindow);
+        //    CustomCommands.LoadDataToGrid.Execute(((FrameworkElement)sender).DataContext, App.Current.Shell);
         //}
 
     }

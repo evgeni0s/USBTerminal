@@ -14,11 +14,11 @@ namespace USBTetminal2.Controls.ToolBar
     public class ToolBarViewModel : ViewModelBase
     {
 
-        protected MainWindow _mainWindow = null;
+        protected Shell _mainWindow = null;
 
         protected ToolBarViewModel()
         {
-            _mainWindow = App.Current.MainWindow as MainWindow;
+            _mainWindow = App.Current.MainWindow as Shell;
             
         }
 

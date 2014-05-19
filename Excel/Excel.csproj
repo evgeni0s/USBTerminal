@@ -40,8 +40,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WPF Dialogs">
-      <HintPath>..\packages\WPF Dialogs.dll</HintPath>
+    <Reference Include="WPF_Dialogs">
+      <HintPath>..\packages\WPF_Dialogs.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

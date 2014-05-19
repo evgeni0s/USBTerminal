@@ -1,0 +1,17 @@
+D:\USBTerminalRepo\TestModule\bin\Debug\TestModule.dll
+D:\USBTerminalRepo\TestModule\bin\Debug\TestModule.pdb
+D:\USBTerminalRepo\TestModule\bin\Debug\Microsoft.Practices.Prism.Composition.dll
+D:\USBTerminalRepo\TestModule\bin\Debug\Microsoft.Practices.Prism.SharedInterfaces.dll
+D:\USBTerminalRepo\TestModule\bin\Debug\Microsoft.Practices.Prism.UnityExtensions.dll
+D:\USBTerminalRepo\TestModule\bin\Debug\Microsoft.Practices.Unity.dll
+D:\USBTerminalRepo\TestModule\bin\Debug\Microsoft.Practices.Prism.Composition.xml
+D:\USBTerminalRepo\TestModule\bin\Debug\Microsoft.Practices.Prism.SharedInterfaces.xml
+D:\USBTerminalRepo\TestModule\bin\Debug\Microsoft.Practices.Prism.UnityExtensions.xml
+D:\USBTerminalRepo\TestModule\bin\Debug\Microsoft.Practices.Unity.xml
+D:\USBTerminalRepo\TestModule\obj\Debug\TestModule.csprojResolveAssemblyReference.cache
+D:\USBTerminalRepo\TestModule\obj\Debug\Views\TestModuleView.baml
+D:\USBTerminalRepo\TestModule\obj\Debug\Views\TestModuleView.g.cs
+D:\USBTerminalRepo\TestModule\obj\Debug\TestModule_MarkupCompile.cache
+D:\USBTerminalRepo\TestModule\obj\Debug\TestModule.g.resources
+D:\USBTerminalRepo\TestModule\obj\Debug\TestModule.dll
+D:\USBTerminalRepo\TestModule\obj\Debug\TestModule.pdb

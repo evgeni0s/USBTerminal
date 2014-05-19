@@ -20,13 +20,13 @@ using MahApps.Metro.Controls;
 namespace USBTetminal2
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Shell.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class Shell : MetroWindow
     {
 
 
-        public MainWindow()
+        public Shell()
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();

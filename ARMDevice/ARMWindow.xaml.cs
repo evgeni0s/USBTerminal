@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 namespace ARMDevice
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Shell.xaml
     /// </summary>
     public partial class ARMWindow : Window
     {

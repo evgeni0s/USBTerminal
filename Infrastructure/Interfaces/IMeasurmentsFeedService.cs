@@ -9,6 +9,6 @@ namespace Interfaces.Infrastructure
 {
     public interface IMeasurementsFeedService
     {
-        public DataTable GetData(string chartId);
+        DataTable GetData(string chartId);
     }
 }

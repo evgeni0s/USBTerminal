@@ -22,7 +22,7 @@ namespace USBTetminal2
     public class CustomSerialPort : SerialPort//, ISimpleBroadcastListener
     {
 
-        MainWindow context;
+        Shell context;
         byte[] buffer;
         public CustomSerialPort()
         {
@@ -34,7 +34,7 @@ namespace USBTetminal2
             //DataBits = 8;
             //StopBits = StopBits.One;
             //Parity = Parity.None;
-            //context = (MainWindow)App.Current.MainWindow;
+            //context = (Shell)App.Current.Shell;
 
             //Poor null port drivers suggest to RtsEnable = true; 
             //Else I get exception “The parameter is incorrect.” when sending data

@@ -1,4 +1,4 @@
-﻿/*Used in MainWindow to display points with 
+﻿/*Used in Shell to display points with 
  * x = number
  * y = number*/
 
