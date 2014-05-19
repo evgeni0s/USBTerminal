@@ -31,20 +31,36 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <toolbar:ToolBarView x:Name="customToolbar" Height="35" Width="550" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Left" Background="{StaticResource headerBarBG}" ></toolbar:ToolBarView>
 
-        <Button Grid.Row="0" VerticalAlignment="Center" Width="150" Height="38" Command="{x:Static commands:CustomCommands.Connect}" Style="{StaticResource ButtonStyle1}">
+        <!-- logo -->
+        <Canvas x:Name="Logo" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5">
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+            <TextBlock Text="USB " TextWrapping="NoWrap" Foreground="White" FontSize="72" Opacity="0.85" Canvas.Left="0" Canvas.Top="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="80" Width="135" TextAlignment="Left" FontWeight="Bold" />
+            <TextBlock Text="  TERMINAL" TextWrapping="NoWrap" Foreground="White" FontSize="72" Opacity="0.85" Height="80" TextAlignment="Left" FontWeight="Normal" Width="525" Canvas.Left="150" Canvas.Top="5"/>
+        </Canvas>
+
+        <toolbar:ToolBarView x:Name="customToolbar" Height="35" Width="550" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Left" Background="{StaticResource headerBarBG}" ></toolbar:ToolBarView>
+
+        <Button Grid.Row="1" VerticalAlignment="Center" Width="150" Height="38" Command="{x:Static commands:CustomCommands.Connect}" Style="{StaticResource ButtonStyle1}">
             <Button.Content>
                 <Label FontSize="20" FontStyle="Oblique" FontWeight="Bold" Foreground="White">Connect</Label>
             </Button.Content>
         </Button>
 
 
-        <DataGrid x:Name="mGrid" Height="Auto" MaxHeight="600"  ItemsSource="{Binding GraphData}" Grid.Row="1" AutoGenerateColumns="False" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
+        <DataGrid x:Name="mGrid" Width="100" Height="Auto" MaxHeight="600"  ItemsSource="{Binding GraphData}" Grid.Row="2" Grid.Column="2" AutoGenerateColumns="False" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
             <DataGrid.Columns>
 
                 <DataGridTextColumn Header="msec" IsReadOnly="True" Width="*" Binding="{Binding Path=X}"></DataGridTextColumn>
@@ -53,19 +69,27 @@
 
         </DataGrid>
 
-        <TextBox Visibility="Visible" x:Name="console" Grid.Row="1" Height="200" VerticalAlignment="Bottom" Text="{Binding ErrMSG}" TextWrapping="Wrap" AcceptsReturn="True" />
-        <TextBox Visibility="Visible" x:Name="portName" x:FieldModifier="public" Grid.Row="1" Text="COM6" TextWrapping="Wrap" AcceptsReturn="True" Background="Red" Foreground="White" FontSize="18" Height="36" Width="100" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-        <Button Visibility="Visible" Click="onSetPort" Grid.Row="1" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="50">Set</Button>
+        <TextBox Visibility="Visible" x:Name="console" Grid.Row="3"  VerticalAlignment="Stretch" Text="{Binding ErrMSG}" TextWrapping="Wrap" AcceptsReturn="True" />
+        <TextBox Visibility="Visible" x:Name="portName" x:FieldModifier="public" Grid.Row="3" Text="COM6" TextWrapping="Wrap" AcceptsReturn="True" Background="Red" Foreground="White" FontSize="18" MaxHeight="36" Width="100" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <Button Visibility="Visible" Click="onSetPort" Grid.Row="3" VerticalAlignment="Bottom"  MaxHeight="38" HorizontalAlignment="Right" Width="50">Set</Button>
 
-        <legend:LegendListView x:Name="customLegend" Grid.RowSpan="4" Grid.Column="1" Grid.Row="1" Margin="0,30,30,0" DataContext="{Binding LegendListDataContext}" HorizontalAlignment="Right" VerticalAlignment="Top" Canvas.ZIndex="1"/>
+        <legend:LegendListView x:Name="customLegend"  Grid.Column="2" Grid.Row="1"  DataContext="{Binding LegendListDataContext}" HorizontalAlignment="Right" VerticalAlignment="Top" Canvas.ZIndex="1"/>
+        <Grid   Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Margin="0,0,10,0" VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <chart:ChartPlotter x:Name="mPlotter" Grid.Column="1" LegendVisible="False"/>
+            <ContentControl x:Name="rightPanel" Grid.Column="0" Margin="0,0,10,0" Content="{Binding RightPanel}"
+                        Visibility="{Binding IsConsoleVisible, Converter={StaticResource boolToVis}}" Background="Brown" Width="{Binding ConsoleWidth}"/>
 
-        <chart:ChartPlotter x:Name="mPlotter" Margin="10,0,0,0"  Grid.Column="1" Grid.Row="1"  VerticalAlignment="Stretch" LegendVisible="False"/>
+        </Grid>
+        
 
         <!--For some reasons I can't declare my console here because graphic XAML designer crashes-->
-        <ContentControl x:Name="rightPanel" Margin="10,0,0,0" Grid.Column="2" Grid.Row="1" Content="{Binding RightPanel}"
-                        Visibility="{Binding IsConsoleVisible, Converter={StaticResource boolToVis}}" Background="Brown" Width="{Binding ConsoleWidth}"/>
+
         
-        <ContentControl x:Name="bottomPanel" Margin="10,10,0,0" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Content="{Binding BottomPanel}"
+        <ContentControl x:Name="bottomPanel" Margin="10,10,0,0" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Content="{Binding BottomPanel}"
                         Visibility="{Binding IsBottomVisible, Converter={StaticResource boolToVis}}" Background="Brown" Height="{Binding BottomHeight}"/>
 
 

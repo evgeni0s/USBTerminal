@@ -37,6 +37,9 @@
                 <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ConsoleVisibility}" Foreground="#FF004291">
                     <TextBlock Text="Console" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
                 </Button>
+                <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ConsoleVisibility}" Foreground="#FF004291">
+                    <TextBlock Text="Excel" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
+                </Button>
             </StackPanel>
         </Grid>
 
