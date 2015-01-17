@@ -9,12 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using ExcelAPI = Microsoft.Office.Interop.Excel;
 
-namespace Excel.Services
+namespace Excel
 {
     //Instructions of how to export
     //http://www.codeproject.com/Reference/753207/Export-DataSet-into-Excel-using-Csharp-Excel-Inter
     //DataSet can have multiple tables
-    public class ExcelService : Excel.Services.IExcelService
+    public class ExcelService : IExcelService
     {
         IMeasurementsFeedService _measurmentsService;
 

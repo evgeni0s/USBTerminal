@@ -48,9 +48,9 @@ namespace USBTetminal2
 
         protected override void ConfigureModuleCatalog()
         {
-            Type moduleBType = typeof(TestModule.TestModule);
+            //Type moduleBType = typeof(TestModule.TestModule);
             //Type moduleAType = typeof(ModuleA);
-            ModuleCatalog.AddModule(new ModuleInfo(moduleBType.Name, moduleBType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
+           // ModuleCatalog.AddModule(new ModuleInfo(moduleBType.Name, moduleBType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
             //     Type moduleAType = typeof(ModuleA);
             //   ModuleCatalog.AddModule(new ModuleInfo(moduleAType.Name, moduleAType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
             //Type moduleCType = typeof(ModuleC.ModuleC);

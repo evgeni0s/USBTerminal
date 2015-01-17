@@ -47,7 +47,7 @@ namespace USBTetminal2
         public MainWindowViewModel()
         {
             _mainWindow = App.Current.MainWindow as Shell;
-            _plotter = _mainWindow.mPlotter;
+            _plotter = new ChartPlotter();//_mainWindow.mPlotter;
 
             initializeCommandBindings();
             initPseudoBroadCast();

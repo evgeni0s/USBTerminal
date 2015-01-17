@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Excel.Services
+namespace Excel
 {
     interface IExcelService
     {
