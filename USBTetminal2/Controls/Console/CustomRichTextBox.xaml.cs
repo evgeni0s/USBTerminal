@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Infrastructure.Interfaces;
+using Microsoft.Practices.Prism.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,26 +14,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace USBTetminal2.Controls
 {
     /// <summary>
-    /// Best solution so far for managing complex text functionality is 
-    /// RichTextBox with Inlines. Inlines accept text formating and event handling
-    /// Inlines cannot be declared outside RTB
-    /// 
-    /// RTB has no properties which I could use for binding
-    /// 
     /// Small hack to bring RTB into life
     /// http://stackoverflow.com/questions/1053533/how-can-i-prevent-input-controls-from-stealing-the-space-character-from-the-text/1509554#1509554?newreg=4c844a22811d4f01a0a1119e72fe8e69
     /// </summary>
-    public partial class CustomRichTextBox : RichTextBox
+    /// 
+    //TO DO: delete ILogger 
+    public partial class CustomRichTextBox : RichTextBox, ILoggerFacade, ILogger
     {
         private List<Key> keysRequireFix = new List<Key>() { Key.Space, Key.Enter, Key.Back, Key.Delete };
 
         public CustomRichTextBox()
         {
-            InitializeComponent(); 
+            InitializeComponent();
         }
 
 
@@ -81,9 +80,9 @@ namespace USBTetminal2.Controls
                 CaretPosition = inputField.ContentEnd;
 
 
-           // CaretPosition.InsertTextInRun(p);//Inserting text. Works but has issues with <- and -> . Acts Whiered
-          //  CaretPosition.GetInsertionPosition(LogicalDirection.Backward).InsertTextInRun(p);
-           // ScrollToEnd();
+            // CaretPosition.InsertTextInRun(p);//Inserting text. Works but has issues with <- and -> . Acts Whiered
+            //  CaretPosition.GetInsertionPosition(LogicalDirection.Backward).InsertTextInRun(p);
+            // ScrollToEnd();
 
             //THIS CODE IS STABLE!!!!
             //http://www.java2s.com/Tutorial/CSharp/0470__Windows-Presentation-Foundation/ProgrammaticallyInsertTextintoaRichTextBox.htm
@@ -104,24 +103,24 @@ namespace USBTetminal2.Controls
                 case Key.Enter:
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                         CaretPosition.InsertTextInRun(Environment.NewLine);
-                       // CaretPosition.InsertLineBreak();
+                    // CaretPosition.InsertLineBreak();
                     else
-                    addToReadonly();
+                        addToReadonly();
                     break;
                 case Key.Back:
                     if (getPositionType(inputField) != CuretPositionType.Outside)
                     {
                         TextPointer tp = CaretPosition.GetPositionAtOffset(-1, LogicalDirection.Backward);
                         tp.DeleteTextInRun(1);
-                       // CaretPosition.DeleteTextInRun(1);
-                       // CaretPosition = tp;
+                        // CaretPosition.DeleteTextInRun(1);
+                        // CaretPosition = tp;
                         //CaretPosition.GetInsertionPosition(LogicalDirection.Backward).DeleteTextInRun(1);
                     }
                     break;
                 case Key.Delete:
                     if (getPositionType(inputField) != CuretPositionType.Outside)
                     {
-                       CaretPosition.DeleteTextInRun(1);
+                        CaretPosition.DeleteTextInRun(1);
                     }
                     break;
             }
@@ -207,10 +206,41 @@ namespace USBTetminal2.Controls
 
         private void onPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-           // Paste(); - Simple, but breaks Isreadonly logic
+            // Paste(); - Simple, but breaks Isreadonly logic
         }
 
 
 
+
+        public void Log(string message)
+        {
+        }
+
+        public void Error(string message)
+        {
+        }
+
+        public void Log(string message, Category category, Priority priority)
+        {
+            readOnlyItems.Dispatcher.BeginInvoke(new Action(() =>
+               {
+
+                   CustomRun run = CustomRun.Log;
+
+
+                   switch (category)
+                   {
+                       case Category.Exception:
+                           run = CustomRun.Error;
+                           break;
+                       case Category.Info:
+                           run = CustomRun.Info;
+                           break;
+                   }
+                   run.Text = message + Environment.NewLine; ;
+                   readOnlyItems.Inlines.Add(run);
+               }));
+
+        }
     }
 }

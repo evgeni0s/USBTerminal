@@ -1,6 +1,9 @@
 ﻿/*MAIN LOGIC
- ALL COMMANDS ARE EXECUTED HERE
- ALL THE REST CLASSES ARE JUST TOOLS*/
+ * Problems with build?
+ * In project I use lots of external Nuget packages. They are stored in /pakeges folder. 
+ * Which I did not add to my repo. SO... Visit http://docs.nuget.org/docs/workflows/using-nuget-without-committing-packages
+ * to know more... And I've never checked if problem with /pakeges is real
+ */
 
 using System;
 using System.Collections.Generic;
@@ -21,6 +24,11 @@ using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using USBTetminal2.Controls;
 using USBTetminal2.Controls.Settings;
+using TestModule;
+using Microsoft.Practices.Prism.Logging;
+using Microsoft.Practices.Prism.Regions;
+using USBTetminal2.Controls.ToolBar;
+using Microsoft.Practices.ServiceLocation;
 
 namespace USBTetminal2
 {
@@ -33,20 +41,26 @@ namespace USBTetminal2
         private ChartPlotter _plotter;
         private LegendListViewModel _legendListViewModel;
         private ObservableCollection<Point> _graphData;
-        private ConsoleView _consoleView;
-        private SettingsView _settingsView;
+        //private ConsoleView _consoleView;
+        private ILoggerFacade _logger;
+        //private SettingsView _settingsView;
+        private IRegionManager _regionManager;
         private bool _isConsoleVisible;
         private bool _isBottomVisible;
         private object _rightPanel;
         private object _bottomPanel;
 
+
+
         private string errMSG;
         Shell _mainWindow;
         #endregion
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(ITestModule module, ILoggerFacade logger, IRegionManager regionManager)
         {
+            _logger = logger;
             _mainWindow = App.Current.MainWindow as Shell;
+            _regionManager = regionManager;
             _plotter = new ChartPlotter();//_mainWindow.mPlotter;
 
             initializeCommandBindings();
@@ -212,30 +226,49 @@ namespace USBTetminal2
         #endregion
 
         #region private properties
-        //Temporary
-        public ConsoleView Console
+        private ToolBarViewModel _toolBar;
+        public ToolBarViewModel ToolBar
         {
-            get
+            get 
             {
-                if (_consoleView == null)
-                {
-                    _consoleView = new ConsoleView();
-                }
-                return _consoleView;
+                return _toolBar ?? (_toolBar = new ToolBarViewModel(_regionManager));
             }
         }
+
         //Temporary
-        public SettingsView Settings
+        //public ConsoleView Console
+        //{
+        //    get
+        //    {
+        //        if (_consoleView == null)
+        //        {
+        //            _consoleView = new ConsoleView();
+        //        }
+        //        return _consoleView;
+        //    }
+        //}
+
+        public CustomRichTextBox Console
         {
-            get
-            {
-                if (_settingsView == null)
-                {
-                    _settingsView = new SettingsView();
-                }
-                return _settingsView;
-            }
+            get { return _logger as CustomRichTextBox; }
         }
+
+        //Temporary. Need use DI Container
+        //public SettingsView Settings
+        //{
+        //    get
+        //    {
+                //if (_settingsView == null)
+                //{
+                //    _settingsView = new SettingsView();
+                //    _settingsView.DataContext = new SettingsViewModel();
+                //}
+                //return _settingsView;
+        //    }
+        //}
+
+
+
         #endregion
 
         private void initPseudoBroadCast()
@@ -307,11 +340,12 @@ namespace USBTetminal2
 
 
         #region ShowSettingsCommand
+        //NOt Used. Moved to Toolbar
         private void onShowSettingsDialog(object sender, ExecutedRoutedEventArgs e)
         {
-            IsBottomVisible = !IsBottomVisible;
-            if (BottomPanel.GetType() != typeof(SettingsView))
-                BottomPanel = Settings;
+            //IsBottomVisible = !IsBottomVisible;
+            //if (BottomPanel.GetType() != typeof(SettingsView))
+            //    BottomPanel = Settings;
         }
 
         private void onShowSettingsDialogCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -354,8 +388,10 @@ namespace USBTetminal2
 
         private void onErrorReport(object sender, ExecutedRoutedEventArgs e)
         {
-            ErrMSG += Environment.NewLine + e.Parameter.ToString();
+            //ErrMSG += Environment.NewLine + e.Parameter.ToString();
             //   MessageBox.Show("Command: ShowLegend");
+
+            //Console.Instanse.Log(e.Parameter.ToString());
         }
 
 
@@ -491,12 +527,14 @@ namespace USBTetminal2
         {
             CommonBroadcastType type = CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE;
            // NotifyAllBroadcastListeners(type, SelectedPort.RecivedData);
+            //Console.Instanse.Log(e.Parameter.ToString());
         }
 
 
         private void onDataRecivedCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
           //  e.CanExecute = e.Parameter != null && SelectedPort.RecivedData.Length > 2;//2 - second byte and points to frame type
+            e.CanExecute = true;
         }
 
         #endregion
@@ -511,6 +549,7 @@ namespace USBTetminal2
         #region simple broadcast 
         private List<ISimpleBroadcastListener> broadCastSubscribers = new List<ISimpleBroadcastListener>();
         private LegendListViewModel.LegendListItem _lastSelectedLegend;
+        
         private void AddListener(ISimpleBroadcastListener listener)
         {
             broadCastSubscribers.Add(listener);

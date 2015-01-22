@@ -79,23 +79,43 @@
         </DataTemplate.Triggers>-->
     </DataTemplate>
 
-    <!--connect button uses this style-->
-    <Style x:Key="ButtonStyle1" TargetType="Button">
+    <LinearGradientBrush x:Key="ConnectButton_Normal_Brush" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+        <GradientStop Color="#00FF0606"/>
+        <GradientStop Color="#DAFB0000" Offset="0.749"/>
+        <GradientStop Color="Black" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ConnectButton_Checked_Brush" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+        <GradientStop Color="#00FF00"/>
+        <GradientStop Color="#00FFB2" Offset="0.749"/>
+        <GradientStop Color="Black" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ConnectButton_PressedNormal_Brush" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+        <GradientStop Color="#00FF0606" Offset="1"/>
+        <GradientStop Color="#DAFB0000" Offset="0.749"/>
+        <GradientStop Color="Black"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ConnectButton_PressedChecked_Brush" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+        <GradientStop Color="#00FF00" Offset="1"/>
+        <GradientStop Color="#00FFB2" Offset="0.749"/>
+        <GradientStop Color="Black"/>
+    </LinearGradientBrush>
+
+    <Style x:Key="ConnectButtonStyle" TargetType="ToggleButton">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="Button">
+                <ControlTemplate TargetType="ToggleButton">
                     <Grid Background="Transparent">
-                        <Path Data="M96,180 C183.0265,178.36055 242.20029,172.28545 233,207 C74.999939,225.00015 96,180 96,180 z" Stretch="Fill" UseLayoutRounding="False">
-                            <Path.Fill>
-                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                                    <GradientStop Color="#00FF0606"/>
-                                    <GradientStop Color="#DAFB0000" Offset="0.749"/>
-                                    <GradientStop Color="Black" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Path.Fill>
-                        </Path>
+                        <Path x:Name="PART_PATH" Data="M96,180 C183.0265,178.36055 242.20029,172.28545 233,207 C74.999939,225.00015 96,180 96,180 z" Stretch="Fill" UseLayoutRounding="False" Fill="{StaticResource ConnectButton_Normal_Brush}"/>
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="PART_PATH" Property="Fill" Value="{StaticResource ConnectButton_Checked_Brush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -103,19 +123,24 @@
             <Trigger Property="IsPressed" Value="true">
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="Button">
+                        <ControlTemplate TargetType="ToggleButton">
                             <Grid Background="Transparent">
-                                <Path Data="M96,180 C183.0265,178.36055 242.20029,172.28545 233,207 C74.999939,225.00015 96,180 96,180 z" Stretch="Fill" UseLayoutRounding="False">
-                                    <Path.Fill>
+                                <Path x:Name="PART_PATH" Data="M96,180 C183.0265,178.36055 242.20029,172.28545 233,207 C74.999939,225.00015 96,180 96,180 z" Stretch="Fill" UseLayoutRounding="False" Fill="{StaticResource ConnectButton_PressedNormal_Brush}"/>
+                                    <!--<Path.Fill>
                                         <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                                             <GradientStop Color="#00FF0606" Offset="1"/>
                                             <GradientStop Color="#DAFB0000" Offset="0.749"/>
                                             <GradientStop Color="Black"/>
                                         </LinearGradientBrush>
                                     </Path.Fill>
-                                </Path>
+                                </Path>-->
                                 <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                             </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="PART_PATH" Property="Fill" Value="{StaticResource ConnectButton_PressedChecked_Brush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>

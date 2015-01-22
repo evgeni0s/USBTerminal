@@ -15,15 +15,15 @@ namespace USBTetminal2
     {
         private void Application_DispatcherUnhandledException_1(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
+            //default VS Exceptions are better
+            //string stackTrace = "Stack Trace failed!";
+            //if (e.Exception != null && e.Exception.StackTrace != null)
+            //   stackTrace =  e.Exception.StackTrace;
+            //MessageBox.Show("Got dispatcher exception!" + Environment.NewLine + "Stacktrace : " + stackTrace);
+            //MessageBox.Show("Method that throw an exception: " + Environment.NewLine + "... or TargetSite" + Environment.NewLine + e.Exception.TargetSite);
+            //MessageBox.Show("Exception message :" + Environment.NewLine + e.Exception.Message);
 
-            string stackTrace = "Stack Trace failed!";
-            if (e.Exception != null && e.Exception.StackTrace != null)
-               stackTrace =  e.Exception.StackTrace;
-            MessageBox.Show("Got dispatcher exception!" + Environment.NewLine + "Stacktrace : " + stackTrace);
-            MessageBox.Show("Method that throw an exception: " + Environment.NewLine + "... or TargetSite" + Environment.NewLine + e.Exception.TargetSite);
-            MessageBox.Show("Exception message :" + Environment.NewLine + e.Exception.Message);
-
-            e.Handled = true;
+            //e.Handled = true;
         }
 
 

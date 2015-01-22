@@ -1,4 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--Copy-Pasted from StockTrader MSDN app-->
     <!-- Focus Visual -->
@@ -552,6 +553,7 @@
                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
                     <Border Name="Border" Padding="2" SnapsToDevicePixels="true"  CornerRadius="4" Margin="0,4,0,0">
                         <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <!--<ContentPresenter/>-->
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">
@@ -626,14 +628,15 @@
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
         <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
     </ControlTemplate>
-
+    
+    <sys:Double x:Key="PART_COMBOBOX_ITEM_WIDTH">120</sys:Double>
     <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="MinWidth" Value="120"/>
+        <Setter Property="MinWidth" Value="{DynamicResource PART_COMBOBOX_ITEM_WIDTH}"/>
         <Setter Property="MinHeight" Value="20"/>
         <Setter Property="Template">
             <Setter.Value>

@@ -10,14 +10,11 @@
         xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:prism="http://www.codeplex.com/prism"
         Loaded="onLoaded"
-        Title="USB to ARM Connector" Height="550" Width="750" MinHeight="45" MinWidth="200">
+        Title="USB to ARM Connector" Height="650" Width="950" MinHeight="45" MinWidth="200">
     <Window.Resources>
 
 
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Res/MyDictionary.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
             <utils:VisibilityConverter x:Key="boolToVis"/>
         </ResourceDictionary>
 
@@ -53,14 +50,7 @@
             <TextBlock Text="  TERMINAL" TextWrapping="NoWrap" Foreground="White" FontSize="72" Opacity="0.85" Height="80" TextAlignment="Left" FontWeight="Normal" Width="525" Canvas.Left="150" Canvas.Top="5"/>
         </Canvas>
 
-        <toolbar:ToolBarView x:Name="customToolbar" Height="35" Width="550" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Left" Background="{StaticResource headerBarBG}" ></toolbar:ToolBarView>
-
-        <Button Grid.Row="1" VerticalAlignment="Center" Width="150" Height="38" Command="{x:Static commands:CustomCommands.Connect}" Style="{StaticResource ButtonStyle1}">
-            <Button.Content>
-                <Label FontSize="20" FontStyle="Oblique" FontWeight="Bold" Foreground="White">Connect</Label>
-            </Button.Content>
-        </Button>
-
+        <toolbar:ToolBarView x:Name="customToolbar" Height="35" Width="550" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Left" Background="{StaticResource headerBarBG}" DataContext="{Binding ToolBar}"></toolbar:ToolBarView>
 
         <DataGrid x:Name="mGrid" Width="100" Height="Auto" MaxHeight="600"  ItemsSource="{Binding GraphData}" Grid.Row="2" Grid.Column="2" AutoGenerateColumns="False" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
             <DataGrid.Columns>
@@ -70,10 +60,6 @@
             </DataGrid.Columns>
 
         </DataGrid>
-
-        <TextBox Visibility="Visible" x:Name="console" Grid.Row="3"  VerticalAlignment="Stretch" Text="{Binding ErrMSG}" TextWrapping="Wrap" AcceptsReturn="True" />
-        <TextBox Visibility="Visible" x:Name="portName" x:FieldModifier="public" Grid.Row="3" Text="COM6" TextWrapping="Wrap" AcceptsReturn="True" Background="Red" Foreground="White" FontSize="18" MaxHeight="36" Width="100" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-        <Button Visibility="Visible" Click="onSetPort" Grid.Row="3" VerticalAlignment="Bottom"  MaxHeight="38" HorizontalAlignment="Right" Width="50">Set</Button>
 
         <legend:LegendListView x:Name="customLegend"  Grid.Column="2" Grid.Row="1"  DataContext="{Binding LegendListDataContext}" HorizontalAlignment="Right" VerticalAlignment="Top" Canvas.ZIndex="1"/>
         <Grid   Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Margin="0,0,10,0" VerticalAlignment="Stretch">
@@ -90,19 +76,26 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             
             <chart:ChartPlotter x:Name="mPlotter" Grid.Column="1" LegendVisible="False"/>
-            <ContentControl x:Name="rightPanel" Grid.Column="0" Margin="0,0,10,0" Content="{Binding RightPanel}"
+            <ContentControl x:Name="rightPanel" Grid.Column="0" Grid.RowSpan="99"  Margin="0,0,10,0" Content="{Binding RightPanel}"
                         Visibility="{Binding IsConsoleVisible, Converter={StaticResource boolToVis}}" Background="Brown" Width="{Binding ConsoleWidth}"/>
-
+            
+            <!--<ContentControl x:Name="bottomPanel" Margin="10,10,0,0" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Content="{Binding BottomPanel}"
+                        Visibility="{Binding IsBottomVisible, Converter={StaticResource boolToVis}}" Background="Brown" Height="{Binding BottomHeight}"/>-->
+            <ItemsControl prism:RegionManager.RegionName="BottomPanelRegion" Margin="10,10,0,0" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" />
         </Grid>
         
 
         <!--For some reasons I can't declare my console here because graphic XAML designer crashes-->
 
         
-        <ContentControl x:Name="bottomPanel" Margin="10,10,0,0" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Content="{Binding BottomPanel}"
-                        Visibility="{Binding IsBottomVisible, Converter={StaticResource boolToVis}}" Background="Brown" Height="{Binding BottomHeight}"/>
+        <!--<ContentControl x:Name="bottomPanel" Margin="10,10,0,0" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Content="{Binding BottomPanel}"
+                        Visibility="{Binding IsBottomVisible, Converter={StaticResource boolToVis}}" Background="Brown" Height="{Binding BottomHeight}"/>-->
 
 
     </Grid>

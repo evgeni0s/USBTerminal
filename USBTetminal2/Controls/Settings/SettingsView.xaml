@@ -3,17 +3,137 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:port="clr-namespace:USBTetminal2"
+             xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="500">
     <UserControl.Resources>
-        <ObjectDataProvider ObjectType="{x:Type port:CustomSerialPort}" MethodName="GetPortNames" x:Key="portNames"/>
+        <!--<ObjectDataProvider ObjectType="{x:Type port:CustomSerialPort}" MethodName="GetPortNames" x:Key="portNames"/>ObjectType="{x:Type ports:Parity}"-->
+        <!--<ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="parities">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="{StaticResource ports:Parity}" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>-->
+
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="parities">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="ports:Parity" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="stopBits">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="ports:StopBits" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <!--<x:Type  TypeName="ports:Parity"/>-->
+        <!--<Style TargetType="ComboBoxItem" >
+            <Setter Property="Width" Value="60"/>
+        </Style>-->
+
+        <sys:Double x:Key="PART_COMBOBOX_ITEM_WIDTH">80</sys:Double>
     </UserControl.Resources>
-    <Grid Background="#008C00" Opacity="0.5">
-        <ComboBox 
+    <!--<Grid Background="#008C00" >-->
+
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush Opacity="0.5" Color="#008C00"/>
+        </Grid.Background>
+        <!--<ComboBox 
             ItemsSource ="{Binding AvailablePorts}"
             SelectedItem=""
-            Height="30" Width="80"/>
+            Height="30" Width="80"/>-->
+
+
         <!--<TextBox>hi!</TextBox>-->
+
+        <!--<ListView ItemsSource="{Binding AvailablePorts}"  Height="100" VerticalAlignment="Top">
+        </ListView>-->
+
+
+        <ListView ItemsSource="{Binding AvailablePorts}" VerticalAlignment="Top" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn  Header="Port Name" DisplayMemberBinding="{Binding PortName}"/>
+                    <!--<GridViewColumn  Header="Baud Rate" DisplayMemberBinding="{Binding BoudRate}"/>-->
+                    <GridViewColumn  Header="Baud Rate">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox SelectedItem="{Binding BaudRate}" SelectedIndex="4">
+                                    <sys:Int32>1200</sys:Int32>
+                                    <sys:Int32>2400</sys:Int32>
+                                    <sys:Int32>4800</sys:Int32>
+                                    <sys:Int32>9600</sys:Int32>
+                                    <sys:Int32>19200</sys:Int32>
+                                    <sys:Int32>38400</sys:Int32>
+                                    <sys:Int32>57600</sys:Int32>
+                                    <sys:Int32>115200</sys:Int32>
+                                </ComboBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn  Header="Parity" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <!--WORKS !!!!-->
+                                <ComboBox SelectedItem="{Binding Parity}" ItemsSource="{Binding Source={StaticResource parities}}"  >
+                                </ComboBox>
+
+                                <!--COMPILES !!!!-->
+                                <!--<ComboBox SelectedItem="{Binding Parity, Mode=OneWayToSource}" ItemsSource="{Binding Source={x:Type TypeName=ports:Parity}}" />-->
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn  Header="Data Bits"  >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox SelectedItem="{Binding DataBits}" SelectedIndex="1">
+                                    <sys:Int32>7</sys:Int32>
+                                    <sys:Int32>8</sys:Int32>
+                                    <sys:Int32>9</sys:Int32>
+                                </ComboBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn  Header="Stop Bits" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox SelectedItem="{Binding StopBits}" ItemsSource="{Binding Source={StaticResource stopBits}}"  />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn  Header="Connect" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <!--<ToggleButton IsChecked="{Binding IsOpen, Mode=OneWay}" Command="{Binding OpenClosePortCommand}" >Connect</ToggleButton>-->
+                                <!--!!works fine-->
+                                <!--<Button Grid.Row="1" VerticalAlignment="Center" Width="70" Height="25" Command="{Binding OpenClosePortCommand}" Style="{StaticResource ConnectButtonStyle}">
+                                    <Button.Content>
+                                        <Label FontSize="12" FontStyle="Oblique" FontWeight="Bold" Foreground="White">Connect</Label>
+                                    </Button.Content>
+                                </Button>-->
+                                <ToggleButton IsChecked="{Binding CustomSerialPortIsOpened, Mode=OneWay}" Grid.Row="1" VerticalAlignment="Center" Width="90" Height="25" Command="{Binding OpenClosePortCommand}" Style="{StaticResource ConnectButtonStyle}">
+                                    <Label FontSize="12" FontStyle="Oblique" FontWeight="Bold" Foreground="White" >
+                                        <Label.Style>
+                                        <Style TargetType="Label">
+                                                <Setter Property="Content" Value="Connect"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CustomSerialPortIsOpened, Mode=OneWay}" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                        <Setter Property="Content" Value="Disconnect"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Label.Style>
+                                    </Label>
+                                </ToggleButton>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+
+        </ListView>
     </Grid>
 </UserControl>

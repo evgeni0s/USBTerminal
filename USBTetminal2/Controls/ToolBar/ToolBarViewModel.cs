@@ -1,9 +1,13 @@
-﻿using System;
+﻿using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using USBTetminal2.Controls.Settings;
 
 namespace USBTetminal2.Controls.ToolBar
 {
@@ -14,18 +18,44 @@ namespace USBTetminal2.Controls.ToolBar
     public class ToolBarViewModel : ViewModelBase
     {
 
-        protected Shell _mainWindow = null;
+        //protected Shell _mainWindow = null;
+        private IRegionManager _regionManager;
+        private SettingsViewModel _settings;
 
-        protected ToolBarViewModel()
+        public ToolBarViewModel(IRegionManager regionManager)
         {
-            _mainWindow = App.Current.MainWindow as Shell;
-            
+            //_mainWindow = App.Current.MainWindow as Shell;
+            _regionManager = regionManager;
+
+
+            _settings = ServiceLocator.Current.GetInstance<SettingsViewModel>();
         }
 
 
 
 
         #region Commands
+
+
+        private ICommand _showSettingsCommand;
+        public ICommand ShowSettingsCommand
+        {
+            get { return _showSettingsCommand ?? (_showSettingsCommand = new RelayCommand(ShowSettings)); }
+        }
+
+        private void ShowSettings(object obj)
+        {
+            var settings = _regionManager.Regions["BottomPanelRegion"].GetView("Settings") as SettingsView;
+
+            if (settings == null)
+            {
+                _regionManager.Regions["BottomPanelRegion"].Add(new SettingsView() { DataContext = _settings }, "Settings");
+            }
+            else
+            {
+                    settings.Visibility = settings.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            }
+        }
 
         //private ICommand _commandBufferExportTo;
         //private ICommand _commandBufferClear;

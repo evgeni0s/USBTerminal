@@ -15,7 +15,8 @@
         <ImageBrush AlignmentX="Left" ImageSource="/USBTetminal2;component/Res/Metal_plate520.jpg" Stretch="None"/>
     </Border.Background>-->
 
-    <Border DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType={x:Type Border}, Mode=FindAncestor}}" >
+    <!--<Border DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType={x:Type Border}, Mode=FindAncestor}}" >-->
+    <Border>
         <Grid>
             <StackPanel Orientation="Horizontal" Width="Auto" Margin="20,0">
                 <!--Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"  Showcard Gothic
@@ -31,7 +32,8 @@
                 <Button Width="50" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}" Foreground="#FF5D4002">
                     <TextBlock Text="Reset" FontSize="16" FontFamily="Gloucester MT Extra Condensed"/>
                 </Button>
-                <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowSettingsDialog}" Foreground="#FF570000">
+                <!--<Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowSettingsDialog}" Foreground="#FF570000">-->
+                <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{Binding ShowSettingsCommand}" Foreground="#FF570000">
                     <TextBlock Text="Settings" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
                 </Button>
                 <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ConsoleVisibility}" Foreground="#FF004291">

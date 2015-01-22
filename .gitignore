@@ -1,5 +1,13 @@
 /ARMDevice/bin/Debug
 /ARMDevice/bin
 /ARMDevice/obj
+/Excel/bin
+/Excel/obj
+/Infrastructure/bin
+/Infrastructure/obj
+/TestModule/bin
+/TestModule/obj
+/TestModule/obj/Debug
 /USBTetminal2/bin
 /USBTetminal2/obj
+/packages

@@ -1,24 +1,37 @@
-﻿using Microsoft.Practices.Prism.Logging;
+﻿
+    
+using System;
+using System.Windows;
+using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.ServiceLocation;
-using System;
+using Microsoft.Practices.Unity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+using TestModule;
+using USBTetminal2.Controls;
+
 
 namespace USBTetminal2
 {
+
     public class Bootstrapper : UnityBootstrapper
     {
-        private readonly Logger _logger = new Logger();
+        //private readonly Logger _logger = new Logger();
 
+        //protected override ILoggerFacade CreateLogger()
+        //{
+        //    return this._logger;
+        //}
+
+        //CallbackLogger in tutorial
+        private readonly CustomRichTextBox _logger = new CustomRichTextBox();
         protected override ILoggerFacade CreateLogger()
         {
-
-            return _logger;
+            return this._logger;
         }
 
         protected override void InitializeShell()
@@ -30,10 +43,20 @@ namespace USBTetminal2
         }
 
         //здесь вроди нужно связать интерфейсы с имплементашкой
-        //protected override void ConfigureContainer()
-        //{
-        //    base.ConfigureContainer();
-        //}
+        protected override void ConfigureContainer()
+        {
+            base.ConfigureContainer();
+            this.RegisterTypeIfMissing(typeof(ITestModule), typeof(TestModule.TestModule), true);
+            /*
+             RegisterInstance - extension method from namespace using Microsoft.Practices.Unity;
+             * this namespace comes from Nuget Unity package. If Something does not work, go to solution 
+             * -> manage Nuget -> remove and add again checkbox over Unity pakage. 
+             * If there is no unity package, then install from console
+             
+             */
+            this.Container.RegisterInstance<CustomRichTextBox>(this._logger);
+           
+        }
 
         protected override DependencyObject CreateShell()
         {
@@ -46,8 +69,8 @@ namespace USBTetminal2
         //    return new ConfigurationModuleCatalog();
         //}
 
-        protected override void ConfigureModuleCatalog()
-        {
+        //protected override void ConfigureModuleCatalog()
+        //{
             //Type moduleBType = typeof(TestModule.TestModule);
             //Type moduleAType = typeof(ModuleA);
            // ModuleCatalog.AddModule(new ModuleInfo(moduleBType.Name, moduleBType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
@@ -56,8 +79,14 @@ namespace USBTetminal2
             //Type moduleCType = typeof(ModuleC.ModuleC);
             //ModuleCatalog.AddModule(new ModuleInfo(moduleCType.Name, moduleCType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
 
+            //18_01_2015
+            //base.ConfigureModuleCatalog();
+            //ModuleCatalog moduleCatalog = (ModuleCatalog)this.ModuleCatalog;
+            //moduleCatalog.AddModule(typeof(TestModule.TestModule));
 
-        }
+
+
+        //}
 
 
 

@@ -6,3 +6,4 @@ F:\USBTerminalRepo\TestModule\obj\Debug\TestModule_MarkupCompile.cache
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.g.resources
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.dll
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.pdb
+F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.csprojResolveAssemblyReference.cache

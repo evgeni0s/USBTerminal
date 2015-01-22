@@ -1,5 +1,4 @@
-﻿using Infrastructure.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,20 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace USBTetminal2.Controls
+namespace Excel.Views
 {
     /// <summary>
-    /// Interaction logic for ConsoleView.xaml
+    /// Interaction logic for ExcelView.xaml
     /// </summary>
-    public partial class ConsoleView : UserControl
+    public partial class ExcelView : UserControl
     {
-        public ConsoleView()
+        public ExcelView()
         {
             InitializeComponent();
         }
-        
-        public ILogger Instanse
-        { get { return customRtb as ILogger; } }
-            
     }
 }

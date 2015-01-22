@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using USBTetminal2.Commands;
 using USBTetminal2.Protocol;
 using MahApps.Metro.Controls;
+using TestModule;
+using Microsoft.Practices.ServiceLocation;
 //[assembly: CLSCompliant(true)] -> works, but I do not need it
 namespace USBTetminal2
 {
@@ -26,10 +28,12 @@ namespace USBTetminal2
     {
 
 
-        public Shell()
+        public Shell(ITestModule module)
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            DataContext = ServiceLocator.Current.GetInstance<MainWindowViewModel>();
+            //DataContext = new MainWindowViewModel(module);
+
            // Title = "Terminal window. ";
             
             //mPlotter.CopyScreenshotToClipboard // Can be usefull
@@ -71,10 +75,10 @@ namespace USBTetminal2
            
         }
 
-        private void onSetPort(object sender, RoutedEventArgs e)
-        {
-            CustomCommands.Connect.Execute(portName.Text, null);
-        }
+        //private void onSetPort(object sender, RoutedEventArgs e)
+        //{
+        //    CustomCommands.Connect.Execute(portName.Text, null);
+        //}
 
         private void testTCS()
         { 
