@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Logging;
+using Microsoft.Practices.Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,18 +8,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using USBTetminal2.Communication;
 
 namespace USBTetminal2.Controls.Settings
 {
-    public class SettingsViewModel: ViewModelBase   //, ISimpleBroadcastListener
+    public class SettingsViewModel: ViewModelBase, ISettingsViewModel//, IRegionMemberLifetime 
     {
         private ILoggerFacade _logger;
-        public SettingsViewModel(ILoggerFacade logger)
+        private ICommunicationService _communicationService;
+        public SettingsViewModel(ILoggerFacade logger, ICommunicationService communicationService)
         {
             _logger = logger;
+            _communicationService = communicationService;
             OnRefreshPortList();
         }
 
+        //TO DO: Add "refresh" icon to settings menu
         private ICommand _refreshCommand;
         public ICommand RefreshCommand
         {
@@ -27,12 +32,7 @@ namespace USBTetminal2.Controls.Settings
 
         private void OnRefreshPortList(object obj = null)
         {
-            foreach (var item in SerialPort.GetPortNames())
-            {
-                PortModel model = new PortModel() { Name = item, BoudRate = 9600, DataBits = 8, StopBits = StopBits.One };
-                CustomSerialPort port = new CustomSerialPort(model, _logger);
-                AvailablePorts.Add(port);
-            }
+            AvailablePorts = new ObservableCollection<CustomSerialPort>(_communicationService.Ports);
         }
 
         private CustomSerialPort _selectedPort;
@@ -54,17 +54,11 @@ namespace USBTetminal2.Controls.Settings
         private ObservableCollection<CustomSerialPort> _availablePorts;
         public ObservableCollection<CustomSerialPort> AvailablePorts
         {
-            get { return _availablePorts ?? (_availablePorts = new ObservableCollection<CustomSerialPort>()); }
+            get { return _availablePorts; }
+            set { _availablePorts = value;
+            OnPropertyChanged("AvailablePorts");
+            }
         }
-
-
-
-        //{
-        //    get
-        //    {
-        //        return new ObservableCollection<PortModel>(CustomSerialPort.GetPortNames());
-        //    }
-        //}
 
         private void connect()
         {
@@ -73,16 +67,6 @@ namespace USBTetminal2.Controls.Settings
             if (!_selectedPort.IsOpen)
                 _selectedPort.Open();
         }
-
-        //public void ReciveMessage(CommonBroadcastType smgType, object data)
-        //{
-        //    switch (smgType)
-        //    {
-        //        case CommonBroadcastType.CONNECT_TO_DEVICE:
-        //            connect();
-        //            break;
-        //    }
-        //}
 
     }
 }

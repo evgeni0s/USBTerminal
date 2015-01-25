@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace USBTetminal2.Communication
 {
-    public interface ICommunicationService: IHexDataSender, ITextDataSender
+    public interface ICommunicationService
     {
+        IEnumerable<CustomSerialPort> Ports { get; }
+        CustomSerialPort Get(string name);
+        bool Contains(string name);
     }
 }

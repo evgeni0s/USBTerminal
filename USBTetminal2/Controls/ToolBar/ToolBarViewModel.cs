@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using USBTetminal2.Controls.Settings;
+using Infrastructure;
+using Microsoft.Practices.Unity;
+using System.Windows.Controls;
+using Microsoft.Practices.Prism.Logging;
 
 namespace USBTetminal2.Controls.ToolBar
 {
@@ -17,22 +21,15 @@ namespace USBTetminal2.Controls.ToolBar
     /// </summary>
     public class ToolBarViewModel : ViewModelBase
     {
-
-        //protected Shell _mainWindow = null;
         private IRegionManager _regionManager;
-        private SettingsViewModel _settings;
-
-        public ToolBarViewModel(IRegionManager regionManager)
+        private IViewModelProvider _viewModelProvider;
+        private ILoggerFacade _logger;
+        public ToolBarViewModel(IRegionManager regionManager, IViewModelProvider viewModelProvider, ILoggerFacade logger)
         {
-            //_mainWindow = App.Current.MainWindow as Shell;
             _regionManager = regionManager;
-
-
-            _settings = ServiceLocator.Current.GetInstance<SettingsViewModel>();
+            _viewModelProvider = viewModelProvider;
+            _logger = logger;
         }
-
-
-
 
         #region Commands
 
@@ -43,60 +40,42 @@ namespace USBTetminal2.Controls.ToolBar
             get { return _showSettingsCommand ?? (_showSettingsCommand = new RelayCommand(ShowSettings)); }
         }
 
+        //Potential Memory leak place. I do not know if my views and VMs are ever disposed
         private void ShowSettings(object obj)
         {
-            var settings = _regionManager.Regions["BottomPanelRegion"].GetView("Settings") as SettingsView;
-
-            if (settings == null)
+            IRegion bottom = _regionManager.Regions[RegionNames.BottomPanelRegion];
+            var view = bottom.GetView("Settings");
+            if (view == null)
             {
-                _regionManager.Regions["BottomPanelRegion"].Add(new SettingsView() { DataContext = _settings }, "Settings");
+                var vm = _viewModelProvider.GetViewModel<SettingsViewModel>("Settings");//in theory, viewmodel should be created just once
+                bottom.Add(new SettingsView() { DataContext = vm }, "Settings");
             }
-            else
+            else 
             {
-                    settings.Visibility = settings.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+                bottom.Remove(view);
             }
         }
 
-        //private ICommand _commandBufferExportTo;
-        //private ICommand _commandBufferClear;
-        //private ICommand _commandBufferAutoScrol;
 
-        //public ICommand CommandBufferExportTo
-        //{
-        //    get
-        //    {
-        //        if (_commandBufferExportTo == null)
-        //        {
-        //            _commandBufferExportTo = new AlaskaCommand(p => OnExecuteBufferExportTo(), c => CanExecuteBufferExportTo());
-        //        }
+        private ICommand _showConsoleCommand;
+        public ICommand ShowConsoleCommand
+        {
+            get { return _showConsoleCommand ?? (_showConsoleCommand = new RelayCommand(ShowConsole)); }
+        }
 
-        //        return _commandBufferExportTo;
-        //    }
-        //}
-        //public ICommand CommandBufferClear
-        //{
-        //    get
-        //    {
-        //        if (_commandBufferClear == null)
-        //        {
-        //            _commandBufferClear = new AlaskaCommand(p => OnExecuteBufferClear(), c => CanExecuteEBufferClear());
-        //        }
-
-        //        return _commandBufferClear;
-        //    }
-        //}
-        //public ICommand CommandBufferAutoScrol
-        //{
-        //    get
-        //    {
-        //        if (_commandBufferAutoScrol == null)
-        //        {
-        //            _commandBufferAutoScrol = new AlaskaCommand(p => OnExecuteBufferAutoScrol(), c => CanExecuteBufferAutoScrol());
-        //        }
-
-        //        return _commandBufferAutoScrol;
-        //    }
-        //}
+        private void ShowConsole(object obj)
+        {
+            IRegion left = _regionManager.Regions[RegionNames.LeftPanelRegion];
+            var view = left.GetView("Console");
+            if (view == null)
+            {
+                left.Add(_logger, "Console");
+            }
+            else
+            {
+                left.Remove(view);
+            }
+        }
 
         #endregion
     }

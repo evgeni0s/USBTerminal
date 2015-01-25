@@ -64,13 +64,5 @@ namespace USBTetminal2.Controls.Settings
             }
         }
 
-        //HOTFIX. There are problems identifying if port is open or closed
-
-        //public void setIsOpened(bool newValue)
-        //{
-        //    _isOpened = newValue;
-        //    OnPropertyChanged("IsOpened");
-        //}
-
     }
 }

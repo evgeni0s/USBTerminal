@@ -22,49 +22,30 @@ using System.Windows.Threading;
 using USBTetminal2.Commands;
 using USBTetminal2.Controls.Settings;
 using USBTetminal2.Protocol;
+using Infrastructure;
+using USBTetminal2.Utils;
 
 namespace USBTetminal2
 {
-    public class CustomSerialPort : SerialPort, INotifyPropertyChanged
+    public enum DataMode { Text, Hex }
+    public class CustomSerialPort : SerialPort, INotifyPropertyChanged, IViewModel
     {
-
-        Shell context;
-        byte[] buffer;
         private Timer _statusCheckTimer;
-        private readonly PortModel _model;
+        private PortModel _model;
+        private ILoggerFacade _logger;
 
-        public CustomSerialPort()
+        public CustomSerialPort(ILoggerFacade logger)
         {
+            _logger = logger;
             DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
             PinChanged += new SerialPinChangedEventHandler(comport_PinChanged);
+            _statusCheckTimer = new Timer(OnCheckPortIsOpen, null, 1000, 2000);
 
             //Poor null port drivers suggest to RtsEnable = true; 
             //Else I get exception “The parameter is incorrect.” when sending data
             //  RtsEnable = true;
         }
 
-        ILoggerFacade _logger;
-        public CustomSerialPort(PortModel model, ILoggerFacade logger)
-           :this()
-        {
-            _model = model;
-            _logger = logger;
-            PortName = model.Name;
-            BaudRate = model.BoudRate;
-            DataBits = model.DataBits;
-            Parity = model.Parity;
-            StopBits = model.StopBits;
-            //DO TO: this is antipattern. Think about elegant solution
-            _statusCheckTimer = new Timer(OnCheckPortIsOpen, null, 1000, 2000);
-        }
-
-        //Port Opened/Closed event
-        //bool _customSerialPortIsOpened;
-        //public bool CustomSerialPortIsOpened
-        //{
-        //    get { return _customSerialPortIsOpened = IsOpen; }
-        //    p
-        //}
         public bool CustomSerialPortIsOpened
         { get; private set; }
         private void OnCheckPortIsOpen(object state)
@@ -96,13 +77,11 @@ namespace USBTetminal2
                 {
                     Open();
                     _logger.Log("Connected to " + PortName, Category.Info, Priority.Medium);
-                    //CustomCommands.ErrorReport.Execute("Connection is Successfull", null);
                 }
                 else
                 {
                     Close();
                     _logger.Log("DIsconected from " + PortName, Category.Info, Priority.Medium);
-                    //CustomCommands.ErrorReport.Execute("Port is successfully closed", null);
                 }
 
             }
@@ -112,33 +91,24 @@ namespace USBTetminal2
 
             if (error)
                 _logger.Log(String.Format("Error occured on port Close/Open command \n {0}", errorMsg), Category.Exception, Priority.Medium);
-                //CustomCommands.ErrorReport.Execute(String.Format("Error occured on port Close/Open command \n {0}", errorMsg), null);
         }
 
 
         #endregion
 
-
-
-
-
         #region public properties
 
-
+        private DataMode _dataMode;
+        public DataMode DataMode
+        {
+            get { return _dataMode; }
+            set
+            {
+                _dataMode = value;
+                OnPropertyChanged("DataMode");
+            }
+        }
         #endregion
-
-
-
-        ///// <summary>
-        ///// THIS CLASS DOES ALL THE CONNECTION JOB
-        ///// </summary>
-        ///// <param name="Name">Name is an address to connect</param>
-
-        //public CustomSerialPort(string Name)
-        //    : this()
-        //{
-        //    PortName = Name;
-        //}
 
 
 
@@ -147,40 +117,23 @@ namespace USBTetminal2
 
         }
 
-        /// <summary>
-        /// What ever is recived - is stored in this class
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            //Application.Current.Dispatcher.Invoke(() =>
-            //{
-            //    LogOnUiThread("Data recived on " + PortName);
-            //    buffer = new byte[BytesToRead];
-            //    Read(buffer, 0, BytesToRead);
-            //    CustomCommands.DataRecived.Execute(buffer, App.Current.MainWindow);
-            //});
 
-
-             byte[]  bArr = new byte[BytesToRead];
-             Read(bArr, 0, BytesToRead);
-             //string str = GetString(bArr);
-             TestFrame frame = new TestFrame();
-             string str = frame.ByteArrayToHexString(bArr);
-             _logger.Log(str, Category.Info, Priority.Medium);
-        }
-
-
-
-
-        //Here is a wired Error: calling thread must be STA (single thread appartment)
-        private void LogOnUiThread(string msg)
-        {
-            //Crashes when not on UI thread
-            if (CustomCommands.ErrorReport.CanExecute(msg, context))
+            if (!IsOpen) return;
+            switch (DataMode)
             {
-                CustomCommands.ErrorReport.Execute(msg, context);
+                case DataMode.Text:
+                    string data = ReadExisting();
+                    _logger.Log(data, Category.Info, Priority.Medium);
+                    break;
+                case DataMode.Hex:
+                    byte[] buffer = new byte[BytesToRead];
+                    Read(buffer, 0, BytesToRead);
+                    _logger.Log(ByteArrayToHexString(buffer), Category.Info, Priority.Medium);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -189,56 +142,51 @@ namespace USBTetminal2
             return PortName;
         }
 
-
-        public void SendData(byte[] data)
+        public void SendData(string data)
         {
-            // Send the binary data out the port
-
-            Thread thread = new Thread(() =>
+            switch (DataMode)
             {
-                // ReadTimeout = 2500;
-                //WriteTimeout = 2500;
-                bool rtsEnable = RtsEnable;
-                Write(data, 0, data.Length);
-            });
-            thread.Start();
-
+                case DataMode.Text:
+                    // Send the user's text straight out the port
+                    Write(data);
+                    // Show in the terminal window the user's text
+                    _logger.Log(data, Category.Info, Priority.Medium);
+                    break;
+                case DataMode.Hex:
+                    try
+                    {
+                        byte[] bdata = HexStringToByteArray(data);
+                        Write(bdata, 0, bdata.Length);
+                        _logger.Log(ByteArrayToHexString(bdata), Category.Info, Priority.Medium);
+                    }
+                    catch (FormatException)
+                    {
+                        _logger.Log("Not properly formatted hex string: " + data + "\n", Category.Exception, Priority.Medium);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
-        ~CustomSerialPort()
+
+
+        #region convertors 
+        private string ByteArrayToHexString(byte[] data)
         {
-            _statusCheckTimer = null;
-            Close();
-            buffer = null;
+            StringBuilder sb = new StringBuilder(data.Length * 3);
+            foreach (byte b in data)
+                sb.Append(Convert.ToString(b, 16).PadLeft(2, '0').PadRight(3, ' '));
+            return sb.ToString().ToUpper();
         }
 
-        /// <summary>
-        /// Data From last transaction. May be storing here is not the best idea.... MEMORY LEAK PLACE!!!!!!
-        /// </summary>
-        //public byte[] RecivedData
-        //{ get { return buffer; } }
-
-        //public void ReciveMessage(CommonBroadcastType smgType, object data)
-        //{
-        //    int i = 0;
-        //    i++;
-        //}
-
-        #region convertors and utils ...not used for now
-        //They solve encoding problem if it ever appears
-        //http://stackoverflow.com/questions/472906/converting-a-string-to-byte-array
-        private byte[] GetBytes(string str)
+        private byte[] HexStringToByteArray(string s)
         {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
-            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
-        }
-
-        private string GetString(byte[] bytes)
-        {
-            char[] chars = new char[bytes.Length / sizeof(char)];
-            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-            return new string(chars);
+            s = s.Replace(" ", "");
+            byte[] buffer = new byte[s.Length / 2];
+            for (int i = 0; i < s.Length; i += 2)
+                buffer[i / 2] = (byte)Convert.ToByte(s.Substring(i, 2), 16);
+            return buffer;
         }
         #endregion
 
@@ -255,5 +203,30 @@ namespace USBTetminal2
             }
         }
         #endregion
+
+        public object Model
+        {
+            get
+            {
+                return _model;
+            }
+            set
+            {
+                _model = value as PortModel;
+                if (_model == null) return;
+                PortName = _model.Name;
+                BaudRate = _model.BoudRate;
+                DataBits = _model.DataBits;
+                Parity = _model.Parity;
+                StopBits = _model.StopBits;
+            }
+        }
+
+        ~CustomSerialPort()
+        {
+            _statusCheckTimer = null;
+            Close();
+        }
+
     }
 }

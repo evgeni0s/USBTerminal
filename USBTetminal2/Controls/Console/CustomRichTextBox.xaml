@@ -9,6 +9,7 @@
              IsReadOnlyCaretVisible="True"
              IsReadOnly="True"
              mc:Ignorable="d" 
+              Width="150"
              Loaded="onLoaded"
    
              PreviewMouseRightButtonDown="onPreviewMouseRightButtonDown"

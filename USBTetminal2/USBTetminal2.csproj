@@ -103,8 +103,6 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Communication\CommunicationService.cs" />
     <Compile Include="Communication\ICommunicationService.cs" />
-    <Compile Include="Communication\IHexDataSender.cs" />
-    <Compile Include="Communication\ITextDataSender.cs" />
     <Compile Include="Controls\Console\ConsoleView.xaml.cs">
       <DependentUpon>ConsoleView.xaml</DependentUpon>
     </Compile>
@@ -116,10 +114,8 @@
       <DependentUpon>LegendListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Legend\LegendListViewModel.cs" />
+    <Compile Include="Controls\Settings\ISettingsViewModel.cs" />
     <Compile Include="Controls\Settings\PortModel.cs" />
-    <Compile Include="Controls\Settings\SettingsDialog.xaml.cs">
-      <DependentUpon>SettingsDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -147,6 +143,7 @@
     <Compile Include="Utils\DataConverter.cs" />
     <Compile Include="Graphs\MyExtensions.cs" />
     <Compile Include="Utils\ExcelHelper.cs" />
+    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\VisibilityConverter.cs" />
     <Compile Include="Utils\VisibilityToCheckedConverter.cs" />
@@ -162,10 +159,6 @@
     <Page Include="Controls\Legend\LegendListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Settings\SettingsDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\SettingsView.xaml">
       <SubType>Designer</SubType>
@@ -249,7 +242,9 @@
     <Resource Include="AppIcon.ico" />
     <Content Include="Res\DynamicDataDisplay.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Enums\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

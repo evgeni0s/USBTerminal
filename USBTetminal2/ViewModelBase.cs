@@ -7,10 +7,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure;
 
 namespace USBTetminal2
 {
-    public class ViewModelBase : INotifyPropertyChanged, IDisposable
+    public class ViewModelBase : INotifyPropertyChanged, IDisposable, IViewModel
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -70,5 +71,7 @@ namespace USBTetminal2
         #endregion
 
 
+
+        public object Model { get; set; }
     }
 }

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace USBTetminal2.Communication
+namespace Infrastructure
 {
-    public interface ITextDataSender
+    public interface IViewModel
     {
+        object Model { get; set; }
     }
 }

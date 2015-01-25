@@ -29,6 +29,8 @@ using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Regions;
 using USBTetminal2.Controls.ToolBar;
 using Microsoft.Practices.ServiceLocation;
+using Infrastructure;
+using Microsoft.Practices.Unity;
 
 namespace USBTetminal2
 {
@@ -41,10 +43,10 @@ namespace USBTetminal2
         private ChartPlotter _plotter;
         private LegendListViewModel _legendListViewModel;
         private ObservableCollection<Point> _graphData;
-        //private ConsoleView _consoleView;
         private ILoggerFacade _logger;
-        //private SettingsView _settingsView;
+        
         private IRegionManager _regionManager;
+        private IUnityContainer _container;
         private bool _isConsoleVisible;
         private bool _isBottomVisible;
         private object _rightPanel;
@@ -56,20 +58,20 @@ namespace USBTetminal2
         Shell _mainWindow;
         #endregion
 
-        public MainWindowViewModel(ITestModule module, ILoggerFacade logger, IRegionManager regionManager)
+        public MainWindowViewModel(ITestModule module, ILoggerFacade logger, IRegionManager regionManager, IUnityContainer container)
         {
             _logger = logger;
             _mainWindow = App.Current.MainWindow as Shell;
             _regionManager = regionManager;
+            //Bolongs to Module responsibility
+            //_regionManager.RegisterViewWithRegion(RegionNames.BottomPanelRegion, typeof(SettingsView));
+            _container = container;
+
             _plotter = new ChartPlotter();//_mainWindow.mPlotter;
 
             initializeCommandBindings();
             initPseudoBroadCast();
         }
-
-
-
-
 
         #region public properties
 
@@ -223,6 +225,15 @@ namespace USBTetminal2
             }
         }
 
+        private SettingsViewModel _settingsViewModel;
+        public SettingsViewModel SettingsViewModel
+        {
+            get { return _settingsViewModel; }
+            set { _settingsViewModel = value;
+            OnPropertyChanged("SettingsViewModel");
+            }
+        }
+        
         #endregion
 
         #region private properties
@@ -231,41 +242,14 @@ namespace USBTetminal2
         {
             get 
             {
-                return _toolBar ?? (_toolBar = new ToolBarViewModel(_regionManager));
+                return _toolBar ?? (_toolBar = _container.Resolve<ToolBarViewModel>());
             }
         }
-
-        //Temporary
-        //public ConsoleView Console
-        //{
-        //    get
-        //    {
-        //        if (_consoleView == null)
-        //        {
-        //            _consoleView = new ConsoleView();
-        //        }
-        //        return _consoleView;
-        //    }
-        //}
 
         public CustomRichTextBox Console
         {
             get { return _logger as CustomRichTextBox; }
         }
-
-        //Temporary. Need use DI Container
-        //public SettingsView Settings
-        //{
-        //    get
-        //    {
-                //if (_settingsView == null)
-                //{
-                //    _settingsView = new SettingsView();
-                //    _settingsView.DataContext = new SettingsViewModel();
-                //}
-                //return _settingsView;
-        //    }
-        //}
 
 
 
@@ -287,20 +271,15 @@ namespace USBTetminal2
             createCommandBinding(CustomCommands.ShowLegend, onShowLegend, onShowLegendCanExecute);
             createCommandBinding(CustomCommands.RemoveLegend, onRemoveLegend, onRemoveLegendCanExecute);
             createCommandBinding(CustomCommands.ErrorReport, onErrorReport, onErrorReportCanExecute);
-            createCommandBinding(CustomCommands.Connect, onConnect, onConnectCanExecute);
             createCommandBinding(CustomCommands.DataRecived, onDataRecived, onDataRecivedCanExecute);
             createCommandBinding(CustomCommands.PlotGraph, onPlotGraph, onPlotGraphCanExecute);
             createCommandBinding(CustomCommands.AddNewLegend, onAddNewLegend, onAddNewLegendCanExecute);
             createCommandBinding(CustomCommands.RemoveGraph, onRemoveGraphLegend, onRemoveGraphCanExecute);
             createCommandBinding(CustomCommands.ChangeMarkersVisibility, onChangeMarkersVisibility, onChangeMarkersVisibilityCanExecute);
             createCommandBinding(CustomCommands.LegendContainerVisibility, onLegendContainerVisibility, onLegendContainerVisibilityCanExecute);
-            createCommandBinding(CustomCommands.ShowSettingsDialog, onShowSettingsDialog, onShowSettingsDialogCanExecute);
             createCommandBinding(CustomCommands.LoadDataToGrid, onLoadDataToGrid, onLoadDataToGridCanExecute);
             createCommandBinding(CustomCommands.ConsoleVisibility, onConsoleVisibility, onConsoleVisibilityCanExecute);
         }
-
-
-
 
         #region Command Implementation
 
@@ -339,45 +318,9 @@ namespace USBTetminal2
         #endregion
 
 
-        #region ShowSettingsCommand
-        //NOt Used. Moved to Toolbar
-        private void onShowSettingsDialog(object sender, ExecutedRoutedEventArgs e)
-        {
-            //IsBottomVisible = !IsBottomVisible;
-            //if (BottomPanel.GetType() != typeof(SettingsView))
-            //    BottomPanel = Settings;
-        }
 
-        private void onShowSettingsDialogCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-        #endregion
 
-        #region ConnectCommand
-
-        private void onConnect(object sender, ExecutedRoutedEventArgs e)
-        {
-           // IdentificatorFrame connectionFrame = new IdentificatorFrame();
-           // byte[] frameData = connectionFrame.Request();
-
-          //  _connector.connect(e.Parameter.ToString());
-
-          //  connectionFrame.
-
-            AbstractFrame tempFrame = new MeasurmentFrame();
-            byte[] request = tempFrame.Request();
-            string PortName = e.Parameter.ToString();
-          //  SelectedPort = new CustomSerialPort(PortName);
-            SelectedPort.SendData(request);
-           
-        }
-
-        private void onConnectCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = e.Parameter != null;
-        }
-        #endregion
+      
 
         #region ErrorReportCommand
         //Provides Loging functional

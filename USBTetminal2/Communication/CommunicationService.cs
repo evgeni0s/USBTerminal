@@ -1,65 +1,55 @@
-﻿using System;
+﻿using Infrastructure;
+using Microsoft.Practices.Unity;
+using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using USBTetminal2.Controls.Settings;
 
 namespace USBTetminal2.Communication
 {
     public class CommunicationService : ICommunicationService
     {
-        /*пока только идеи
-         нужно попробовать подмени интерфейса
-         идеально для Console
-         •••
-         в конструктор принимает порт 
-         * CustomRichTextBox(port)
-         порт или порты могут меняться
-         
-         http://rules.ssw.com.au/SoftwareDevelopment/RulesToBetterMVC/Pages/Use-a-Dependency-Injection-Centric-Architecture.aspx
-         * Из этой диаграмки выходит что может быть BinaryDataSender, StringDataSender и HexDataSender  :IDataSender
-         *                                           слишком малы и пока вырождаются в методы, или как модель данных! 
-         *                                           1) добавить в порт поле EDataSenderType.  
-         *                                           
-         CustomRichTextBox(IDataSender)
-         * DataRecived - приходит через логи
-         * 
-         
-         * 
-         * Графики... они принимают данные. 2) Добавить в графики IPortListener
-         * Excel...  
-         * 
-         * CommunicationService
-         */
-        /*
-         
-         ◘◘◘◘◘◘◘◘◘◘◘
-         * 
-         * 
-         CommunicationService содержит список портов
-         * ему сначала нужно слать сообщения на Консоль и график
-         * потом на Excel
-         * 
-         * 
-         * тогда эти 3 части могли бы унаследоваться от ISimpleBroadcastListener
-         * 
-         * 
-         * 
-         * •••••••
-         * ToolBarViewModel - может управлять view, но ViewModel находятся за 3-9 земель в MainWindowVM
-         */
 
-        public void SendData(byte[] data)
+        private IUnityContainer _container;
+        private IViewModelProvider _viewModelProvider;//provider does not realy fits here, but I'm reusing code
+        public CommunicationService(IUnityContainer container, IViewModelProvider viewModelProvider)
         {
-            // Send the binary data out the port
-            //Write(data, 0, data.Length);
+            _container = container;
+            _viewModelProvider = viewModelProvider;
+            OnRefreshPortList();
         }
 
-        public void SendData(string data)
+        private void OnRefreshPortList(object obj = null)
         {
-            //TestFrame frame = new TestFrame();
-            //byte[] bytes = frame.HexStringToByteArray(data);
-            //SendData(bytes);
+            
+            foreach (var item in SerialPort.GetPortNames())
+            {
+                PortModel model = new PortModel() { Name = item, BoudRate = 9600, DataBits = 8, StopBits = StopBits.One };
+                CustomSerialPort port = _viewModelProvider.GetViewModel<CustomSerialPort>(model);//Injects logger
+                _cash.Add(port.PortName, port);
+            }
+        }
+
+        #region Cash implementation
+        private  Dictionary<string, CustomSerialPort> _cash = new Dictionary<string, CustomSerialPort>();
+        public CustomSerialPort Get(string name)
+        {
+            return _cash[name];
+        }
+
+        public bool Contains(string name)
+        {
+            return _cash.ContainsKey(name);
+        }
+        #endregion
+
+
+        public IEnumerable<CustomSerialPort> Ports
+        {
+            get { return _cash.Values; }
         }
     }
 }

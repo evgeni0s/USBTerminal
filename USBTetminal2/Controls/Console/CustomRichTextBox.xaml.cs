@@ -1,9 +1,11 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.Practices.Prism.Logging;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +17,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using USBTetminal2.Communication;
+using USBTetminal2.Controls.Settings;
 
 namespace USBTetminal2.Controls
 {
@@ -27,9 +31,11 @@ namespace USBTetminal2.Controls
     public partial class CustomRichTextBox : RichTextBox, ILoggerFacade, ILogger
     {
         private List<Key> keysRequireFix = new List<Key>() { Key.Space, Key.Enter, Key.Back, Key.Delete };
-
+        //private ICommunicationService _communicationService;
+        //private ISettingsViewModel _settings;
         public CustomRichTextBox()
         {
+            //_settings = ServiceLocator.Current.GetInstance<ISettingsViewModel>();
             InitializeComponent();
         }
 
@@ -127,21 +133,14 @@ namespace USBTetminal2.Controls
         }
         #endregion
 
-        //protected override void OnPreviewKeyDown(KeyEventArgs e)
-        //{
-        //    base.OnPreviewKeyDown(e);
-        //   // if (getPositionType(inputField != ))
-        //   // inputField.ManualPreviewKeyDown(e);
-        //    //  e.Handled = true;
-        //    // inputField
-        //}
 
         #region action methods
 
         private void addToReadonly()
         {
-            Run run = inputField.getCopy(getNextStyle());
-            readOnlyItems.Inlines.Add(run);
+            //Run run = inputField.getCopy(getNextStyle());
+            //readOnlyItems.Inlines.Add(run);
+            TryExecute(inputField.Text);//runs command if nessesary
             inputField.Text = "";
             ScrollToEnd();
         }
@@ -156,7 +155,7 @@ namespace USBTetminal2.Controls
 
         #endregion
 
-        #region Tools
+        #region Positioning Tools
         CustomRun.CustomType previousStyle = CustomRun.CustomType.Red;
         private CustomRun.CustomType getNextStyle()
         {
@@ -197,6 +196,50 @@ namespace USBTetminal2.Controls
         }
         #endregion
 
+        #region other tools
+        bool isBinary;
+        //Regex binaryMgs = new Regex(@"^(-s)(.*)");//(@"^(-s .*)")  starts with -s + whitespace + any amount of chars
+        //Regex consoleSetting = new Regex(@"^(console)(.*)");
+        private void TryExecute(string cmd)
+        {
+           var _settings = ServiceLocator.Current.GetInstance<ISettingsViewModel>();
+           if (_settings.SelectedPort == null) return;
+           _settings.SelectedPort.SendData(cmd);
+            //works
+            //if (binaryMgs.IsMatch(cmd))
+            //{
+
+            //    //string filtered = Regex.Match(cmd, @"^(-s )(.*)").Groups[2].Value;
+            //    string filtered = cmd.Remove(0, 3);
+            //    _settings.SelectedPort.SendString(filtered);//skips - s and ' 'cmd.Skip(3).ToString()
+            //}
+
+           //if (binaryMgs.IsMatch(cmd))
+           //{
+ 
+           //}
+
+
+            //if (consoleSetting.IsMatch(cmd))
+            //{
+            //    changeConsoleSetting.
+            //}
+
+        }
+
+        private void changeConsoleSetting(string param)
+        {
+            switch (param)
+            {
+                case "-s":
+                    isBinary = false;
+                    break;
+                case "-b":
+                    isBinary = true;
+                    break;
+            }
+        }
+        #endregion
 
         private void onLoaded(object sender, RoutedEventArgs e)
         {

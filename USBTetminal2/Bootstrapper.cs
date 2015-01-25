@@ -13,6 +13,10 @@ using System.Text;
 using System.Threading.Tasks;
 using TestModule;
 using USBTetminal2.Controls;
+using Microsoft.Practices.Prism.Regions;
+using Infrastructure;
+using USBTetminal2.Controls.Settings;
+using USBTetminal2.Communication;
 
 
 namespace USBTetminal2
@@ -43,10 +47,15 @@ namespace USBTetminal2
         }
 
         //здесь вроди нужно связать интерфейсы с имплементашкой
+        //ВАЖНО http://stackoverflow.com/questions/21461278/unity-constructor-injection
+        //
         protected override void ConfigureContainer()
         {
             base.ConfigureContainer();
             this.RegisterTypeIfMissing(typeof(ITestModule), typeof(TestModule.TestModule), true);
+            this.RegisterTypeIfMissing(typeof(IViewModelProvider), typeof(ViewModelProvider), true);
+            this.RegisterTypeIfMissing(typeof(ICommunicationService), typeof(CommunicationService), true);
+            this.RegisterTypeIfMissing(typeof(ISettingsViewModel), typeof(SettingsViewModel), true);
             /*
              RegisterInstance - extension method from namespace using Microsoft.Practices.Unity;
              * this namespace comes from Nuget Unity package. If Something does not work, go to solution 
@@ -54,6 +63,8 @@ namespace USBTetminal2
              * If there is no unity package, then install from console
              
              */
+            
+            //this.Container.RegisterType<ISettingsViewModel, SettingsViewModel>();
             this.Container.RegisterInstance<CustomRichTextBox>(this._logger);
            
         }
@@ -62,6 +73,17 @@ namespace USBTetminal2
         {
             return ServiceLocator.Current.GetInstance<Shell>();
         }
+
+        //protected override IRegionBehaviorFactory ConfigureDefaultRegionBehaviors()
+        //{
+        //    return base.ConfigureDefaultRegionBehaviors();
+        //}
+
+
+        //protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
+        //{
+        //    return base.ConfigureRegionAdapterMappings();
+        //}
 
 
         //protected override IModuleCatalog CreateModuleCatalog()

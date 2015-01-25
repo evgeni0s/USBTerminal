@@ -14,7 +14,6 @@ namespace USBTetminal2
 {
     public interface ISimpleBroadcastListener
     {
-       // public void SendMessage(Utils.CommonBroadcastType msgType, object data);
        void ReciveMessage(CommonBroadcastType smgType, object data);//Meaasges will be sent from MainViewModel
     }
 }
