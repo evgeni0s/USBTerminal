@@ -6,12 +6,14 @@ Common features of all frames
  - Manualy execute command associated with this frame. Example: Measurment frame can start bilding a graph
  */
 
+using Modbus.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using USBTetminal2.Commands;
+using USBTetminal2.Utils;
 
 namespace USBTetminal2.Protocol
 {
@@ -24,6 +26,45 @@ namespace USBTetminal2.Protocol
         public abstract byte[] Request();
         protected abstract string getName();
         public abstract bool tryPrase(byte[] dataFromDevice);
+        //return BitConverter.ToUInt16(messageFrame, messageFrame.Length - 2) == BitConverter.ToUInt16(ModbusUtility.CalculateCrc(message.MessageFrame), 0);
+        //Works, but device calculates it wrong
+        public static bool ValidateCRC(ushort[] dataFromDevice) 
+        {
+            if(dataFromDevice.Length < 3) return false; // 2 byles for crc hash and 1 for any data
+
+            var main = dataFromDevice.Take(dataFromDevice.Length - 2).ToArray().PackUInt12();
+            var crc = dataFromDevice.Skip(dataFromDevice.Length - 2).ToArray().PackUInt12();
+            return ModbusUtility.CalculateCrc(main).SequenceEqual(crc);
+        }
+
+        public static bool ValidateCRC(byte[] dataFromDevice)
+        {
+            if (dataFromDevice.Length < 6) return false; // 2 byles for crc hash and 1 for any data
+
+            var main = dataFromDevice.Take(dataFromDevice.Length - 2).ToArray();
+            var crc = dataFromDevice.Skip(dataFromDevice.Length - 2).ToArray();
+            return ModbusUtility.CalculateCrc(main).SequenceEqual(crc);
+        }
+
+
+        public static bool ValidateLRC(ushort[] dataFromDevice)
+        {
+            if (dataFromDevice.Length < 3) return false; // 2 byles for crc hash and 1 for any data
+
+            var main = dataFromDevice.Take(dataFromDevice.Length - 2).ToArray().PackUInt12();
+            var crc = dataFromDevice.Skip(dataFromDevice.Length - 2).ToArray().PackUInt12();
+            return ModbusUtility.CalculateLrc(main).Equals(crc[1]);
+        }
+
+        public static bool ValidateLRC(byte[] dataFromDevice)
+        {
+            if (dataFromDevice.Length < 6) return false; // 2 byles for crc hash and 1 for any data
+
+            var main = dataFromDevice.Take(dataFromDevice.Length - 2).ToArray();
+            var crc = dataFromDevice.Skip(dataFromDevice.Length - 2).ToArray();
+            return ModbusUtility.CalculateLrc(main).Equals(crc[1]);
+        }
+
         public abstract void executeActionForThisFrame();
 
 

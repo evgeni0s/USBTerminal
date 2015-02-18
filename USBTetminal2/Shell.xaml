@@ -23,7 +23,7 @@
     <Window.Background>
         <ImageBrush AlignmentX="Left" ImageSource="/USBTetminal2;component/Res/Electronic_circuit.jpg" Stretch="Fill"/>
     </Window.Background>
-   
+
     <Grid Margin="10,0,10,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -50,7 +50,38 @@
             <TextBlock Text="USB " TextWrapping="NoWrap" Foreground="White" FontSize="72" Opacity="0.85" Canvas.Left="0" Canvas.Top="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="80" Width="135" TextAlignment="Left" FontWeight="Bold" />
             <TextBlock Text="  TERMINAL" TextWrapping="NoWrap" Foreground="White" FontSize="72" Opacity="0.85" Height="80" TextAlignment="Left" FontWeight="Normal" Width="525" Canvas.Left="150" Canvas.Top="5"/>
         </Canvas>
-
+        <ToggleButton Grid.Row="1" Width="120" Height="25"
+                                              FontStyle="Oblique"
+                                              FontWeight="Bold"
+                                              Foreground="White"
+                                              VerticalAlignment="Center"
+                                              Style="{StaticResource ConnectButtonStyle}"
+                                              Content="Measure"
+                                              IsEnabled="{Binding  RelativeSource={x:Static RelativeSource.Self}, Path=IsChecked, Converter={StaticResource InvertedBoolConverter}, Mode=OneWay}"
+                                              Command="{Binding MeasureCommand}">
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="Button.Click">
+                    <BeginStoryboard>
+                        <Storyboard FillBehavior="Stop">
+                            <StringAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentPresenter.Content)">
+                                <DiscreteStringKeyFrame KeyTime="0" Value="Wait 4"/> 
+                                <DiscreteStringKeyFrame KeyTime="0:0:1" Value="Wait 3"/> 
+                                <DiscreteStringKeyFrame KeyTime="0:0:2" Value="Wait 2"/> 
+                                <DiscreteStringKeyFrame KeyTime="0:0:3" Value="Wait 1"/> 
+                                <DiscreteStringKeyFrame KeyTime="0:0:4" Value="Done!"/> 
+                            </StringAnimationUsingKeyFrames> 
+                            <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="(ToggleButton.IsChecked)">
+                                <DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
+                                <DiscreteBooleanKeyFrame KeyTime="0:0:5" Value="False"/>
+                            </BooleanAnimationUsingKeyFrames>
+                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ToggleButton.Foreground).Color">
+                                <LinearColorKeyFrame KeyTime="0" Value="Black"/>
+                            </ColorAnimationUsingKeyFrames>
+                        </Storyboard> 
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
         <toolbar:ToolBarView x:Name="customToolbar" Height="35" Width="550" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Left" Background="{StaticResource headerBarBG}" DataContext="{Binding ToolBar}"></toolbar:ToolBarView>
 
         <DataGrid x:Name="mGrid" Width="100" Height="Auto" MaxHeight="600"  ItemsSource="{Binding GraphData}" Grid.Row="2" Grid.Column="2" AutoGenerateColumns="False" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
@@ -81,7 +112,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
+
             <chart:ChartPlotter x:Name="mPlotter" Grid.Column="1" LegendVisible="False"/>
             <ContentControl prism:RegionManager.RegionName="{x:Static Inf:RegionNames.LeftPanelRegion}" Grid.Column="0" Grid.RowSpan="99"  Margin="0,0,10,0" Background="Brown" />
 

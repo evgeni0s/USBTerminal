@@ -1,5 +1,4 @@
-﻿using Infrastructure.Interfaces;
-using Microsoft.Practices.Prism.Logging;
+﻿using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
@@ -28,14 +27,12 @@ namespace USBTetminal2.Controls
     /// </summary>
     /// 
     //TO DO: delete ILogger 
-    public partial class CustomRichTextBox : RichTextBox, ILoggerFacade, ILogger
+    public partial class CustomRichTextBox : RichTextBox, ILoggerFacade 
     {
-        private List<Key> keysRequireFix = new List<Key>() { Key.Space, Key.Enter, Key.Back, Key.Delete };
-        //private ICommunicationService _communicationService;
-        //private ISettingsViewModel _settings;
+        private List<Key> keysRequireFix = new List<Key>() { Key.Space, Key.Enter, Key.Back, Key.Delete, Key.Up, Key.Down };
+        private Run _focusedInline;
         public CustomRichTextBox()
         {
-            //_settings = ServiceLocator.Current.GetInstance<ISettingsViewModel>();
             InitializeComponent();
         }
 
@@ -108,42 +105,62 @@ namespace USBTetminal2.Controls
             {
                 case Key.Enter:
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                        CaretPosition.InsertTextInRun(Environment.NewLine);
-                    // CaretPosition.InsertLineBreak();
-                    else
-                        addToReadonly();
-                    break;
-                case Key.Back:
-                    if (getPositionType(inputField) != CuretPositionType.Outside)
                     {
-                        TextPointer tp = CaretPosition.GetPositionAtOffset(-1, LogicalDirection.Backward);
-                        tp.DeleteTextInRun(1);
-                        // CaretPosition.DeleteTextInRun(1);
-                        // CaretPosition = tp;
-                        //CaretPosition.GetInsertionPosition(LogicalDirection.Backward).DeleteTextInRun(1);
+                        CaretPosition.InsertTextInRun(Environment.NewLine);
+                        ScrollToEnd();
+                    }
+                    else
+                    {
+                        Run run = CustomRun.Cmd;
+                        run.Text = inputField.Text;
+                        readOnlyItems.Inlines.Add(new Run(Environment.NewLine));//problems with extra lines
+                        readOnlyItems.Inlines.Add(run);
+                        TryExecute(inputField.Text);//runs command if nessesary
+                        inputField.Text = "";
+                        ScrollToEnd();
+                        _focusedInline = null;
                     }
                     break;
                 case Key.Delete:
-                    if (getPositionType(inputField) != CuretPositionType.Outside)
+                case Key.Back:
+                    //Deletes text if selected
+                    var deletableTextRange = GetSelection(inputField);
+                    if (deletableTextRange != null)
                     {
-                        CaretPosition.DeleteTextInRun(1);
+                        deletableTextRange.Text = string.Empty;
+                    }
+                    else if (getPositionType(inputField) != CuretPositionType.Outside)
+                    {
+                        int deleteDirection = action == Key.Delete ? 1 : -1;
+                        TextPointer tp = CaretPosition.GetPositionAtOffset(deleteDirection, LogicalDirection.Backward);
+                        tp.DeleteTextInRun(1);
+                    }
+                    break;
+                case Key.Up:
+
+                    var previousRun = GetPreviousRun(_focusedInline);
+                    if (previousRun != null)
+                    {
+                        inputField.Text = previousRun.Text;
+                        _focusedInline = previousRun;
+                    }
+                    break;
+                case Key.Down:
+
+                    var nextRun = GetNextRun(_focusedInline);
+                    if (nextRun != null)
+                    {
+                        inputField.Text = nextRun.Text;
+                        _focusedInline = nextRun;
                     }
                     break;
             }
+            ScrollToEnd();
         }
         #endregion
 
 
         #region action methods
-
-        private void addToReadonly()
-        {
-            //Run run = inputField.getCopy(getNextStyle());
-            //readOnlyItems.Inlines.Add(run);
-            TryExecute(inputField.Text);//runs command if nessesary
-            inputField.Text = "";
-            ScrollToEnd();
-        }
 
         private void pasteFromClipboard()
         {
@@ -194,6 +211,56 @@ namespace USBTetminal2.Controls
                 return CuretPositionType.End;
             return CuretPositionType.Outside;
         }
+
+        private TextRange GetSelection(Inline element)
+        {
+            int pos1 = Selection.Start.CompareTo(element.ContentStart);
+            int pos2 = element.ContentEnd.CompareTo(Selection.End);
+            int pos3 = Selection.End.CompareTo(element.ContentStart);
+
+            if (pos3 == -1 || Selection.IsEmpty)
+                return null;
+
+
+            TextPointer start = Selection.Start;
+            TextPointer end = Selection.End;
+            if (pos1 < 0)
+                start = element.ContentStart;
+            if (pos2 < 0)
+                end = element.ContentEnd;
+
+            return new TextRange(start, end);
+        }
+
+        private Run GetNextRun(Run run)
+        {
+            var runs = readOnlyItems.Inlines.OfType<CustomRun.CommandRun>();
+            if (runs.Count() == 0)
+                return CustomRun.Cmd;
+
+            int nextIndex = run != null ? runs.TakeWhile(x => x != run).Count() + 1 : -1;
+            if (nextIndex > runs.Count() - 1)
+                return runs.ElementAt(runs.Count()-1);
+
+            nextIndex = nextIndex > 0 ? nextIndex : 0;
+            return runs.ElementAt(nextIndex);
+        }
+
+        private Run GetPreviousRun(Run run)
+        {
+            var runs = readOnlyItems.Inlines.OfType<CustomRun.CommandRun>();
+            if (runs.Count() == 0)
+                return CustomRun.Cmd;
+
+            if (run == null)
+                return runs.LastOrDefault();
+
+            int previousIndex = runs.TakeWhile(x => x != run).Count() - 1;
+            previousIndex = previousIndex > -1 ? previousIndex : 0;
+            return runs.ElementAt(previousIndex);
+        }
+
+
         #endregion
 
         #region other tools
@@ -203,8 +270,17 @@ namespace USBTetminal2.Controls
         private void TryExecute(string cmd)
         {
            var _settings = ServiceLocator.Current.GetInstance<ISettingsViewModel>();
-           if (_settings.SelectedPort == null) return;
-           _settings.SelectedPort.SendData(cmd);
+           if (_settings.Ports == null || cmd == string.Empty) return;
+
+           if (_settings.Ports.Count == 0)
+           {
+               Log("No active ports. Go to settings and open at least 1 port", Category.Exception, Priority.Medium);
+           }
+
+           foreach (var port in _settings.Ports)
+           {
+               port.SendData(cmd);
+           }
             //works
             //if (binaryMgs.IsMatch(cmd))
             //{
@@ -226,19 +302,34 @@ namespace USBTetminal2.Controls
             //}
 
         }
+        #endregion
 
-        private void changeConsoleSetting(string param)
+        #region Commands
+        private ICommand _clearCommand;
+        public ICommand ClearCommand
         {
-            switch (param)
-            {
-                case "-s":
-                    isBinary = false;
-                    break;
-                case "-b":
-                    isBinary = true;
-                    break;
-            }
+            get { return _clearCommand ?? (_clearCommand = new RelayCommand(OnClear)); }
         }
+
+        private void OnClear(object obj)
+        {
+            readOnlyItems.Dispatcher.BeginInvoke(new Action(() =>
+               {
+                   readOnlyItems.Inlines.Clear();
+               }));
+        }
+
+        private ICommand _saveCommand;
+        public ICommand SaveCommand
+        {
+            get { return _saveCommand ?? (_saveCommand = new RelayCommand(OnSave)); }
+        }
+
+        private void OnSave(object obj)
+        {
+            MessageBox.Show("Not implemented. Will be instead of Chart");
+        }
+
         #endregion
 
         private void onLoaded(object sender, RoutedEventArgs e)
@@ -249,20 +340,27 @@ namespace USBTetminal2.Controls
 
         private void onPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Paste(); - Simple, but breaks Isreadonly logic
+            if (base.Selection.IsEmpty)
+            {
+                inputField.Text += Clipboard.GetText();//Paste from clipboard
+                CaretPosition = inputField.ContentEnd;
+                ScrollToEnd();
+            }
+            else
+            {
+                Clipboard.SetText(base.Selection.Text, TextDataFormat.Text);//Copy to Clipboard
+                CaretPosition = Selection.End;//deselect
+            }
         }
 
-
-
-
-        public void Log(string message)
+        //when mouse enters
+        private void onSetKeyboardFocus(object sender, MouseEventArgs e)
         {
+            Focus();
         }
 
-        public void Error(string message)
-        {
-        }
 
+        /// <param name="category">Info - message from device only, Debug - messages from my app like "Successfull"</param>
         public void Log(string message, Category category, Priority priority)
         {
             readOnlyItems.Dispatcher.BeginInvoke(new Action(() =>
@@ -270,20 +368,31 @@ namespace USBTetminal2.Controls
 
                    CustomRun run = CustomRun.Log;
 
-
                    switch (category)
                    {
                        case Category.Exception:
                            run = CustomRun.Error;
                            break;
-                       case Category.Info:
-                           run = CustomRun.Info;
+                       case Category.Debug:
+                           run = CustomRun.Debug;
                            break;
+                       case Category.Info:
+                           run = CustomRun.Info;//something I do not control
+                           break;
+                       //case Category.Warn:
+                       //    run = CustomRun.Cmd;
+                       //    break;
                    }
-                   run.Text = message + Environment.NewLine; ;
+                   run.Text = message;
+                   if (category != Category.Info)
+                   {
+                       run.Text = Environment.NewLine + message; 
+                   }
                    readOnlyItems.Inlines.Add(run);
+                   _focusedInline = null;
                }));
 
         }
+
     }
 }

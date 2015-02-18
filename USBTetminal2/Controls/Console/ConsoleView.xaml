@@ -1,13 +1,51 @@
 ﻿<UserControl x:Class="USBTetminal2.Controls.ConsoleView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:customRTB ="clr-namespace:USBTetminal2.Controls"
-             mc:Ignorable="d"
-            
-             d:DesignHeight="300" d:DesignWidth="300">
+             xmlns:customRTB="clr-namespace:USBTetminal2.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml" />
+    </UserControl.Resources>
     <Grid>
-        <customRTB:CustomRichTextBox x:Name="customRtb" />
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ContentControl Content="{Binding ConsolePresenter}" />
+        <Border Grid.Row="1">
+            <Border Background="LightGreen" CornerRadius="0,0,20,20">
+                <Grid>
+                    <StackPanel Width="Auto"
+                                Margin="20,3"
+                                Orientation="Horizontal">
+                        <Button Width="25"
+                                Height="15"
+                                Command="{Binding ConsolePresenter.ClearCommand}"
+                                FontFamily="Tele-Marines"
+                                Foreground="#FF075100"
+                                Style="{StaticResource FlatButtonStyle}">
+                            <TextBlock FontFamily="Gloucester MT Extra Condensed"
+                                       FontSize="12"
+                                       Text="Clear" />
+                        </Button>
+                        <Button Width="25"
+                                Height="15"
+                                Margin="10,0,0,0"
+                                Command="{Binding ConsolePresenter.SaveCommand}"
+                                FontFamily="Tele-Marines"
+                                Foreground="#FF075100"
+                                Style="{StaticResource FlatButtonStyle}">
+                            <TextBlock FontFamily="Gloucester MT Extra Condensed"
+                                       FontSize="12"
+                                       Text="Save" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Border>
     </Grid>
 </UserControl>

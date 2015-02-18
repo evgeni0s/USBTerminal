@@ -1,24 +1,28 @@
 ﻿<RichTextBox x:Class="USBTetminal2.Controls.CustomRichTextBox"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:customRun ="clr-namespace:USBTetminal2.Controls"
+             xmlns:customRun="clr-namespace:USBTetminal2.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             Width="150"
              Background="Black"
-             SelectionBrush="White"
-             IsReadOnlyCaretVisible="True"
              IsReadOnly="True"
-             mc:Ignorable="d" 
-              Width="150"
+             IsReadOnlyCaretVisible="True"
              Loaded="onLoaded"
-   
+             MouseEnter="onSetKeyboardFocus"
              PreviewMouseRightButtonDown="onPreviewMouseRightButtonDown"
-             d:DesignHeight="300" d:DesignWidth="300">
+             SelectionBrush="White"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
     <FlowDocument>
-        <Paragraph x:Name="readOnlyItems"  >
-        </Paragraph>
-        <Paragraph>
-            <customRun:CustomRun x:Name="inputField" Text="I am editable" Foreground="LimeGreen" FontWeight="Bold" FontSize="13"/>
+        <Paragraph x:Name="readOnlyItems" />
+        <Paragraph MinWidowLines="15">
+            <customRun:CustomRun x:Name="inputField"
+                                 FontSize="13"
+                                 FontWeight="Bold"
+                                 Foreground="LimeGreen"
+                                 Text="I am editable" />
         </Paragraph>
     </FlowDocument>
 </RichTextBox>

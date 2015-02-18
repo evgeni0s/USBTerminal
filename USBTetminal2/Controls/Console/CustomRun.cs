@@ -15,7 +15,7 @@ namespace USBTetminal2.Controls
 
         public CustomRun()
         {
-
+            
         }
 
         public Run getCopy(CustomType type)
@@ -80,8 +80,21 @@ namespace USBTetminal2.Controls
                 CustomRun run = new CustomRun();
                 run.Text += Environment.NewLine;
                 run.FontWeight = FontWeights.Bold;
-                run.FontSize = 11;
-                run.Foreground = Brushes.LightBlue;
+                run.FontSize = 12;
+                run.Foreground = Brushes.LightGreen;
+                return run;
+            }
+        }
+
+        public class CommandRun : CustomRun { }
+        public static CustomRun Cmd
+        {
+            get
+            {
+                CustomRun run = new CommandRun();
+                run.FontWeight = FontWeights.Bold;
+                run.FontSize = 12;
+                run.Foreground = Brushes.White;
                 return run;
             }
         }
@@ -92,5 +105,18 @@ namespace USBTetminal2.Controls
            // base.OnPreviewKeyDown(e);
            // Text += e.Key;
     //    }
+
+        public static CustomRun Debug
+        {
+            get
+            {
+                CustomRun run = new CustomRun();
+                run.Text += Environment.NewLine;
+                run.FontWeight = FontWeights.Bold;
+                run.FontSize = 12;
+                run.Foreground = Brushes.LightBlue;
+                return run;
+            }
+        }
     }
 }

@@ -17,18 +17,16 @@ namespace USBTetminal2.Controls.ToolBar
 {
 
     /// <summary>
-    /// NOT USED FOR NOW
+    /// ColsoleKey, SettingsKey are used to register VMs in IViewModelProvider's dict
     /// </summary>
     public class ToolBarViewModel : ViewModelBase
     {
         private IRegionManager _regionManager;
         private IViewModelProvider _viewModelProvider;
-        private ILoggerFacade _logger;
-        public ToolBarViewModel(IRegionManager regionManager, IViewModelProvider viewModelProvider, ILoggerFacade logger)
+        public ToolBarViewModel(IRegionManager regionManager, IViewModelProvider viewModelProvider)
         {
             _regionManager = regionManager;
             _viewModelProvider = viewModelProvider;
-            _logger = logger;
         }
 
         #region Commands
@@ -44,11 +42,11 @@ namespace USBTetminal2.Controls.ToolBar
         private void ShowSettings(object obj)
         {
             IRegion bottom = _regionManager.Regions[RegionNames.BottomPanelRegion];
-            var view = bottom.GetView("Settings");
+            var view = bottom.GetView("SettingsKey");
             if (view == null)
             {
-                var vm = _viewModelProvider.GetViewModel<SettingsViewModel>("Settings");//in theory, viewmodel should be created just once
-                bottom.Add(new SettingsView() { DataContext = vm }, "Settings");
+                var vm = _viewModelProvider.GetViewModel<SettingsViewModel>("SettingsKey");//in theory, viewmodel should be created just once
+                bottom.Add(new SettingsView() { DataContext = vm }, "SettingsKey");
             }
             else 
             {
@@ -66,10 +64,11 @@ namespace USBTetminal2.Controls.ToolBar
         private void ShowConsole(object obj)
         {
             IRegion left = _regionManager.Regions[RegionNames.LeftPanelRegion];
-            var view = left.GetView("Console");
+            var view = left.GetView("ColsoleKey");
             if (view == null)
             {
-                left.Add(_logger, "Console");
+                var vm =_viewModelProvider.GetViewModel<ConsoleViewModel>("ColsoleKey");
+                left.Add(new ConsoleView() { DataContext = vm }, "ColsoleKey");
             }
             else
             {

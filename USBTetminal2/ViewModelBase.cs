@@ -71,7 +71,7 @@ namespace USBTetminal2
         #endregion
 
 
-
+        //Is set manualy or from ViewModelProvider
         public object Model { get; set; }
     }
 }

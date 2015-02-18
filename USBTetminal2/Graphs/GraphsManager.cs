@@ -139,7 +139,12 @@ namespace USBTetminal2.Graphs
         //Colverts object data -> List<double>
         private void buildGraphFromYPoints(object data)
         {
-            if (data.GetType() == typeof(List<int>))
+            if (data.GetType() == typeof(List<ushort>))
+            {
+                List<double> yPoints = ((List<ushort>)data).Select(i => (double)i).ToList();
+                buildGraphFromYPoints(yPoints);
+            }
+            else if (data.GetType() == typeof(List<int>))
             {
                 List<double> yPoints = ((List<int>)data).Select(i => (double)i).ToList();
                 buildGraphFromYPoints(yPoints);

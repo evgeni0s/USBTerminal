@@ -2,8 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:USBTetminal2"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:vm="clr-namespace:USBTetminal2.Controls.Settings"
@@ -11,15 +11,6 @@
              d:DesignWidth="500"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <!--  <ObjectDataProvider ObjectType="{x:Type port:CustomSerialPort}" MethodName="GetPortNames" x:Key="portNames"/>ObjectType="{x:Type ports:Parity}"  -->
-        <!--
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="parities">
-            <ObjectDataProvider.MethodParameters>
-            <x:Type TypeName="{StaticResource ports:Parity}" />
-            </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-        -->
-
         <ObjectDataProvider x:Key="parities"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
@@ -51,17 +42,73 @@
         <Grid.Background>
             <SolidColorBrush Opacity="0.5" Color="#008C00" />
         </Grid.Background>
-
-        <ListView VerticalAlignment="Top" ItemsSource="{Binding AvailablePorts}" SelectedItem="{Binding SelectedPort}">
+        <Button Width="20"
+                Height="20"
+                MinWidth="0"
+                MinHeight="0"
+                Margin="8"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Canvas.ZIndex="1"
+                Command="{Binding RefreshCommand}">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Grid Background="Transparent">
+                        <Border x:Name="outer_PART"
+                                Background="Transparent"
+                                CornerRadius="15" />
+                        <Image x:Name="AnimatedRotateTransform"
+                               Width="20"
+                               Height="20"
+                               RenderTransformOrigin=".5,.5"
+                               Source="/USBTetminal2;component/Res/Refresh.png">
+                            <Image.RenderTransform>
+                                <RotateTransform Angle="0" />
+                            </Image.RenderTransform>
+                        </Image>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!--  <Setter TargetName="outer_PART" Property="Background" Value="#7F00FF3A"/>  -->
+                        <!--
+                            <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                        -->
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard x:Name="RotationStoryboard">
+                                <Storyboard>
+                                    <DoubleAnimation Duration="0:0:1"
+                                                     From="0"
+                                                     RepeatBehavior="Forever"
+                                                     Storyboard.TargetName="AnimatedRotateTransform"
+                                                     Storyboard.TargetProperty="RenderTransform.Angle"
+                                                     To="360" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <StopStoryboard BeginStoryboardName="RotationStoryboard" />
+                        </EventTrigger>
+                        <!--
+                            </Trigger.EnterActions>
+                            </Trigger>
+                        -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="outer_PART" Property="Background" Value="#7FE8FF00" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <ListView VerticalAlignment="Top" ItemsSource="{Binding AvailablePorts}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding PortName}" Header="Port Name" />
                     <GridViewColumn Header="Baud Rate">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox  SelectedItem="{Binding BaudRate}">
-                                    <!--SelectedIndex="4"-->
-                                    <!--Default values do not fit because view is Recreated and VM remains-->
+                                <ComboBox IsEnabled="{Binding CustomSerialPortIsOpened, Converter={StaticResource InvertedBoolConverter}}" SelectedItem="{Binding BaudRate}">
+                                    <!--  SelectedIndex="4"  -->
+                                    <!--  Default values do not fit because view is Recreated and VM remains  -->
                                     <sys:Int32>1200</sys:Int32>
                                     <sys:Int32>2400</sys:Int32>
                                     <sys:Int32>4800</sys:Int32>
@@ -77,15 +124,17 @@
                     <GridViewColumn Header="Parity">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox ItemsSource="{Binding Source={StaticResource parities}}" SelectedItem="{Binding Parity}" />
+                                <ComboBox IsEnabled="{Binding CustomSerialPortIsOpened,
+                                                              Converter={StaticResource InvertedBoolConverter}}"
+                                          ItemsSource="{Binding Source={StaticResource parities}}"
+                                          SelectedItem="{Binding Parity}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Data Bits">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox SelectedItem="{Binding DataBits}">
-                                    <!--SelectedIndex="1"-->
+                                <ComboBox IsEnabled="{Binding CustomSerialPortIsOpened, Converter={StaticResource InvertedBoolConverter}}" SelectedItem="{Binding DataBits}">
                                     <sys:Int32>7</sys:Int32>
                                     <sys:Int32>8</sys:Int32>
                                     <sys:Int32>9</sys:Int32>
@@ -96,11 +145,15 @@
                     <GridViewColumn Header="Stop Bits">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox ItemsSource="{Binding Source={StaticResource stopBits}}" SelectedItem="{Binding StopBits}" />
+                                <ComboBox IsEnabled="{Binding CustomSerialPortIsOpened,
+                                                              Converter={StaticResource InvertedBoolConverter}}"
+                                          ItemsSource="{Binding Source={StaticResource stopBits}}"
+                                          SelectedItem="{Binding StopBits}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Data Mode"><!--IsBinaryMode-->
+                    <GridViewColumn Header="Data Mode">
+                        <!--  IsBinaryMode  -->
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding Source={StaticResource dataMode}}" SelectedItem="{Binding DataMode}" />
@@ -138,7 +191,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                 </GridView>
             </ListView.View>
 

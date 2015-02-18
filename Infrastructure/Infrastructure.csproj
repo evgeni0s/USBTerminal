@@ -48,7 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IMeasurmentsFeedService.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="IViewModelProvider.cs" />

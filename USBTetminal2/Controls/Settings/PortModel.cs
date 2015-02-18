@@ -64,5 +64,16 @@ namespace USBTetminal2.Controls.Settings
             }
         }
 
+        private DataMode _dataMode;
+        public DataMode DataMode
+        {
+            get { return _dataMode; }
+            set
+            {
+                _dataMode = value;
+                OnPropertyChanged("StopBits");
+            }
+        }
+
     }
 }

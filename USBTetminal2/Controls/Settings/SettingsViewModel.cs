@@ -20,35 +20,18 @@ namespace USBTetminal2.Controls.Settings
         {
             _logger = logger;
             _communicationService = communicationService;
-            OnRefreshPortList();
+            AvailablePorts = new ObservableCollection<CustomSerialPort>(_communicationService.Ports);
+            _communicationService.OnPortsRefreshed += OnPortsRefreshed;
         }
 
-        //TO DO: Add "refresh" icon to settings menu
-        private ICommand _refreshCommand;
-        public ICommand RefreshCommand
-        {
-            get { return _refreshCommand ?? (_refreshCommand = new RelayCommand(OnRefreshPortList)); }
-        }
-
-        private void OnRefreshPortList(object obj = null)
+        private void OnPortsRefreshed(object sender, EventArgs e)
         {
             AvailablePorts = new ObservableCollection<CustomSerialPort>(_communicationService.Ports);
         }
 
-        private CustomSerialPort _selectedPort;
-        public CustomSerialPort SelectedPort
+        public ICommand RefreshCommand
         {
-            get
-            {
-               
-                return _selectedPort;
-            }
-            set
-            {
-                //////FIX EXCEPTION!! Доступ к порту закрыт. Возникает если к порту подключена другая программа
-                _selectedPort = value;
-                OnPropertyChanged("SelectedPort");
-            }
+            get { return _communicationService.RefreshCommand; }
         }
 
         private ObservableCollection<CustomSerialPort> _availablePorts;
@@ -60,13 +43,25 @@ namespace USBTetminal2.Controls.Settings
             }
         }
 
-        private void connect()
+        public List<CustomSerialPort> Ports
         {
-            if (_selectedPort.IsOpen)
-                _selectedPort.Close();
-            if (!_selectedPort.IsOpen)
-                _selectedPort.Open();
+            get
+            {
+                return AvailablePorts.Where(port => port.IsOpen).ToList(); 
+            }
         }
 
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set
+            {
+                _isBusy = value;
+                OnPropertyChanged("IsBusy");
+            }
+            
+        }
+        
     }
 }

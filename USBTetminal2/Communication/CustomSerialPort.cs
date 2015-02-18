@@ -24,6 +24,7 @@ using USBTetminal2.Controls.Settings;
 using USBTetminal2.Protocol;
 using Infrastructure;
 using USBTetminal2.Utils;
+using Modbus.Device;
 
 namespace USBTetminal2
 {
@@ -37,13 +38,16 @@ namespace USBTetminal2
         public CustomSerialPort(ILoggerFacade logger)
         {
             _logger = logger;
-            DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
+            //DataReceived += new SerialDataReceivedEventHandler(dataReceived);
             PinChanged += new SerialPinChangedEventHandler(comport_PinChanged);
             _statusCheckTimer = new Timer(OnCheckPortIsOpen, null, 1000, 2000);
-
+            //Modbus.Device.ModbusSlave
             //Poor null port drivers suggest to RtsEnable = true; 
             //Else I get exception “The parameter is incorrect.” when sending data
             //  RtsEnable = true;
+
+            ReadTimeout = 5000;//consider exporting to model
+            WriteTimeout = 5000;//consider exporting to model
         }
 
         public bool CustomSerialPortIsOpened
@@ -76,12 +80,12 @@ namespace USBTetminal2
                 if (!IsOpen)
                 {
                     Open();
-                    _logger.Log("Connected to " + PortName, Category.Info, Priority.Medium);
+                    _logger.Log("Connected to " + PortName, Category.Debug, Priority.Medium);
                 }
                 else
                 {
                     Close();
-                    _logger.Log("DIsconected from " + PortName, Category.Info, Priority.Medium);
+                    _logger.Log("DIsconected from " + PortName, Category.Debug, Priority.Medium);
                 }
 
             }
@@ -90,7 +94,10 @@ namespace USBTetminal2
             catch (ArgumentException e) { error = true; errorMsg = e.Message; }
 
             if (error)
+            {
                 _logger.Log(String.Format("Error occured on port Close/Open command \n {0}", errorMsg), Category.Exception, Priority.Medium);
+                OnPropertyChanged("CustomSerialPortIsOpened");
+            }
         }
 
 
@@ -108,6 +115,21 @@ namespace USBTetminal2
                 OnPropertyChanged("DataMode");
             }
         }
+
+        //private IModbusSerialMaster _master;
+        //public IModbusSerialMaster Master
+        //{
+        //    //get { return master ?? (master = ModbusSerialMaster.CreateRtu(this)); }
+        //    get { return _master; }
+        //}
+
+        //not exactly what i need
+        //private ModbusSlave slave;
+        //public ModbusSlave Slave
+        //{
+        //    //AHTUNG!!! Devise address is hardcoded to 3
+        //    get { return slave ?? (slave = ModbusSerialSlave.CreateRtu(3, this)); }
+        //}  
         #endregion
 
 
@@ -117,7 +139,7 @@ namespace USBTetminal2
 
         }
 
-        private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        public void dataReceived(object sender, SerialDataReceivedEventArgs e)
         {
 
             if (!IsOpen) return;
@@ -128,8 +150,11 @@ namespace USBTetminal2
                     _logger.Log(data, Category.Info, Priority.Medium);
                     break;
                 case DataMode.Hex:
-                    byte[] buffer = new byte[BytesToRead];
-                    Read(buffer, 0, BytesToRead);
+                    int bytes = base.BytesToRead;
+                    byte[] buffer = new byte[bytes];
+                    //FIX EXCEPTION
+                    Read(buffer, 0, bytes);
+                     _logger.Log("Validating CRC: " + AbstractFrame.ValidateCRC(buffer), Category.Warn, Priority.High);
                     _logger.Log(ByteArrayToHexString(buffer), Category.Info, Priority.Medium);
                     break;
                 default:
@@ -142,26 +167,29 @@ namespace USBTetminal2
             return PortName;
         }
 
-        public void SendData(string data)
+        public void SendData(string str)
         {
             switch (DataMode)
             {
                 case DataMode.Text:
                     // Send the user's text straight out the port
-                    Write(data);
+                    Write(str);
                     // Show in the terminal window the user's text
-                    _logger.Log(data, Category.Info, Priority.Medium);
+                    //_logger.Log(str, Category.Debug, Priority.Medium);
                     break;
                 case DataMode.Hex:
                     try
                     {
-                        byte[] bdata = HexStringToByteArray(data);
-                        Write(bdata, 0, bdata.Length);
-                        _logger.Log(ByteArrayToHexString(bdata), Category.Info, Priority.Medium);
+                        byte[] bArr = HexStringToByteArray(str);
+                        Write(bArr, 0, bArr.Length);
+                        _logger.Log(ByteArrayToHexString(bArr), Category.Debug, Priority.Medium);
                     }
-                    catch (FormatException)
+                    catch (Exception e)
                     {
-                        _logger.Log("Not properly formatted hex string: " + data + "\n", Category.Exception, Priority.Medium);
+                        if (e is FormatException || e is ArgumentOutOfRangeException)
+                        {
+                            _logger.Log("Not properly formatted hex string: " + str + "\n", Category.Exception, Priority.Medium);
+                        }
                     }
                     break;
                 default:
@@ -219,6 +247,7 @@ namespace USBTetminal2
                 DataBits = _model.DataBits;
                 Parity = _model.Parity;
                 StopBits = _model.StopBits;
+                DataMode = _model.DataMode;
             }
         }
 

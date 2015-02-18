@@ -31,6 +31,9 @@ using USBTetminal2.Controls.ToolBar;
 using Microsoft.Practices.ServiceLocation;
 using Infrastructure;
 using Microsoft.Practices.Unity;
+using USBTetminal2.Communication;
+using Modbus.Utility;
+using System.Threading;
 
 namespace USBTetminal2
 {
@@ -38,13 +41,13 @@ namespace USBTetminal2
     {
 
         #region fields
-       // private ObservableCollection<CLegendItemViewModel> legendsList;
+        // private ObservableCollection<CLegendItemViewModel> legendsList;
         private CustomSerialPort _selectedPort;
         private ChartPlotter _plotter;
         private LegendListViewModel _legendListViewModel;
         private ObservableCollection<Point> _graphData;
         private ILoggerFacade _logger;
-        
+        private ICommunicationService _communicationService;
         private IRegionManager _regionManager;
         private IUnityContainer _container;
         private bool _isConsoleVisible;
@@ -58,7 +61,7 @@ namespace USBTetminal2
         Shell _mainWindow;
         #endregion
 
-        public MainWindowViewModel(ITestModule module, ILoggerFacade logger, IRegionManager regionManager, IUnityContainer container)
+        public MainWindowViewModel(ITestModule module, ILoggerFacade logger, IRegionManager regionManager, IUnityContainer container, ICommunicationService communicationService)
         {
             _logger = logger;
             _mainWindow = App.Current.MainWindow as Shell;
@@ -66,7 +69,7 @@ namespace USBTetminal2
             //Bolongs to Module responsibility
             //_regionManager.RegisterViewWithRegion(RegionNames.BottomPanelRegion, typeof(SettingsView));
             _container = container;
-
+            _communicationService = communicationService;
             _plotter = new ChartPlotter();//_mainWindow.mPlotter;
 
             initializeCommandBindings();
@@ -82,34 +85,36 @@ namespace USBTetminal2
                 if (errMSG == null)
                 {
                     errMSG = "Error tracker is ON";
-                    
+
                 }
                 return errMSG;
             }
-            set { errMSG = value;
-            OnPropertyChanged("ErrMSG");
+            set
+            {
+                errMSG = value;
+                OnPropertyChanged("ErrMSG");
             }
         }
         //Not binded to UI for now and is used as private
-        public CustomSerialPort SelectedPort
-        {
-            get
-            {
-                return _selectedPort;
-            }
-            set
-            {
-                if (_selectedPort != null && _selectedPort.IsOpen)
-                    _selectedPort.Close();
-                if (value != null && !value.IsOpen)
-                        value.Open();
-                    //////FIX EXCEPTION!! Доступ к порту закрыт. Возникает если к порту подключена другая программа
-               // RemoveListener(_selectedPort);
-              //  AddListener(value);
-                _selectedPort = value;
-                OnPropertyChanged("SelectedPort");
-            }
-        }
+        //public CustomSerialPort SelectedPort
+        //{
+        //    get
+        //    {
+        //        return _selectedPort;
+        //    }
+        //    set
+        //    {
+        //        if (_selectedPort != null && _selectedPort.IsOpen)
+        //            _selectedPort.Close();
+        //        if (value != null && !value.IsOpen)
+        //            value.Open();
+        //        //////FIX EXCEPTION!! Доступ к порту закрыт. Возникает если к порту подключена другая программа
+        //        // RemoveListener(_selectedPort);
+        //        //  AddListener(value);
+        //        _selectedPort = value;
+        //        OnPropertyChanged("SelectedPort");
+        //    }
+        //}
 
         public LegendListViewModel LegendListDataContext
         {
@@ -118,7 +123,7 @@ namespace USBTetminal2
                 if (_legendListViewModel == null)
                 {
                     _legendListViewModel = new LegendListViewModel();
-                     AddListener(_legendListViewModel);
+                    AddListener(_legendListViewModel);
                 }
                 return _legendListViewModel;
             }
@@ -145,14 +150,14 @@ namespace USBTetminal2
 
         public ObservableCollection<Point> GraphData
         {
-            get 
+            get
             {
                 if (_graphData == null)
                     return new ObservableCollection<Point>();
-                return  _graphData; 
+                return _graphData;
             }
-            set 
-            { 
+            set
+            {
                 _graphData = value;
                 OnPropertyChanged("GraphData");
             }
@@ -160,7 +165,7 @@ namespace USBTetminal2
 
         public bool IsConsoleVisible
         {
-            get 
+            get
             {
                 return _isConsoleVisible;
             }
@@ -173,7 +178,7 @@ namespace USBTetminal2
 
         public bool IsBottomVisible
         {
-            get 
+            get
             {
                 return _isBottomVisible;
             }
@@ -203,7 +208,7 @@ namespace USBTetminal2
                     _rightPanel = new object();
                 return _rightPanel;
             }
-            set 
+            set
             {
                 _rightPanel = value;
                 OnPropertyChanged("RightPanel");
@@ -229,27 +234,29 @@ namespace USBTetminal2
         public SettingsViewModel SettingsViewModel
         {
             get { return _settingsViewModel; }
-            set { _settingsViewModel = value;
-            OnPropertyChanged("SettingsViewModel");
+            set
+            {
+                _settingsViewModel = value;
+                OnPropertyChanged("SettingsViewModel");
             }
         }
-        
+
         #endregion
 
         #region private properties
         private ToolBarViewModel _toolBar;
         public ToolBarViewModel ToolBar
         {
-            get 
+            get
             {
                 return _toolBar ?? (_toolBar = _container.Resolve<ToolBarViewModel>());
             }
         }
 
-        public CustomRichTextBox Console
-        {
-            get { return _logger as CustomRichTextBox; }
-        }
+        //public CustomRichTextBox Console
+        //{
+        //    get { return _logger as CustomRichTextBox; }
+        //}
 
 
 
@@ -263,7 +270,7 @@ namespace USBTetminal2
             // +LegendLisDataContext WILL ADD ITSELF
         }
 
-      
+
         private void initializeCommandBindings()
         {
             createCommandBinding(CustomCommands.Reset, onResetExecute, onResetCanExecute);
@@ -271,31 +278,31 @@ namespace USBTetminal2
             createCommandBinding(CustomCommands.ShowLegend, onShowLegend, onShowLegendCanExecute);
             createCommandBinding(CustomCommands.RemoveLegend, onRemoveLegend, onRemoveLegendCanExecute);
             createCommandBinding(CustomCommands.ErrorReport, onErrorReport, onErrorReportCanExecute);
-            createCommandBinding(CustomCommands.DataRecived, onDataRecived, onDataRecivedCanExecute);
+            //createCommandBinding(CustomCommands.DataRecived, onDataRecived, onDataRecivedCanExecute);
             createCommandBinding(CustomCommands.PlotGraph, onPlotGraph, onPlotGraphCanExecute);
             createCommandBinding(CustomCommands.AddNewLegend, onAddNewLegend, onAddNewLegendCanExecute);
             createCommandBinding(CustomCommands.RemoveGraph, onRemoveGraphLegend, onRemoveGraphCanExecute);
             createCommandBinding(CustomCommands.ChangeMarkersVisibility, onChangeMarkersVisibility, onChangeMarkersVisibilityCanExecute);
             createCommandBinding(CustomCommands.LegendContainerVisibility, onLegendContainerVisibility, onLegendContainerVisibilityCanExecute);
             createCommandBinding(CustomCommands.LoadDataToGrid, onLoadDataToGrid, onLoadDataToGridCanExecute);
-            createCommandBinding(CustomCommands.ConsoleVisibility, onConsoleVisibility, onConsoleVisibilityCanExecute);
+            //createCommandBinding(CustomCommands.ConsoleVisibility, onConsoleVisibility, onConsoleVisibilityCanExecute);
         }
 
         #region Command Implementation
 
-        #region ConsoleVisibilityCommand
-        private void onConsoleVisibility(object sender, ExecutedRoutedEventArgs e)
-        {
-            IsConsoleVisible = !IsConsoleVisible;
-            if (RightPanel.GetType() != typeof(ConsoleView))
-            RightPanel = Console;
-        }
-        private void onConsoleVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
+        //#region ConsoleVisibilityCommand
+        //private void onConsoleVisibility(object sender, ExecutedRoutedEventArgs e)
+        //{
+        //    IsConsoleVisible = !IsConsoleVisible;
+        //    if (RightPanel.GetType() != typeof(ConsoleView))
+        //    RightPanel = Console;
+        //}
+        //private void onConsoleVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        //{
+        //    e.CanExecute = true;
+        //}
 
-        #endregion
+        //#endregion
 
         #region LegendSelectedCommand
         private void onLoadDataToGrid(object sender, ExecutedRoutedEventArgs e)
@@ -304,7 +311,7 @@ namespace USBTetminal2
             GraphData = new ObservableCollection<Point>(dataSource.GetPoints());
             OnPropertyChanged("GraphData");
 
-           //EnumerableDataSource<double> test =  _rawData.DataParts.ElementAt(1) as EnumerableDataSource<double>;
+            //EnumerableDataSource<double> test =  _rawData.DataParts.ElementAt(1) as EnumerableDataSource<double>;
             //var someValues = _rawData.GetPoints();
             //var someValues1 = _rawData.DataParts.ElementAt(0).GetPoints();
             //var someValues2 = _rawData.DataParts.ElementAt(1).GetPoints();
@@ -320,7 +327,7 @@ namespace USBTetminal2
 
 
 
-      
+
 
         #region ErrorReportCommand
         //Provides Loging functional
@@ -455,7 +462,7 @@ namespace USBTetminal2
         {
 
             CommonBroadcastType type = CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS;
-            NotifyAllBroadcastListeners(type, e.Parameter);                                                                                                                                     
+            NotifyAllBroadcastListeners(type, e.Parameter);
         }
 
         private void onPlotGraphCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -466,21 +473,83 @@ namespace USBTetminal2
 
         #region DataRecivedCommand
 
-        private void onDataRecived(object sender, ExecutedRoutedEventArgs e)
-        {
-            CommonBroadcastType type = CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE;
-           // NotifyAllBroadcastListeners(type, SelectedPort.RecivedData);
-            //Console.Instanse.Log(e.Parameter.ToString());
-        }
+
+        //private void onDataRecived(object sender, ExecutedRoutedEventArgs e)
+        //{
+        //    CommonBroadcastType type = CommonBroadcastType.DECODE_BYTE_ARRAY_FROM_DEVICE;
+        //   // NotifyAllBroadcastListeners(type, SelectedPort.RecivedData);
+        //    //Console.Instanse.Log(e.Parameter.ToString());
+        //}
 
 
-        private void onDataRecivedCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-          //  e.CanExecute = e.Parameter != null && SelectedPort.RecivedData.Length > 2;//2 - second byte and points to frame type
-            e.CanExecute = true;
-        }
+        //private void onDataRecivedCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        //{
+        //  //  e.CanExecute = e.Parameter != null && SelectedPort.RecivedData.Length > 2;//2 - second byte and points to frame type
+        //    e.CanExecute = true;
+        //}
 
         #endregion
+
+        #region MeasureCommand
+
+
+        private ICommand _measureCommand;
+        public ICommand MeasureCommand
+        {
+            get { return _measureCommand ?? (_measureCommand = new RelayCommand(OnMeasureCommand)); }
+        }
+
+        private void OnMeasureCommand(object obj)
+        {
+
+            
+            
+            ////works perfect
+            foreach (var port in _communicationService.Ports)
+            {
+                if (!port.IsOpen) continue;
+
+                // ModbusUtility.GetUInt32(registers[1], registers[0]);
+                //new Thread(() =>
+                //{
+
+                    try
+                    {
+                       var device = _communicationService.GetDevice(port.PortName);
+                        //Test Frame. works perfect. Returns all data    FUNCTION 6
+                        //device.WriteSingleRegister(255, 250, 170);
+
+                        //FUNCTION 3
+                        //var response = device.ReadHoldingRegisters(255, 252, 1);
+                       //var response = device.ReadHoldingRegisters(0x03, 0xFC, 0x01);//Do not delete. Way to decode hex
+                        var response = device.ReadHoldingRegisters(0x03, 0x00, 0x78);//Final!!!!!!!!!
+                        string msg = "";
+                       
+                     
+                        for (int i = 0; i < response.Length; i++)
+                        {
+                            //_logger.Log(Convert.ToString(response[i], 16), Category.Info, Priority.High);
+                            //_logger.Log(response[i].ToString(), Category.Info, Priority.High);
+                            //msg+= " " + response[i].ToString("X");
+
+                            msg += " " + response[i].ToString();
+                        }
+                        _logger.Log(msg, Category.Info, Priority.High);
+
+                        NotifyAllBroadcastListeners(CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS, response.ToList());
+
+                    }
+                    catch (TimeoutException)
+                    {
+                        _logger.Log("OnMeasureCommand: no response have been recived", Category.Exception, Priority.Low);
+                        port.dataReceived(null, null);
+                    }
+                //}).Start();
+            }
+
+        }
+        #endregion
+
 
         protected void createCommandBinding(ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute)
         {
@@ -489,10 +558,10 @@ namespace USBTetminal2
         }
         #endregion
 
-        #region simple broadcast 
+        #region simple broadcast
         private List<ISimpleBroadcastListener> broadCastSubscribers = new List<ISimpleBroadcastListener>();
         private LegendListViewModel.LegendListItem _lastSelectedLegend;
-        
+
         private void AddListener(ISimpleBroadcastListener listener)
         {
             broadCastSubscribers.Add(listener);
@@ -525,7 +594,7 @@ namespace USBTetminal2
             return SerialPort.GetPortNames().OrderBy(a => a.Length > 3 && int.TryParse(a.Substring(3), out num) ? num : 0).ToArray();
         }
 
- 
+
         public void showAllPorts()
         {
 

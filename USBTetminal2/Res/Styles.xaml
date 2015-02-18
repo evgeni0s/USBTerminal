@@ -562,10 +562,11 @@
                         <Trigger Property="ItemsControl.AlternationIndex" Value="1">
                             <Setter Property="Background" TargetName="Border"  Value="#01FFFFFF"></Setter>
                         </Trigger>
-                        <Trigger Property="IsSelected" Value="true">
+                        <!--Disabled selection for list items-->
+                        <!--<Trigger Property="IsSelected" Value="true">
                             <Setter Property="Background" TargetName="Border" Value="#99B4C6"/>
                             <Setter Property="Foreground" Value="#000000"/>
-                        </Trigger>
+                        </Trigger>-->
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Background" TargetName="Border" Value="#c5d7e5"/>
                             <Setter Property="Foreground" Value="#000000"/>

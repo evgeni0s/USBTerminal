@@ -15,6 +15,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModule", "TestModule\TestModule.csproj", "{BC60A717-A221-467F-B9DB-3263E3008082}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Referenced Assemblies", "Referenced Assemblies", "{4929DE00-F082-47A3-8ECC-3899A05AB5C8}"
+	ProjectSection(SolutionItems) = preProject
+		Referenced Assemblies\FTD2XX.dll = Referenced Assemblies\FTD2XX.dll
+		Referenced Assemblies\FtdAdapter.dll = Referenced Assemblies\FtdAdapter.dll
+		Referenced Assemblies\log4net.dll = Referenced Assemblies\log4net.dll
+		Referenced Assemblies\Modbus.dll = Referenced Assemblies\Modbus.dll
+		Referenced Assemblies\Modbus.Extensions.dll = Referenced Assemblies\Modbus.Extensions.dll
+		Referenced Assemblies\Unme.Common.dll = Referenced Assemblies\Unme.Common.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace USBTetminal2.Controls.Settings
 {
     interface ISettingsViewModel 
     {
-        USBTetminal2.CustomSerialPort SelectedPort { get; set; }
+        List<USBTetminal2.CustomSerialPort> Ports { get; }
     }
 }

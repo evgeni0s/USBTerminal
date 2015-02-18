@@ -1,4 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:utils="clr-namespace:USBTetminal2.Utils"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--<Style  x:Key="thumbStyle" TargetType="{x:Type Thumb}">
@@ -10,7 +11,8 @@
     </Style>-->
 
 
-
+    <utils:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    
     <DataTemplate x:Key="legendTemplate" >
         <Grid HorizontalAlignment="Stretch">
             <!--uncomment to enable color effect <Grid.Background>

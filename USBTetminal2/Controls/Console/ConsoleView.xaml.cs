@@ -1,5 +1,4 @@
-﻿using Infrastructure.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,9 +24,5 @@ namespace USBTetminal2.Controls
         {
             InitializeComponent();
         }
-        
-        public ILogger Instanse
-        { get { return customRtb as ILogger; } }
-            
     }
 }

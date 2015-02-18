@@ -46,7 +46,7 @@ namespace USBTetminal2
             comport.PinChanged += new SerialPinChangedEventHandler(comport_PinChanged);
 
             //Standart connection
-            comport.BaudRate = 9600;
+            comport.BaudRate = 19200;
             comport.DataBits = 8;
             comport.StopBits = StopBits.One;
             comport.Parity = Parity.None;

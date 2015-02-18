@@ -41,6 +41,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\USBTerminal\USBTerminal\Libs\DynamicDataDisplay.dll</HintPath>
     </Reference>
+    <Reference Include="FtdAdapter">
+      <HintPath>..\Referenced Assemblies\FtdAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\Referenced Assemblies\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -77,6 +83,12 @@
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
       <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
+    <Reference Include="Modbus">
+      <HintPath>..\Referenced Assemblies\Modbus.dll</HintPath>
+    </Reference>
+    <Reference Include="Modbus.Extensions">
+      <HintPath>..\Referenced Assemblies\Modbus.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -90,6 +102,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Unme.Common">
+      <HintPath>..\Referenced Assemblies\Unme.Common.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -106,6 +121,7 @@
     <Compile Include="Controls\Console\ConsoleView.xaml.cs">
       <DependentUpon>ConsoleView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Console\ConsoleViewModel.cs" />
     <Compile Include="Controls\Console\CustomRichTextBox.xaml.cs">
       <DependentUpon>CustomRichTextBox.xaml</DependentUpon>
     </Compile>
@@ -144,6 +160,7 @@
     <Compile Include="Graphs\MyExtensions.cs" />
     <Compile Include="Utils\ExcelHelper.cs" />
     <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\InvertedBoolConverter.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\VisibilityConverter.cs" />
     <Compile Include="Utils\VisibilityToCheckedConverter.cs" />
@@ -235,6 +252,7 @@
     <Resource Include="Res\Metal_plate820.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Res\Refresh.png" />
     <Resource Include="Res\Gitar-mobile-app-icons.jpg" />
     <Resource Include="Res\Delete_Icon.png" />
     <Resource Include="Res\Delete_Icon_small.png" />
