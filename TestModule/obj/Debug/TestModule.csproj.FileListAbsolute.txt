@@ -1,9 +1,9 @@
 F:\USBTerminalRepo\TestModule\bin\Debug\TestModule.dll
 F:\USBTerminalRepo\TestModule\bin\Debug\TestModule.pdb
+F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.csprojResolveAssemblyReference.cache
 F:\USBTerminalRepo\TestModule\obj\Debug\Views\TestModuleView.baml
 F:\USBTerminalRepo\TestModule\obj\Debug\Views\TestModuleView.g.cs
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule_MarkupCompile.cache
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.g.resources
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.dll
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.pdb
-F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.csprojResolveAssemblyReference.cache

@@ -13,7 +13,7 @@ namespace USBTetminal2.Commands
         static CustomCommands()
         {
             initializeShowLegendCommand();
-            initializeLegendContainerVisibilityCommand();
+            initializeLegendLegendVisibilityCommand();
             initializeAddNewLegend();
             initializeRemoveLegendCommand();
 
@@ -96,9 +96,9 @@ namespace USBTetminal2.Commands
             _removeLegendCommand = new RoutedCommand("RemoveLegend", typeof(CustomCommands));
         }
 
-        private static void initializeLegendContainerVisibilityCommand()
+        private static void initializeLegendLegendVisibilityCommand()
         {
-            _legendContainerVisibilityCommand = new RoutedCommand("LegendContainerVisibility", typeof(CustomCommands));
+            _legendLegendVisibilityCommand = new RoutedCommand("LegendLegendVisibility", typeof(CustomCommands));
         }
 
         private static void initializeDataRecived()
@@ -136,9 +136,9 @@ namespace USBTetminal2.Commands
             get { return CustomCommands._removeLegendCommand; }
         }
 
-        public static RoutedCommand LegendContainerVisibility
+        public static RoutedCommand LegendLegendVisibility
         {
-            get { return CustomCommands._legendContainerVisibilityCommand; }
+            get { return CustomCommands._legendLegendVisibilityCommand; }
         }
 
         public static RoutedCommand Connect
@@ -190,7 +190,7 @@ namespace USBTetminal2.Commands
         static RoutedCommand _resetCommand;
         static RoutedCommand _showPointsCommand;
         static RoutedCommand _removeLegendCommand;
-        static RoutedCommand _legendContainerVisibilityCommand;
+        static RoutedCommand _legendLegendVisibilityCommand;
         static RoutedCommand _connectCommand;
         static RoutedCommand _errorReportCommand;
         static RoutedCommand _dataRecivedCommand;

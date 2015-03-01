@@ -13,6 +13,7 @@ using USBTetminal2.Commands;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
+using USBTetminal2.Graphs;
 
 namespace USBTetminal2.Controls.Legend
 {
@@ -21,7 +22,7 @@ namespace USBTetminal2.Controls.Legend
     /// LegendListViewModel - contains list of items
     /// LegendListItem - items themselves
     /// </summary>
-    public class LegendListViewModel : ViewModelBase, ISimpleBroadcastListener
+    public class LegendListViewModel : ViewModelBase, ILegendListViewModel
     {
 
 
@@ -35,12 +36,25 @@ namespace USBTetminal2.Controls.Legend
             private string description;
             private SolidColorBrush lineColor;
             public bool isChecked;
-            public LegendListItem(LineAndMarker<MarkerPointsGraph> graph)
+            private ILegendListViewModel _legendList;
+            public LegendListItem(LineAndMarker<MarkerPointsGraph> graph, ILegendListViewModel legendList)
             {
                 _graph = graph;
                 Description = graph.LineGraph.Description.ToString();
                 LineColor = graph.LineGraph.Stroke as SolidColorBrush; 
                 IsChecked = true;
+                _legendList = legendList;
+            }
+
+            //private LegendListItem _empty;
+            private LegendListItem()
+            {
+                //_empty = new LegendListItem();
+            }
+
+            public static LegendListItem Empty
+            {
+                get { return new LegendListItem(); }
             }
 
             public string Description
@@ -91,30 +105,56 @@ namespace USBTetminal2.Controls.Legend
                    return rawData;
                 }
             }
+
+            public IEnumerable<Point> Points
+            {
+                get
+                {
+                    if (_graph == null || _graph.LineGraph == null || _graph.LineGraph.DataSource == null)
+                        return new Point[0];
+                    return _graph.LineGraph.DataSource.GetPoints();
+                }
+            }
+
+            #region Commads
+            
+            private ICommand _removeLegendCommand;
+            public ICommand RemoveLegendCommand
+            {
+                get { return _removeLegendCommand ?? (_removeLegendCommand = new RelayCommand(_legendList.deleteLegend)); }
+            }
+
+            //private ICommand _removeLegendCommand;
+            //public ICommand RemoveLegendCommand
+            //{
+            //    get { return _removeLegendCommand ?? (_removeLegendCommand = new RelayCommand(_legendList.deleteLegend)); }
+            //}
+            #endregion
         }
 
         #endregion
 
 
-        Visibility _containerVisibility = Visibility.Visible;
-        public LegendListViewModel()
+        Visibility _LegendVisibility = Visibility.Visible;
+        IGraphModule _graph;
+        public void SetGraph(IGraphModule graph)
         {
-            //
+            _graph = graph;
         }
 
 
-        public Visibility ContainerVisibility
+        public Visibility LegendVisibility
         {
             get
             {
                 if (LegendsList.Count <= 0)
                     return Visibility.Collapsed;
-                return _containerVisibility;
+                return _LegendVisibility;
             }
             set 
             {
-                _containerVisibility = value;
-                OnPropertyChanged("ContainerVisibility");
+                _LegendVisibility = value;
+                OnPropertyChanged("LegendVisibility");
             }
         }
 
@@ -127,69 +167,93 @@ namespace USBTetminal2.Controls.Legend
             }
             set
             {
-                OnPropertyChanged("ContainerVisibility");
+                OnPropertyChanged("LegendVisibility");
                 _legendsList = value;
             }
         }
 
-        private void addNewLegend(object data)
+        private LegendListItem _selectedLegend;
+        public LegendListItem SelectedLegend
+        {
+            get
+            {
+                return _selectedLegend ?? LegendListItem.Empty;
+            }
+            set
+            {
+                _selectedLegend = value;
+                OnPropertyChanged("SelectedLegend");
+            }
+        }
+         
+        public void addNewLegend(object data)
         {
             if (data.GetType() != typeof(LineAndMarker<MarkerPointsGraph>))
                 return;
             var graph = (LineAndMarker<MarkerPointsGraph>)data;
-            LegendListItem legend = new LegendListItem(graph);
+            LegendListItem legend = new LegendListItem(graph, this);
             LegendsList.Add(legend);
-            OnPropertyChanged("ContainerVisibility");
+            OnPropertyChanged("LegendVisibility");
         }
 
 
-        private void deleteLegend(object data)
+        public void deleteLegend(object data)
         {
             if (data.GetType() != typeof(LegendListItem))
                 return;
             LegendListItem item = (LegendListItem)data;
             LegendsList.Remove((LegendListItem)data);
-            OnPropertyChanged("ContainerVisibility");
-            CustomCommands.RemoveGraph.Execute(item.Graph, App.Current.MainWindow);
+            OnPropertyChanged("LegendVisibility");
+            //CustomCommands.RemoveGraph.Execute(item.Graph, App.Current.MainWindow);
+            _graph.removeGraph(item.Graph);
         }
 
 
-        private void clearAll()
+        public void clearAll()
         {
             LegendsList.Clear();// = new ObservableCollection<LegendListItem>();
-            OnPropertyChanged("ContainerVisibility");
+            OnPropertyChanged("LegendVisibility");
         }
 
 
-        private void switchLegendVisibility()
+        public void switchLegendVisibility(object cmdParam = null)
         {
-            if (ContainerVisibility == Visibility.Collapsed)
-                ContainerVisibility = Visibility.Visible;
+            if (LegendVisibility == Visibility.Collapsed)
+                LegendVisibility = Visibility.Visible;
 
-            else if(ContainerVisibility == Visibility.Visible)
-                ContainerVisibility = Visibility.Collapsed;
+            else if(LegendVisibility == Visibility.Visible)
+                LegendVisibility = Visibility.Collapsed;
         }
 
-        public void ReciveMessage(CommonBroadcastType smgType, object data)
+
+        private ICommand _switchVisibilityCommand;
+        public ICommand SwitchVisibilityCommand
         {
-            switch (smgType)
-            {
-                case CommonBroadcastType.ADD_LEGEND_TO_GRAPH:
-                    addNewLegend(data);
-                    break;
-                case CommonBroadcastType.DELETE_LEGEND:
-                    deleteLegend(data);
-                    break;
-                case CommonBroadcastType.CLEAR_ALL:
-                    clearAll();
-                    break;
-                case CommonBroadcastType.USER_CHANGED_LEGEND_CONTAINER_VISIBILITY:
-                    switchLegendVisibility();
-                    break;
-                default:
-                    break;
-            }
+            get { return _switchVisibilityCommand ?? (_switchVisibilityCommand = new RelayCommand(switchLegendVisibility)); }
         }
+
+      
+
+        //public void ReciveMessage(CommonBroadcastType smgType, object data)
+        //{
+        //    switch (smgType)
+        //    {
+        //        case CommonBroadcastType.ADD_LEGEND_TO_GRAPH:
+        //            addNewLegend(data);
+        //            break;
+        //        case CommonBroadcastType.DELETE_LEGEND:
+        //            deleteLegend(data);
+        //            break;
+        //        case CommonBroadcastType.CLEAR_ALL:
+        //            clearAll();
+        //            break;
+        //        case CommonBroadcastType.USER_CHANGED_LEGEND_CONTAINER_VISIBILITY:
+        //            switchLegendVisibility();
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
 
 
 

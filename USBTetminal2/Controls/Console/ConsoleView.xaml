@@ -35,7 +35,7 @@
                         <Button Width="25"
                                 Height="15"
                                 Margin="10,0,0,0"
-                                Command="{Binding ConsolePresenter.SaveCommand}"
+                                Command="{Binding SaveCommand}"
                                 FontFamily="Tele-Marines"
                                 Foreground="#FF075100"
                                 Style="{StaticResource FlatButtonStyle}">

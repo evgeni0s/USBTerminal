@@ -38,13 +38,22 @@ namespace USBTetminal2.Graphs
         {
             return (EnumerableDataSource<Point>)graph.DataSource;
         }
+        //Worked long ago
+        //public static void DefaultSettings(this ChartPlotter plotter)
+        //{
+        //    plotter.Viewport.AutoFitToView = true;
+        //    GraphAxisHelper.ViewportAxesRangeRestriction restr = new GraphAxisHelper.ViewportAxesRangeRestriction();
+        //    restr.XRange = new GraphAxisHelper.DisplayRange(0, 66000, GraphAxisHelper.DisplayRange.DisplayRangeType.Min);
+        //    restr.YRange = new GraphAxisHelper.DisplayRange(0, 66000, GraphAxisHelper.DisplayRange.DisplayRangeType.Min);
+        //    plotter.Viewport.Restrictions.Add(restr);
+        //}
 
         public static void DefaultSettings(this ChartPlotter plotter)
         {
             plotter.Viewport.AutoFitToView = true;
             GraphAxisHelper.ViewportAxesRangeRestriction restr = new GraphAxisHelper.ViewportAxesRangeRestriction();
-            restr.XRange = new GraphAxisHelper.DisplayRange(0, 66000, GraphAxisHelper.DisplayRange.DisplayRangeType.Min);
-            restr.YRange = new GraphAxisHelper.DisplayRange(0, 66000, GraphAxisHelper.DisplayRange.DisplayRangeType.Min);
+            restr.XRange = new GraphAxisHelper.DisplayRange(0, 200, GraphAxisHelper.DisplayRange.DisplayRangeType.Min);
+            restr.YRange = new GraphAxisHelper.DisplayRange(300, 10000, GraphAxisHelper.DisplayRange.DisplayRangeType.Min);
             plotter.Viewport.Restrictions.Add(restr);
         }
     }

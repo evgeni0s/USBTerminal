@@ -12,6 +12,8 @@ using Infrastructure;
 using Microsoft.Practices.Unity;
 using System.Windows.Controls;
 using Microsoft.Practices.Prism.Logging;
+using Microsoft.Research.DynamicDataDisplay;
+using USBTetminal2.Graphs;
 
 namespace USBTetminal2.Controls.ToolBar
 {
@@ -23,10 +25,14 @@ namespace USBTetminal2.Controls.ToolBar
     {
         private IRegionManager _regionManager;
         private IViewModelProvider _viewModelProvider;
-        public ToolBarViewModel(IRegionManager regionManager, IViewModelProvider viewModelProvider)
+        private IGraphModule _graph;
+        public ToolBarViewModel(IRegionManager regionManager, IViewModelProvider viewModelProvider, IGraphModule graph)
         {
             _regionManager = regionManager;
             _viewModelProvider = viewModelProvider;
+            _graph = graph;
+            //ShowConsole(null);
+            ShowGraph(null);
         }
 
         #region Commands
@@ -76,6 +82,28 @@ namespace USBTetminal2.Controls.ToolBar
             }
         }
 
+        private ICommand _showGraphCommand;
+        public ICommand ShowGraphCommand
+        {
+            get { return _showGraphCommand ?? (_showGraphCommand = new RelayCommand(ShowGraph)); }
+        }
+
+        private void ShowGraph(object obj)
+        {
+            _graph.show();
+        }
+
+
+        private ICommand _showLegendCommand;
+        public ICommand ShowLegendCommand
+        {
+            get { return _showLegendCommand ?? (_showLegendCommand = new RelayCommand(ShowLegend)); }
+        }
+
+        private void ShowLegend(object obj)
+        {
+            _graph.showLegend();
+        }
         #endregion
     }
 }

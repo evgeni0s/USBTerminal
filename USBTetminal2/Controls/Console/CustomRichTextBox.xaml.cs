@@ -319,17 +319,6 @@ namespace USBTetminal2.Controls
                }));
         }
 
-        private ICommand _saveCommand;
-        public ICommand SaveCommand
-        {
-            get { return _saveCommand ?? (_saveCommand = new RelayCommand(OnSave)); }
-        }
-
-        private void OnSave(object obj)
-        {
-            MessageBox.Show("Not implemented. Will be instead of Chart");
-        }
-
         #endregion
 
         private void onLoaded(object sender, RoutedEventArgs e)
@@ -359,6 +348,20 @@ namespace USBTetminal2.Controls
             Focus();
         }
 
+        public string GetText()
+        {
+            TextRange textRange = new TextRange(
+                // TextPointer to the start of content in the RichTextBox.
+                Document.ContentStart,
+                // TextPointer to the end of content in the RichTextBox.
+                Document.ContentEnd
+            );
+
+            // The Text property on a TextRange object returns a string 
+            // representing the plain text content of the TextRange. 
+            return textRange.Text;
+        }
+
 
         /// <param name="category">Info - message from device only, Debug - messages from my app like "Successfull"</param>
         public void Log(string message, Category category, Priority priority)
@@ -384,11 +387,12 @@ namespace USBTetminal2.Controls
                        //    break;
                    }
                    run.Text = message;
-                   if (category != Category.Info)
-                   {
+                   //if (category != Category.Info)
+                   //{
                        run.Text = Environment.NewLine + message; 
-                   }
+                   //}
                    readOnlyItems.Inlines.Add(run);
+                   ScrollToEnd();
                    _focusedInline = null;
                }));
 

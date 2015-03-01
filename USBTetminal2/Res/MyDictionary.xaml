@@ -206,8 +206,31 @@
         </Style.Triggers>
     </Style>
 
+    <Style TargetType="Button" x:Key="CloseButtonStyle" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                <Grid Background="Transparent">
+                    <Border x:Name="outer_PART"
+                                Background="Transparent"
+                                CornerRadius="15" />
+                        <Image Width="Auto"
+                                   Height="20"
+                                   SnapsToDevicePixels="True"
+                                   Source="/USBTetminal2;component/Res/Close.png" />
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter TargetName="outer_PART" Property="Background" Value="Red" />
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+           </Setter.Value>
+      </Setter>
+    </Style>
 
-    <LinearGradientBrush x:Key="headerBarBG" EndPoint="0.5,1" StartPoint="0.5,0">
+
+        <LinearGradientBrush x:Key="headerBarBG" EndPoint="0.5,1" StartPoint="0.5,0">
         <GradientStop Color="#FF284292"/>
         <GradientStop Color="#FF2175B8" Offset="0.26499998569488525"/>
     </LinearGradientBrush>

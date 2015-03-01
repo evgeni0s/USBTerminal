@@ -4,26 +4,35 @@
         xmlns:commands="clr-namespace:USBTetminal2.Commands"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:dict="clr-namespace:USBTetminal2"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:prism="http://www.codeplex.com/prism"
         MinHeight="20"
         BorderBrush="#4F6FFF"
         BorderThickness="1,1,4,4"
         CornerRadius="10"
         Loaded="onLoaded"
         Padding="3"
-        Visibility="{Binding ContainerVisibility}"
+        Visibility="{Binding LegendVisibility}"
         d:DesignHeight="300"
         d:DesignWidth="300"
         mc:Ignorable="d">
     <Border.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
+            <!--
+                <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary.MergedDictionaries>
+            -->
             <Style x:Key="itemstyle" TargetType="{x:Type ListViewItem}">
                 <EventSetter Event="MouseDoubleClick" Handler="HandleDoubleClick" />
             </Style>
+            <Style x:Key="{x:Type ListView}" TargetType="{x:Type ListView}" />
+            <!--
+                <Style x:Key="{x:Type ListViewItem}" TargetType="{x:Type ListViewItem}">
+                <Setter Property="SnapsToDevicePixels" Value="true"/>
+                <Setter Property="OverridesDefaultStyle" Value="true"/>
+            -->
         </ResourceDictionary>
     </Border.Resources>
 
@@ -35,14 +44,20 @@
                   HorizontalContentAlignment="Stretch"
                   Background="Transparent"
                   BorderThickness="0"
-                  ItemsSource="{Binding LegendsList}">
-
+                  ItemContainerStyle="{StaticResource itemstyle}"
+                  ItemsSource="{Binding LegendsList}"
+                  SelectedItem="{Binding SelectedLegend}">
+            <!--  ItemsSource="{Binding LegendsList}">  -->
+            <!--
+                <ListViewItem>sdfgsdfg</ListViewItem>
+                <ListBoxItem>sdfgsdfg</ListBoxItem>
+            -->
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,2" Background="#00AAAAAA">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                                <i:InvokeCommandAction Command="{x:Static commands:CustomCommands.LoadDataToGrid}" CommandParameter="{Binding GraphPoints}"/>
+                                <i:InvokeCommandAction Command="{x:Static commands:CustomCommands.LoadDataToGrid}" CommandParameter="{Binding GraphPoints}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Grid.RowDefinitions>
@@ -75,7 +90,7 @@
                                                   UpdateSourceTrigger=PropertyChanged}" />
                         <Button Grid.Column="2"
                                 HorizontalAlignment="Right"
-                                Command="{x:Static commands:CustomCommands.RemoveLegend}"
+                                Command="{Binding RemoveLegendCommand}"
                                 CommandParameter="{Binding}"
                                 Style="{StaticResource FlatButtonStyle}">
                             <Image Width="Auto"

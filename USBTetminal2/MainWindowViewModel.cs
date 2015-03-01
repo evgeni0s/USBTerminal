@@ -43,7 +43,8 @@ namespace USBTetminal2
         #region fields
         // private ObservableCollection<CLegendItemViewModel> legendsList;
         private CustomSerialPort _selectedPort;
-        private ChartPlotter _plotter;
+        //private ChartPlotter _plotter;
+        private IGraphModule _graphModule;
         private LegendListViewModel _legendListViewModel;
         private ObservableCollection<Point> _graphData;
         private ILoggerFacade _logger;
@@ -61,7 +62,7 @@ namespace USBTetminal2
         Shell _mainWindow;
         #endregion
 
-        public MainWindowViewModel(ITestModule module, ILoggerFacade logger, IRegionManager regionManager, IUnityContainer container, ICommunicationService communicationService)
+        public MainWindowViewModel(ITestModule module, ILoggerFacade logger, IRegionManager regionManager, IUnityContainer container, ICommunicationService communicationService, IGraphModule graphModule)
         {
             _logger = logger;
             _mainWindow = App.Current.MainWindow as Shell;
@@ -70,7 +71,8 @@ namespace USBTetminal2
             //_regionManager.RegisterViewWithRegion(RegionNames.BottomPanelRegion, typeof(SettingsView));
             _container = container;
             _communicationService = communicationService;
-            _plotter = new ChartPlotter();//_mainWindow.mPlotter;
+            _graphModule = graphModule;
+            //_plotter = new ChartPlotter();//_mainWindow.mPlotter;
 
             initializeCommandBindings();
             initPseudoBroadCast();
@@ -116,38 +118,38 @@ namespace USBTetminal2
         //    }
         //}
 
-        public LegendListViewModel LegendListDataContext
-        {
-            get
-            {
-                if (_legendListViewModel == null)
-                {
-                    _legendListViewModel = new LegendListViewModel();
-                    AddListener(_legendListViewModel);
-                }
-                return _legendListViewModel;
-            }
-            set
-            {
-                _legendListViewModel = value;
-                OnPropertyChanged("LegendListDataContext");
-            }
-        }
+        //public LegendListViewModel LegendListDataContext
+        //{
+        //    get
+        //    {
+        //        if (_legendListViewModel == null)
+        //        {
+        //            _legendListViewModel = new LegendListViewModel();
+        //            AddListener(_legendListViewModel);
+        //        }
+        //        return _legendListViewModel;
+        //    }
+        //    set
+        //    {
+        //        _legendListViewModel = value;
+        //        OnPropertyChanged("LegendListDataContext");
+        //    }
+        //}
 
         //not used for now
-        public LegendListViewModel.LegendListItem LastSelectedLegend
-        {
-            get
-            {
-                return _lastSelectedLegend;
-            }
-            set
-            {
-                _lastSelectedLegend = value;
+        //public LegendListViewModel.LegendListItem LastSelectedLegend
+        //{
+        //    get
+        //    {
+        //        return _lastSelectedLegend;
+        //    }
+        //    set
+        //    {
+        //        _lastSelectedLegend = value;
 
-            }
-        }
-
+        //    }
+        //}
+        //not used for now
         public ObservableCollection<Point> GraphData
         {
             get
@@ -265,7 +267,7 @@ namespace USBTetminal2
         private void initPseudoBroadCast()
         {
             AddListener(new FrameManager());
-            AddListener(new GraphsManager(_plotter));
+            //AddListener(new GraphsManager(_plotter));
             // +SELECTED PORT WILL ADD ITSELF
             // +LegendLisDataContext WILL ADD ITSELF
         }
@@ -283,7 +285,7 @@ namespace USBTetminal2
             createCommandBinding(CustomCommands.AddNewLegend, onAddNewLegend, onAddNewLegendCanExecute);
             createCommandBinding(CustomCommands.RemoveGraph, onRemoveGraphLegend, onRemoveGraphCanExecute);
             createCommandBinding(CustomCommands.ChangeMarkersVisibility, onChangeMarkersVisibility, onChangeMarkersVisibilityCanExecute);
-            createCommandBinding(CustomCommands.LegendContainerVisibility, onLegendContainerVisibility, onLegendContainerVisibilityCanExecute);
+            createCommandBinding(CustomCommands.LegendLegendVisibility, onLegendLegendVisibility, onLegendLegendVisibilityCanExecute);
             createCommandBinding(CustomCommands.LoadDataToGrid, onLoadDataToGrid, onLoadDataToGridCanExecute);
             //createCommandBinding(CustomCommands.ConsoleVisibility, onConsoleVisibility, onConsoleVisibilityCanExecute);
         }
@@ -394,8 +396,8 @@ namespace USBTetminal2
         #region RemoveLegendCommand
         private void onRemoveLegend(object sender, ExecutedRoutedEventArgs e)
         {
-            CommonBroadcastType type = CommonBroadcastType.DELETE_LEGEND;
-            NotifyAllBroadcastListeners(type, e.Parameter);
+            //CommonBroadcastType type = CommonBroadcastType.DELETE_LEGEND;
+            //NotifyAllBroadcastListeners(type, e.Parameter);
         }
 
         private void onRemoveLegendCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -404,14 +406,14 @@ namespace USBTetminal2
         }
         #endregion
 
-        #region LegendContainerVisibility
-        private void onLegendContainerVisibility(object sender, ExecutedRoutedEventArgs e)
+        #region LegendLegendVisibility
+        private void onLegendLegendVisibility(object sender, ExecutedRoutedEventArgs e)
         {
             CommonBroadcastType type = CommonBroadcastType.USER_CHANGED_LEGEND_CONTAINER_VISIBILITY;
             NotifyAllBroadcastListeners(type, e.Parameter);
         }
 
-        private void onLegendContainerVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void onLegendLegendVisibilityCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
@@ -502,8 +504,9 @@ namespace USBTetminal2
         private void OnMeasureCommand(object obj)
         {
 
-            
-            
+            _graphModule.buildGraphFromYPoints(GraphsManager.TestData);
+
+            //NotifyAllBroadcastListeners(CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS, GraphsManager.TestData);
             ////works perfect
             foreach (var port in _communicationService.Ports)
             {
@@ -535,7 +538,6 @@ namespace USBTetminal2
                             msg += " " + response[i].ToString();
                         }
                         _logger.Log(msg, Category.Info, Priority.High);
-
                         NotifyAllBroadcastListeners(CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS, response.ToList());
 
                     }

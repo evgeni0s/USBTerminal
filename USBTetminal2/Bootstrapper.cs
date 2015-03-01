@@ -1,5 +1,5 @@
 ﻿
-    
+
 using System;
 using System.Windows;
 using Microsoft.Practices.Prism.Logging;
@@ -17,6 +17,11 @@ using Microsoft.Practices.Prism.Regions;
 using Infrastructure;
 using USBTetminal2.Controls.Settings;
 using USBTetminal2.Communication;
+using ExportModule;
+using USBTetminal2.Graphs;
+using Microsoft.Research.DynamicDataDisplay;
+using System.Windows.Controls;
+using USBTetminal2.Utils;
 
 
 namespace USBTetminal2
@@ -56,6 +61,8 @@ namespace USBTetminal2
             this.RegisterTypeIfMissing(typeof(IViewModelProvider), typeof(ViewModelProvider), true);
             this.RegisterTypeIfMissing(typeof(ICommunicationService), typeof(CommunicationService), true);
             this.RegisterTypeIfMissing(typeof(ISettingsViewModel), typeof(SettingsViewModel), true);
+            this.RegisterTypeIfMissing(typeof(IExportModule), typeof(ExportModule.ExportModule), true);
+            this.RegisterTypeIfMissing(typeof(IGraphModule), typeof(GraphsManager), true);
             /*
              RegisterInstance - extension method from namespace using Microsoft.Practices.Unity;
              * this namespace comes from Nuget Unity package. If Something does not work, go to solution 
@@ -63,16 +70,24 @@ namespace USBTetminal2
              * If there is no unity package, then install from console
              
              */
-            
+
             //this.Container.RegisterType<ISettingsViewModel, SettingsViewModel>();
             this.Container.RegisterInstance<CustomRichTextBox>(this._logger);
-           
+
         }
 
         protected override DependencyObject CreateShell()
         {
             return ServiceLocator.Current.GetInstance<Shell>();
         }
+
+
+        //protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
+        //{
+        //    RegionAdapterMappings mappings = base.ConfigureRegionAdapterMappings();
+        //    mappings.RegisterMapping(typeof(ContentControl), ServiceLocator.Current.GetInstance<CustomRegionAdapter>());
+        //    return mappings;
+        //}
 
         //protected override IRegionBehaviorFactory ConfigureDefaultRegionBehaviors()
         //{
@@ -93,25 +108,43 @@ namespace USBTetminal2
 
         //protected override void ConfigureModuleCatalog()
         //{
-            //Type moduleBType = typeof(TestModule.TestModule);
-            //Type moduleAType = typeof(ModuleA);
-           // ModuleCatalog.AddModule(new ModuleInfo(moduleBType.Name, moduleBType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
-            //     Type moduleAType = typeof(ModuleA);
-            //   ModuleCatalog.AddModule(new ModuleInfo(moduleAType.Name, moduleAType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
-            //Type moduleCType = typeof(ModuleC.ModuleC);
-            //ModuleCatalog.AddModule(new ModuleInfo(moduleCType.Name, moduleCType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
+        //Type moduleBType = typeof(TestModule.TestModule);
+        //Type moduleAType = typeof(ModuleA);
+        // ModuleCatalog.AddModule(new ModuleInfo(moduleBType.Name, moduleBType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
+        //     Type moduleAType = typeof(ModuleA);
+        //   ModuleCatalog.AddModule(new ModuleInfo(moduleAType.Name, moduleAType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
+        //Type moduleCType = typeof(ModuleC.ModuleC);
+        //ModuleCatalog.AddModule(new ModuleInfo(moduleCType.Name, moduleCType.AssemblyQualifiedName) { InitializationMode = InitializationMode.WhenAvailable });
 
-            //18_01_2015
-            //base.ConfigureModuleCatalog();
-            //ModuleCatalog moduleCatalog = (ModuleCatalog)this.ModuleCatalog;
-            //moduleCatalog.AddModule(typeof(TestModule.TestModule));
+        //18_01_2015
+        //base.ConfigureModuleCatalog();
+        //ModuleCatalog moduleCatalog = (ModuleCatalog)this.ModuleCatalog;
+        //moduleCatalog.AddModule(typeof(TestModule.TestModule));
 
 
 
         //}
 
 
+        //protected override void ConfigureModuleCatalog()
+        //{
+        //    Type graphModule = typeof(GraphsManager);
+        //    this.ModuleCatalog.AddModule(new ModuleInfo()
+        //    {
+        //        ModuleName = graphModule.Name,
+        //        ModuleType = graphModule.AssemblyQualifiedName,
+        //        InitializationMode = InitializationMode.WhenAvailable
+        //    });
 
+        //    Type exportModule = typeof(ExportModule.ExportModule);
+        //    this.ModuleCatalog.AddModule(new ModuleInfo()
+        //    {
+        //        ModuleName = graphModule.Name,
+        //        ModuleType = graphModule.AssemblyQualifiedName,
+        //        InitializationMode = InitializationMode.WhenAvailable
+        //    });
+
+        //}
 
 
     }

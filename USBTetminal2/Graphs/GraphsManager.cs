@@ -10,6 +10,12 @@ using System.Windows.Media;
 using USBTetminal2.Commands;
 using System.Windows.Data;
 using System.Windows;
+using Microsoft.Practices.Prism.Regions;
+using Infrastructure;
+using Microsoft.Practices.Prism.Modularity;
+using USBTetminal2.Controls.Legend;
+using USBTetminal2.Controls.Chart;
+using Microsoft.Practices.Prism.Logging;
 
 namespace USBTetminal2.Graphs
 {
@@ -20,19 +26,40 @@ namespace USBTetminal2.Graphs
     /// access to Markers. 
     /// Markers - ??? ))) points on graph or legend shit. Don't remember)
     /// </summary>
-    public class GraphsManager : ISimpleBroadcastListener
+    public class GraphsManager : IModule, IGraphModule//: ISimpleBroadcastListener
     {
-        List<LineAndMarker<MarkerPointsGraph>> GraphsCollection = new List<LineAndMarker<MarkerPointsGraph>>();
-        ChartPlotter _plotter;
-        Random hue = new Random(255); //Part of HSV spectrum 
+        private List<LineAndMarker<MarkerPointsGraph>> GraphsCollection = new List<LineAndMarker<MarkerPointsGraph>>();
+        private ChartPlotter _plotter;         //Group A
+        private ChartView _chartView;          //Group A
+        private ChartViewModel _chartViewModel;//Group A
+        private Random hue = new Random(255); //Part of HSV spectrum 
         const Visibility DEFAULT_MARKER_VILIBILITY = Visibility.Collapsed;
-        public GraphsManager(ChartPlotter plotter)
-        {
-            _plotter = plotter;
+        private IRegionManager _regionManager;
+        private IViewModelProvider _viewModelProvider;
+        private ILegendListViewModel _legendListViewModel;
+        private ILoggerFacade _logger;
+        public static List<int> TestData = new List<int> {506, 506, 506, 507, 507, 507, 507, 508, 508, 509, 509, 509, 510, 510, 510,
+            511, 511, 512, 512, 512, 513, 513, 514, 514, 514, 515, 515, 516, 516, 516, 518, 522, 525, 529, 532,
+            536, 540, 543, 547, 551 ,554 ,558 ,561 ,565 ,568 ,572 ,576 ,579 ,583 ,587 ,590, 594 ,597 ,601, 604 ,
+            608, 611, 630, 664, 698, 731, 764, 796, 828, 860, 891, 921, 951, 981, 1011, 1040, 1068, 1097, 1125, 1152, 1180, 1206, 1233, 1259,
+            1285, 1311, 1336, 1361, 1386, 1514, 1728, 1920, 2091, 2244, 2381 ,2503 ,2613 ,2712 ,2802 ,2882 ,2954 ,3040 ,3189 ,3229 ,3265 ,
+            3297 ,3326 ,3352 ,3374 ,3396 ,3414, 3429 ,3442 ,3455 ,3466 ,3476 ,3533 ,3584 ,3600 ,3612 ,3614 ,3615 ,3615 ,506 ,3615};
 
+        public GraphsManager(IRegionManager regionManager, IViewModelProvider viewModelProvider, ILoggerFacade logger)
+        {
+            _regionManager = regionManager;
+            _viewModelProvider = viewModelProvider;
+            _logger = logger;
+            _legendListViewModel = _viewModelProvider.GetViewModel<LegendListViewModel>("LegendListKey");
+            _legendListViewModel.SetGraph(this);
+            _chartViewModel = _viewModelProvider.GetViewModel<ChartViewModel>(_legendListViewModel);
+            _chartView = new ChartView() { DataContext = _chartViewModel };
+            _plotter = _chartView.mPlotter;
+            _plotter.LegendVisible = false;
             _plotter.DefaultSettings();
             hideDefaultLegend();//Disabled default ledend so that I could use my custom
-            
+
+
         }
 
 
@@ -69,7 +96,7 @@ namespace USBTetminal2.Graphs
         /// <summary>
         /// Needs to be updated regulary
         /// </summary>
-        private void hideDefaultLegend()
+        public void hideDefaultLegend()
         {
             _plotter.Legend.Visibility = System.Windows.Visibility.Collapsed;
         }
@@ -78,7 +105,7 @@ namespace USBTetminal2.Graphs
         /// try to show all markers who have visible solid lines
         /// if they are already visible - hide all
         /// </summary>
-        private void changeMarkersVisibility()
+        public void changeMarkersVisibility()
         {
             bool allMarkersAreVisible = GraphsCollection.Where(pair => pair.LineGraph.Visibility == Visibility.Visible).//for thouse graphs who's  solid lines are visible,
                                                          All(pair => pair.MarkerGraph.Visibility == Visibility.Visible);//check if all their markers are visible as well
@@ -110,7 +137,7 @@ namespace USBTetminal2.Graphs
         }
 
 
-        private void clearAll()
+        public void clearAll()
         {
             foreach (var pair in GraphsCollection)
             {
@@ -119,9 +146,10 @@ namespace USBTetminal2.Graphs
             }
             GraphsCollection.Clear();
             hideDefaultLegend();
+
         }
 
-        private void removeGraph(object data)
+        public void removeGraph(object data)
         {
             if (data.GetType() != typeof(LineAndMarker<MarkerPointsGraph>))
                 return;
@@ -137,7 +165,7 @@ namespace USBTetminal2.Graphs
 
 
         //Colverts object data -> List<double>
-        private void buildGraphFromYPoints(object data)
+        public void buildGraphFromYPoints(object data)
         {
             if (data.GetType() == typeof(List<ushort>))
             {
@@ -156,6 +184,22 @@ namespace USBTetminal2.Graphs
 
         }
 
+
+
+        public void showLegend()
+        {
+            _logger.Log("showLegend: Command is not used any longer!", Category.Exception, Priority.Medium);
+            //IRegion legendRegion = _regionManager.Regions[RegionNames.LegendRegion];
+            //var view = legendRegion.GetView("LegendListKey");
+            //if (view == null)
+            //{
+            //    var vm = _viewModelProvider.GetViewModel<LegendListViewModel>("LegendListKey");
+            //    legendRegion.Add(new LegendListView() { DataContext = vm }, "LegendListKey");
+            //}
+            //view = legendRegion.GetView("LegendListKey");
+            //legendRegion.Activate(view);
+        }
+
         private void buildGraphFromYPoints(List<double> yPoints)
         {
             List<double> xPoints = generateXArray(yPoints);
@@ -164,8 +208,12 @@ namespace USBTetminal2.Graphs
             CompositeDataSource dataSource = xPoints.ToChartDataSource(yPoints);
             var graph = _plotter.AddLineGraph(dataSource, new Pen(randomBrush(), 2), new CirclePointMarker { Size = 5, Fill = Brushes.Red }, new PenDescription(getRandomName()));
             graph.MarkerGraph.Visibility = DEFAULT_MARKER_VILIBILITY;
+
+            //var vm = _viewModelProvider.GetViewModel<LegendListViewModel>("LegendListKey");
+            //vm.
+            _legendListViewModel.addNewLegend(graph);
             GraphsCollection.Add(graph);
-            CustomCommands.AddNewLegend.Execute(graph, App.Current.MainWindow);
+            //CustomCommands.AddNewLegend.Execute(graph, App.Current.MainWindow);
         }
 
         //private void buildGraphFromDataSource(CompositeDataSource dataSource)
@@ -261,8 +309,19 @@ namespace USBTetminal2.Graphs
 
 
         #endregion
+        //Compleatly wrong! Need to redo
+        public void show()
+        {
 
-
+            IRegion main = _regionManager.Regions[RegionNames.MainRegion];
+            var view = main.GetView("PlotterKey");
+            if (view == null)
+            {
+                main.Add(_chartView, "PlotterKey");
+            }
+            view = main.GetView("PlotterKey");
+            main.Activate(view);
+        }
 
 
 
@@ -284,5 +343,14 @@ namespace USBTetminal2.Graphs
         }
 
         #endregion
+
+
+
+        public void Initialize()
+        {
+
+        }
+
+
     }
 }

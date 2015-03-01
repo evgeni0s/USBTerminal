@@ -17,6 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModule", "TestModule\Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Referenced Assemblies", "Referenced Assemblies", "{4929DE00-F082-47A3-8ECC-3899A05AB5C8}"
 	ProjectSection(SolutionItems) = preProject
+		Referenced Assemblies\FolderBrowser.dll = Referenced Assemblies\FolderBrowser.dll
 		Referenced Assemblies\FTD2XX.dll = Referenced Assemblies\FTD2XX.dll
 		Referenced Assemblies\FtdAdapter.dll = Referenced Assemblies\FtdAdapter.dll
 		Referenced Assemblies\log4net.dll = Referenced Assemblies\log4net.dll
@@ -24,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Referenced Assemblies", "Re
 		Referenced Assemblies\Modbus.Extensions.dll = Referenced Assemblies\Modbus.Extensions.dll
 		Referenced Assemblies\Unme.Common.dll = Referenced Assemblies\Unme.Common.dll
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExportModule", "ExportModule\ExportModule.csproj", "{33CF1499-DAE2-4880-B3F6-764E2BB6A551}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +54,10 @@ Global
 		{BC60A717-A221-467F-B9DB-3263E3008082}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC60A717-A221-467F-B9DB-3263E3008082}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC60A717-A221-467F-B9DB-3263E3008082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33CF1499-DAE2-4880-B3F6-764E2BB6A551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33CF1499-DAE2-4880-B3F6-764E2BB6A551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33CF1499-DAE2-4880-B3F6-764E2BB6A551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33CF1499-DAE2-4880-B3F6-764E2BB6A551}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +65,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8E62B330-D147-4A75-A6C8-438A5CD14630} = {9FD513ED-F2B0-47B9-951B-7CD31AF845E9}
 		{BC60A717-A221-467F-B9DB-3263E3008082} = {9FD513ED-F2B0-47B9-951B-7CD31AF845E9}
+		{33CF1499-DAE2-4880-B3F6-764E2BB6A551} = {9FD513ED-F2B0-47B9-951B-7CD31AF845E9}
 		{BC09399A-B7A7-48E6-8FC2-5053846E77C3} = {46447245-09B3-42D8-90FE-6161C6F47D69}
 	EndGlobalSection
 EndGlobal

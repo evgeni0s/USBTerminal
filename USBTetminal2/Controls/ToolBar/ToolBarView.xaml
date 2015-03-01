@@ -1,44 +1,96 @@
 ﻿<Border x:Class="USBTetminal2.Controls.ToolBar.ToolBarView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:commands="clr-namespace:USBTetminal2.Commands"
-             mc:Ignorable="d" 
-             d:DesignHeight="60" d:DesignWidth="500" MaxWidth="520" BorderBrush="White" BorderThickness="2" CornerRadius="0,0,70,20" Margin="10,0" Height="32" >
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:commands="clr-namespace:USBTetminal2.Commands"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Height="32"
+        MaxWidth="520"
+        Margin="10,0"
+        BorderBrush="White"
+        BorderThickness="2"
+        CornerRadius="0,0,70,20"
+        d:DesignHeight="60"
+        d:DesignWidth="500"
+        mc:Ignorable="d">
     <Border.Resources>
-        <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml"/>
-        
-    </Border.Resources>
-    <!--this used to add metal pattern to background-->
-    <!--<Border.Background>
-        <ImageBrush AlignmentX="Left" ImageSource="/USBTetminal2;component/Res/Metal_plate520.jpg" Stretch="None"/>
-    </Border.Background>-->
+        <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml" />
 
-    <!--<Border DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType={x:Type Border}, Mode=FindAncestor}}" >-->
+    </Border.Resources>
+    <!--  this used to add metal pattern to background  -->
+    <!--
+        <Border.Background>
+        <ImageBrush AlignmentX="Left" ImageSource="/USBTetminal2;component/Res/Metal_plate520.jpg" Stretch="None"/>
+        </Border.Background>
+    -->
+
+    <!--  <Border DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType={x:Type Border}, Mode=FindAncestor}}" >  -->
     <Border>
         <Grid>
-            <StackPanel Orientation="Horizontal" Width="Auto" Margin="20,0">
-                <!--Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"  Showcard Gothic
-                OCR A Extended
+            <StackPanel Width="Auto"
+                        Margin="20,0"
+                        Orientation="Horizontal">
+                <!--
+                    Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"  Showcard Gothic
+                    OCR A Extended
                 -->
-                <Button Width="50" Height="22"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.LegendContainerVisibility}" Foreground="#FF075100" FontFamily="Tele-Marines">
+                <Button Width="50"
+                        Height="22"
+                        Command="{Binding ShowGraphCommand}"
+                        FontFamily="Tele-Marines"
+                        Foreground="#7A0072"
+                        Style="{StaticResource FlatButtonStyle}">
+                    <TextBlock FontFamily="Gloucester MT Extra Condensed"
+                               FontSize="16"
+                               Text="Graph" />
+                </Button>
+                <!--
+                    <Button Width="50" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{Binding ShowLegendCommand}" Foreground="#FF075100" FontFamily="Tele-Marines">
                     <TextBlock Text="Legend" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
-                </Button>
-                <Button Width="50" Height="22" Margin="15,0,0,0"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}" Foreground="#FF00045D" FontSize="14">
+                    </Button>
+                    <Button Width="50" Height="22" Margin="15,0,0,0"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}" Foreground="#FF00045D" FontSize="14">
                     <TextBlock Text="Points" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
+                    </Button>
+                -->
+                <Button Width="50"
+                        Height="22"
+                        Margin="15,0,0,0"
+                        Command="{x:Static commands:CustomCommands.Reset}"
+                        Foreground="#FF5D4002"
+                        Style="{StaticResource FlatButtonStyle}">
+                    <TextBlock FontFamily="Gloucester MT Extra Condensed"
+                               FontSize="16"
+                               Text="Reset" />
                 </Button>
-                <Button Width="50" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.Reset}" Foreground="#FF5D4002">
-                    <TextBlock Text="Reset" FontSize="16" FontFamily="Gloucester MT Extra Condensed"/>
+                <Button Width="55"
+                        Height="22"
+                        Margin="15,0,0,0"
+                        Command="{Binding ShowSettingsCommand}"
+                        Foreground="#FF570000"
+                        Style="{StaticResource FlatButtonStyle}">
+                    <TextBlock FontFamily="Gloucester MT Extra Condensed"
+                               FontSize="16"
+                               Text="Settings" />
                 </Button>
-                <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{Binding ShowSettingsCommand}" Foreground="#FF570000">
-                    <TextBlock Text="Settings" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
+                <Button Width="55"
+                        Height="22"
+                        Margin="15,0,0,0"
+                        Command="{Binding ShowConsoleCommand}"
+                        Foreground="#FF004291"
+                        Style="{StaticResource FlatButtonStyle}">
+                    <TextBlock FontFamily="Gloucester MT Extra Condensed"
+                               FontSize="16"
+                               Text="Console" />
                 </Button>
-                <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{Binding ShowConsoleCommand}" Foreground="#FF004291">
-                    <TextBlock Text="Console" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
-                </Button>
-                <Button Width="55" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ConsoleVisibility}" Foreground="#FF004291">
-                    <TextBlock Text="Excel" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
+                <Button Width="55"
+                        Height="22"
+                        Margin="15,0,0,0"
+                        Command="{x:Static commands:CustomCommands.ConsoleVisibility}"
+                        Foreground="#FF004291"
+                        Style="{StaticResource FlatButtonStyle}">
+                    <TextBlock FontFamily="Gloucester MT Extra Condensed"
+                               FontSize="16"
+                               Text="Excel" />
                 </Button>
             </StackPanel>
         </Grid>
