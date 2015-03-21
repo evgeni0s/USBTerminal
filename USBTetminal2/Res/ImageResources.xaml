@@ -1,0 +1,6 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <BitmapImage x:Key="Notepad_icon" UriSource="/USBTetminal2;component/Res/Notepad_icon.png" />
+    <BitmapImage x:Key="excel-icon" UriSource="/USBTetminal2;component/Res/excel-icon.png" />
+</ResourceDictionary>

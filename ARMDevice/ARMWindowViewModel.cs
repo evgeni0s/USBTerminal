@@ -11,6 +11,7 @@ http://www.hhdsoftware.com/free-virtual-serial-ports
  */
 
 using ARMDevice.ARMCommands;
+using Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

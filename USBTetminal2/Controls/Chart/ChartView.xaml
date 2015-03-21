@@ -7,6 +7,7 @@
              xmlns:legend="clr-namespace:USBTetminal2.Controls.Legend"
              xmlns:prism="http://www.codeplex.com/prism"
               xmlns:Inf="clr-namespace:Infrastructure;assembly=Infrastructure"
+             xmlns:utils="clr-namespace:USBTetminal2.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
@@ -27,7 +28,7 @@
                 <Setter Property="FontWeight" Value="Bold"/>
             </Style>
             <SolidColorBrush x:Key="DynamicGridHeaderBrush" Color="Blue" />
-
+            <utils:LegendDetailsVisibilityConverter x:Key="LegendDetailsVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -51,12 +52,19 @@
         <legend:LegendListView x:Name="legendBox"  Margin="50,10,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.ZIndex="1" DataContext="{Binding Legend}"/>
 
         <ListView Grid.Column="1" 
+                  Grid.RowSpan="2"
                   Margin="10,0,0,0"
                   VerticalAlignment="Top" 
                   HorizontalAlignment="Right"
                   DataContext="{Binding Legend}" 
-                  Visibility="{Binding LegendVisibility}" 
-                  ItemsSource="{Binding SelectedLegend.Points}"  >
+                   
+                  ItemsSource="{Binding SelectedLegend.Points}">
+            <ListView.Visibility>
+                <MultiBinding Converter="{StaticResource LegendDetailsVisibilityConverter}">
+                    <Binding Path="LegendVisibility" />
+                    <Binding Path="SelectedLegend.IsChecked"/>
+                </MultiBinding>
+            </ListView.Visibility>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="msec" Width="50"   DisplayMemberBinding="{Binding X}" />

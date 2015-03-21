@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using USBTetminal2.Graphs;
+using Infrastructure;
 
 namespace USBTetminal2.Controls.Legend
 {
@@ -94,6 +95,14 @@ namespace USBTetminal2.Controls.Legend
                 get
                 {
                     return _graph;
+                }
+            }
+
+            public LineGraph LineGraph
+            {
+                get
+                {
+                    return _graph.LineGraph;
                 }
             }
 

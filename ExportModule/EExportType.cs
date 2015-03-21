@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExportModule
 {
+    //Not used for now
     public enum EExportType
     {
         Excel,

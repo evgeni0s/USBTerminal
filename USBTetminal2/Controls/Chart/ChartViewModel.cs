@@ -3,6 +3,7 @@ using Infrastructure;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.ServiceLocation;
+using Microsoft.Research.DynamicDataDisplay;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ using USBTetminal2.Graphs;
 
 namespace USBTetminal2.Controls.Chart
 {
-    public class ChartViewModel: ViewModelBase
+    public class ChartViewModel : ViewModelBase
     {
         private IExportModule _exportModule;
         private ILoggerFacade _logger;
@@ -22,7 +23,7 @@ namespace USBTetminal2.Controls.Chart
         //private IGraphModule _grahpModule;
         public ChartViewModel(ILoggerFacade logger, IExportModule exportModule, IRegionManager regionManager)
         {
-           
+
             //Model = logger;
             _exportModule = exportModule;
             _logger = logger;
@@ -43,9 +44,9 @@ namespace USBTetminal2.Controls.Chart
 
         private void OnClear(object obj)
         {
-          IGraphModule gm =  ServiceLocator.Current.GetInstance<IGraphModule>(); //Need get Grapgs module to impliment commands
-          gm.clearAll();
-          Legend.clearAll();
+            IGraphModule gm = ServiceLocator.Current.GetInstance<IGraphModule>(); //Need get Grapgs module to impliment commands
+            gm.clearAll();
+            Legend.clearAll();
         }
 
         private ICommand _changeMarkersVisibilityCommand;
@@ -74,12 +75,26 @@ namespace USBTetminal2.Controls.Chart
 
         private void OnSaveCommand(object obj)
         {
-            _exportModule.ShowFolderBrowserView(OnFileSelected);
-        }
+            //IGraphModule gm = ServiceLocator.Current.GetInstance<IGraphModule>();
+            //gm.
+            //SelectedLegend.IsChecked
+            //    SelectedLegend.Points
 
-        public void  OnFileSelected(string path)
-        {
 
+            //could use this, but want to provide more complex display of color and lables
+            //IEnumerable<IEnumerable<System.Windows.Point>>  Legend.LegendsList.Where(legendItem => legendItem.IsChecked).Select(legend => legend.Points);
+
+          
+            List<LegendListViewModel.LegendListItem> checkedLegends = Legend.LegendsList.Where(legendItem => legendItem.IsChecked).ToList();
+            List<ChartExportArguments> exportList = new List<ChartExportArguments>();
+            foreach (LegendListViewModel.LegendListItem legend in checkedLegends)
+            {
+                ChartExportArguments args = new ChartExportArguments();
+                args.Points = legend.Points;
+                args.ChartId = legend.Description;
+                exportList.Add(args);
+            }
+            _exportModule.Export(exportList);
         }
 
         private ICommand _closeCommand;
@@ -98,6 +113,6 @@ namespace USBTetminal2.Controls.Chart
             }
         }
 
-        
+
     }
 }

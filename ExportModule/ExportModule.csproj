@@ -30,8 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DynamicDataDisplay">
+      <HintPath>..\Referenced Assemblies\DynamicDataDisplay.dll</HintPath>
+    </Reference>
     <Reference Include="FolderBrowser">
       <HintPath>..\Referenced Assemblies\FolderBrowser.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.Practices.Prism.Composition">
       <HintPath>..\packages\Prism.Composition.5.0.0\lib\NET45\Microsoft.Practices.Prism.Composition.dll</HintPath>
@@ -66,6 +72,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChartExportArguments.cs" />
     <Compile Include="EExportType.cs" />
     <Compile Include="ExportModule.cs" />
     <Compile Include="IExportModule.cs" />
@@ -75,10 +82,16 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Sevices\ExcelService.cs" />
+    <Compile Include="Sevices\IExcelService.cs" />
     <Compile Include="Views\ChooseExportTypeView.xaml.cs">
       <DependentUpon>ChooseExportTypeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ChooseExportTypeViewModel.cs" />
+    <Compile Include="Views\ExcelPreview.xaml.cs">
+      <DependentUpon>ExcelPreview.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExcelPreviewViewModel.cs" />
     <Compile Include="Views\FolderBrowseView.xaml.cs">
       <DependentUpon>FolderBrowseView.xaml</DependentUpon>
     </Compile>
@@ -93,13 +106,25 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Excel\Excel.csproj">
+      <Project>{8e62b330-d147-4a75-a6c8-438a5cd14630}</Project>
+      <Name>Excel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
       <Project>{bc09399a-b7a7-48e6-8fc2-5053846e77c3}</Project>
       <Name>Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WpfDocumentPreviewer\WpfDocumentPreviewer.csproj">
+      <Project>{6a63405a-b6bb-4095-b48c-e720de021482}</Project>
+      <Name>WpfDocumentPreviewer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\ChooseExportTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExcelPreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

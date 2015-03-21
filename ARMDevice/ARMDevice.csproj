@@ -112,6 +112,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+      <Project>{bc09399a-b7a7-48e6-8fc2-5053846e77c3}</Project>
+      <Name>Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\USBTetminal2\USBTetminal2.csproj">
       <Project>{00da47ad-4df0-4477-afab-16d0cc13e435}</Project>
       <Name>USBTetminal2</Name>

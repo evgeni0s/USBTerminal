@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:commands="clr-namespace:USBTetminal2.Commands"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:dict="clr-namespace:USBTetminal2"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://www.codeplex.com/prism"
@@ -46,7 +45,8 @@
                   BorderThickness="0"
                   ItemContainerStyle="{StaticResource itemstyle}"
                   ItemsSource="{Binding LegendsList}"
-                  SelectedItem="{Binding SelectedLegend}">
+                  SelectedItem="{Binding SelectedLegend}"
+                  SelectedIndex="0">
             <!--  ItemsSource="{Binding LegendsList}">  -->
             <!--
                 <ListViewItem>sdfgsdfg</ListViewItem>

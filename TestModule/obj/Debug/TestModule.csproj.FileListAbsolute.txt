@@ -7,3 +7,12 @@ F:\USBTerminalRepo\TestModule\obj\Debug\TestModule_MarkupCompile.cache
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.g.resources
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.dll
 F:\USBTerminalRepo\TestModule\obj\Debug\TestModule.pdb
+I:\USBTerminalRepo\TestModule\bin\Debug\TestModule.dll
+I:\USBTerminalRepo\TestModule\bin\Debug\TestModule.pdb
+I:\USBTerminalRepo\TestModule\obj\Debug\TestModule.csprojResolveAssemblyReference.cache
+I:\USBTerminalRepo\TestModule\obj\Debug\Views\TestModuleView.baml
+I:\USBTerminalRepo\TestModule\obj\Debug\Views\TestModuleView.g.cs
+I:\USBTerminalRepo\TestModule\obj\Debug\TestModule_MarkupCompile.cache
+I:\USBTerminalRepo\TestModule\obj\Debug\TestModule.g.resources
+I:\USBTerminalRepo\TestModule\obj\Debug\TestModule.dll
+I:\USBTerminalRepo\TestModule\obj\Debug\TestModule.pdb

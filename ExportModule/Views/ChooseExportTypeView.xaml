@@ -4,8 +4,47 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+             Height="400" Width="400">
+    <GroupBox Header="Select Export Format" FontSize="25" FontFamily="Gloucester MT Extra Condensed" Background="LightGoldenrodYellow" >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="130"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Button Canvas.ZIndex="1"
+                Width="18" Height="18" Margin="5"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Style="{StaticResource CloseButtonStyle}"
+                                Command="{Binding CloseCommand}"
+                                CommandParameter="{Binding}"/>
             
-    </Grid>
+            <Button Style="{StaticResource FlatButtonStyle}"
+                    Command="{Binding TextCommand}"
+                    Margin="30" MaxWidth="200"  Grid.Row="1" HorizontalContentAlignment="Stretch" Foreground="Black">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock FontSize="40" TextAlignment="Left" Grid.Column="1" VerticalAlignment="Center">Text</TextBlock>
+                    <Image Source="{StaticResource Notepad_icon}" />
+                </Grid>
+            </Button>
+            <Button Style="{StaticResource FlatButtonStyle}"
+                    Command="{Binding ExcelCommand}"
+                    Margin="30" Height="70" MaxWidth="200"  VerticalAlignment="Top"
+                    HorizontalContentAlignment="Stretch" Grid.Row="2" Foreground="#FF058723">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock FontSize="40" TextAlignment="Left" Grid.Column="1" VerticalAlignment="Center">Excel</TextBlock>
+                    <Image Source="{StaticResource  excel-icon}" Margin="15,0"  />
+                </Grid>
+            </Button>
+        </Grid> 
+    </GroupBox>
 </UserControl>

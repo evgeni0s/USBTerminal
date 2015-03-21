@@ -73,6 +73,8 @@ namespace USBTetminal2
 
             //this.Container.RegisterType<ISettingsViewModel, SettingsViewModel>();
             this.Container.RegisterInstance<CustomRichTextBox>(this._logger);
+            //Temporary!! Excel module is not designed jet. I need a single class from iit
+            //this.RegisterTypeIfMissing(typeof(I), typeof(GraphsManager), true);
 
         }
 

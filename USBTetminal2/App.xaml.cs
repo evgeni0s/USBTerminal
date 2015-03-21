@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,6 +25,10 @@ namespace USBTetminal2
             //MessageBox.Show("Exception message :" + Environment.NewLine + e.Exception.Message);
 
             //e.Handled = true;
+
+
+
+
         }
 
 
@@ -31,7 +36,7 @@ namespace USBTetminal2
         {
             base.OnStartup(e);
 
-            Microsoft.Practices.Prism.Modularity.ModulesConfigurationSection t;
+            //Microsoft.Practices.Prism.Modularity.ModulesConfigurationSection t;
 
             //  Ошибка при создании обработчика раздела конфигурации для modules: Не удалось загрузить файл или сборку "Microsoft.Practices.Prism" либо одну из их зависимостей. Не удается найти указанный файл. (C:\Users\Zhenja\Documents\Visual Studio 2012\Projects\MyFirstPrismUnityApp\MyFirstPrismUnityApp\bin\Debug\MyFirstPrismUnityApp.vshost.exe.Config line 7)
             // The boostrapper will create the Shell instance, so the App.xaml does not have a StartupUri.

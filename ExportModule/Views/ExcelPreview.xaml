@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="ExportModule.Views.ExcelPreview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:WpfDocumentPreviewer="clr-namespace:WpfDocumentPreviewer;assembly=WpfDocumentPreviewer"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <!--<WpfDocumentPreviewer:PreviewerControl  x:Name="previewControl" FileName="{Binding Model}" />-->
+        <ContentControl x:Name="previewControl" Content="{Binding PreviewerControl}"/>
+        <Button Canvas.ZIndex="1"
+                Width="18" Height="18" Margin="5"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Style="{StaticResource CloseButtonStyle}"
+                                Command="{Binding CloseCommand}"/>
+    </Grid>
+</UserControl>

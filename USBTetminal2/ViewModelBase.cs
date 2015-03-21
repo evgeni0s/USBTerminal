@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure;
 
-namespace USBTetminal2
+namespace USBTetminal2_OLD
 {
     public class ViewModelBase : INotifyPropertyChanged, IDisposable, IViewModel
     {

@@ -172,6 +172,7 @@
     <Compile Include="Utils\ExcelHelper.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\InvertedBoolConverter.cs" />
+    <Compile Include="Utils\LegendDetailsVisibilityConverter.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\VisibilityConverter.cs" />
     <Compile Include="Utils\VisibilityToCheckedConverter.cs" />
@@ -203,6 +204,10 @@
     <Page Include="Controls\ToolBar\ToolBarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Res\ImageResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Res\Styles.xaml">
       <SubType>Designer</SubType>
@@ -275,6 +280,8 @@
     <Resource Include="Res\Metal_plate820.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Res\excel-icon.png" />
+    <Resource Include="Res\Notepad_icon.png" />
     <Resource Include="Res\Refresh.png" />
     <Resource Include="Res\Gitar-mobile-app-icons.jpg" />
     <Resource Include="Res\Delete_Icon.png" />
