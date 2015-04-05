@@ -36,6 +36,9 @@
     <Reference Include="FolderBrowser">
       <HintPath>..\Referenced Assemblies\FolderBrowser.dll</HintPath>
     </Reference>
+    <Reference Include="MahApps.Metro">
+      <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net45\MahApps.Metro.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -63,6 +66,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -82,20 +88,26 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Sevices\ExcelExtensions.cs" />
     <Compile Include="Sevices\ExcelService.cs" />
     <Compile Include="Sevices\IExcelService.cs" />
-    <Compile Include="Views\ChooseExportTypeView.xaml.cs">
-      <DependentUpon>ChooseExportTypeView.xaml</DependentUpon>
+    <Compile Include="Views\ChooseExportTypeView_OLD.xaml.cs">
+      <DependentUpon>ChooseExportTypeView_OLD.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ChooseExportTypeViewModel.cs" />
-    <Compile Include="Views\ExcelPreview.xaml.cs">
-      <DependentUpon>ExcelPreview.xaml</DependentUpon>
+    <Compile Include="Views\ChooseExportTypeViewModel_OLD.cs" />
+    <Compile Include="Views\ExcelPreview_OLD.xaml.cs">
+      <DependentUpon>ExcelPreview_OLD.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ExcelPreviewViewModel.cs" />
+    <Compile Include="Views\ExcelPreviewViewModel_OLD.cs" />
+    <Compile Include="Views\FileBrowseViewModel.cs" />
     <Compile Include="Views\FolderBrowseView.xaml.cs">
       <DependentUpon>FolderBrowseView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FolderBrowseViewModel.cs" />
+    <Compile Include="Views\SelectExportTemplateView.xaml.cs">
+      <DependentUpon>SelectExportTemplateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SelectExportTemplateViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -120,15 +132,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\ChooseExportTypeView.xaml">
+    <Page Include="Views\ChooseExportTypeView_OLD.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ExcelPreview.xaml">
+    <Page Include="Views\ExcelPreview_OLD.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FolderBrowseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SelectExportTemplateView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

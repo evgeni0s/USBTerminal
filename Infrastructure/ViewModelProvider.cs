@@ -30,5 +30,11 @@ namespace Infrastructure
 
             return viewModel;
         }
+
+        //I've added dispose to solve issue with excel files
+        public void Dispose()
+        {
+            _viewModelCache.Dispose();
+        }
     }
 }

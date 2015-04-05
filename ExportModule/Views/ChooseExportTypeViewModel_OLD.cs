@@ -13,14 +13,14 @@ using System.Windows.Input;
 //Uses common ViewModel, but different RelayCommand
 namespace ExportModule.Views
 {
-    public class ChooseExportTypeViewModel : ViewModelBase
+    public class ChooseExportTypeViewModel_OLD : ViewModelBase
     {
 
         private ILoggerFacade _logger;
         private IRegionManager _regionManager;
         //private IGraphModule _grahpModule;
         private IViewModelProvider _viewModelProvider;
-        public ChooseExportTypeViewModel(ILoggerFacade logger, IRegionManager regionManager, IViewModelProvider viewModelProvider)
+        public ChooseExportTypeViewModel_OLD(ILoggerFacade logger, IRegionManager regionManager, IViewModelProvider viewModelProvider)
         {
             _logger = logger;
             _regionManager = regionManager;
@@ -39,7 +39,7 @@ namespace ExportModule.Views
         private ICommand _excelCommand;
         public ICommand ExcelCommand
         {
-            get { return _excelCommand ?? (_excelCommand = new RelayCommand(OnExcel)); }
+            get { return _excelCommand ?? (_excelCommand = new FolderBrowser.Command.RelayCommand(OnExcel)); }
         }
 
         private void OnExcel()
@@ -51,7 +51,7 @@ namespace ExportModule.Views
             if (view == null)
             {
                 var v = new ExcelPreview();
-                var vm = _viewModelProvider.GetViewModel<ExcelPreviewViewModel>(Model);//new ChooseExportTypeViewModel(selectedPathCallback, main);
+                var vm = _viewModelProvider.GetViewModel<ExcelPreviewViewModel_OLD>(Model);//new ChooseExportTypeViewModel(selectedPathCallback, main);
                 vm.CreatePreview();
                 v.DataContext = vm;
                 foreach (var otherView in main.Views)
@@ -75,7 +75,7 @@ namespace ExportModule.Views
         private ICommand _closeCommand;
         public ICommand CloseCommand
         {
-            get { return _closeCommand ?? (_closeCommand = new RelayCommand(OnClose)); }
+            get { return _closeCommand ?? (_closeCommand = new FolderBrowser.Command.RelayCommand(OnClose)); }
         }
 
         private void OnClose()

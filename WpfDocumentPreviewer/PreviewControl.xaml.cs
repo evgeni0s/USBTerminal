@@ -60,11 +60,20 @@ namespace WpfDocumentPreviewer
                 wfh1.Visibility = Visibility.Visible;
             }
 
+
+        }
+        //this controls has problems closing files. I wrote this method to make app more stable
+        //I do not know if it works
+        public void ForceDispose()
+        {
+            previewHandlerHost1.UnloadPreviewHandler();
+            previewHandlerHost1.Dispose();
         }
 
         public PreviewerControl()
         {
             InitializeComponent();
+
         }
 
 
@@ -114,6 +123,13 @@ namespace WpfDocumentPreviewer
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+        private void onSizeChanges(object sender, SizeChangedEventArgs e)
+        {
+            int width = (int)(ActualWidth - (ActualWidth % 100) + 0.5);
+            if (previewHandlerHost1.Width != width)
+                previewHandlerHost1.Width = width;
+        }
 
     }
 }

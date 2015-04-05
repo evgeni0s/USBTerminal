@@ -16,45 +16,27 @@ using System.Windows.Input;
 
 namespace ExportModule.Views
 {
+    //folder is used by export module
     public class FolderBrowseViewModel : DialogViewModel
     {
-        private IRegion main;
+        protected IRegion main;
 
 
-        Action<string> selectedFileCallback;
+        protected Action<string> selectedFileCallback;
         public FolderBrowseViewModel(Action<string> selectedFileCallback, IRegion main)
         {
             // TODO: Complete member initialization
             this.selectedFileCallback = selectedFileCallback;
             this.main = main;
             base.TreeBrowser.SelectedFolder = Properties.Settings.Default.SaveFolder;
+
         }
 
-
-        public IEnumerable Files
+        public virtual Visibility SelectFileComboboxVisibility
         {
-            get
-            {
-                if (string.IsNullOrEmpty(TreeBrowser.SelectedFolder))
-                    return new string[] { "" };
-                return new DirectoryInfo(base.TreeBrowser.SelectedFolder).GetFiles().Select(file => file.Name); ; }
+            get { return Visibility.Collapsed; }
         }
 
-        private string _selectedFile;
-        public string SelectedFile
-        {
-            get { return _selectedFile; }
-            set
-            {
-                _selectedFile = value;
-                RaisePropertyChanged("SelectedItem");
-            }
-        }
-        public string UserFileName
-        {
-            get;
-            set;
-        }
 
         private ICommand _okCommand;
         public ICommand OkCommand
@@ -62,14 +44,8 @@ namespace ExportModule.Views
             get { return _okCommand ?? (_okCommand = new RelayCommand(OkExecute)); }
         }
 
-        private void OkExecute()
+        protected virtual void OkExecute()
         {
-            if (!UserFileName.Contains(".txt"))
-            {
-                UserFileName += ".txt";
-            }
-            string filePath = base.TreeBrowser.SelectedFolder + "\\" + UserFileName;;
-
             var view = main.GetView("FolderBrowserKey");
             if (view != null)
             {
@@ -79,9 +55,8 @@ namespace ExportModule.Views
             Properties.Settings.Default.Save();
             if (selectedFileCallback != null)
             {
-                selectedFileCallback(filePath);
+                selectedFileCallback(Properties.Settings.Default.SaveFolder);
             }
-
         }
 
 

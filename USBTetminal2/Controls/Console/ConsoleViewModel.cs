@@ -43,7 +43,8 @@ namespace USBTetminal2.Controls
 
         private void OnSave(object obj)
         {
-            _exportModule.ShowFolderBrowserView(OnUserSelelectedFile);
+
+            _exportModule.ShowFileBrowserView(OnUserSelelectedFile);
         }
 
         private void OnUserSelelectedFile(string obj)

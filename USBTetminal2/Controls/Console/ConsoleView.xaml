@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="300"
              d:DesignWidth="300"
+             Margin="0,0,5,0"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml" />
@@ -13,35 +14,34 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <ContentControl Content="{Binding ConsolePresenter}" />
         <Border Grid.Row="1">
             <Border Background="LightGreen" CornerRadius="0,0,20,20">
                 <Grid>
                     <StackPanel Width="Auto"
-                                Margin="20,3"
+                                Margin="20,0"
                                 Orientation="Horizontal">
-                        <Button Width="25"
-                                Height="15"
+                        <Button Width="35"
+                                Height="35"
+                                Margin="10,-2,0,0"
+                                ToolTip="Clear Console's Content"
                                 Command="{Binding ConsolePresenter.ClearCommand}"
                                 FontFamily="Tele-Marines"
                                 Foreground="#FF075100"
-                                Style="{StaticResource FlatButtonStyle}">
-                            <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                                       FontSize="12"
-                                       Text="Clear" />
+                                Style="{DynamicResource MetroCircleButtonStyle}">
+                            <Image Source="/USBTetminal2;component/Res/clean_brush-512.png" Width="17"></Image>
                         </Button>
-                        <Button Width="25"
-                                Height="15"
-                                Margin="10,0,0,0"
+                        <Button Width="35"
+                                Height="35"
+                                Margin="10,-2,0,0"
+                                ToolTip="Save Console's Content"
                                 Command="{Binding SaveCommand}"
                                 FontFamily="Tele-Marines"
                                 Foreground="#FF075100"
-                                Style="{StaticResource FlatButtonStyle}">
-                            <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                                       FontSize="12"
-                                       Text="Save" />
+                                Style="{DynamicResource MetroCircleButtonStyle}">
+                            <Image Source="/USBTetminal2;component/Res/save_as.png" Width="17"></Image>
                         </Button>
                     </StackPanel>
                 </Grid>

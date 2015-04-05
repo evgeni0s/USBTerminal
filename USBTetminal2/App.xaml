@@ -5,10 +5,23 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Res/Styles.xaml"/>
-                <ResourceDictionary Source="Res/MyDictionary.xaml"/>
-                <ResourceDictionary Source="Res/ImageResources.xaml"/>
+                <!-- FROM SITE: http://mahapps.com/guides/quick-start.html
+                    this changes top panel-->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="Res/Icons.xaml"/>
+                <ResourceDictionary Source="Res/Styles.xaml" />
+                <ResourceDictionary Source="Res/MyDictionary.xaml" />
+                <ResourceDictionary Source="Res/ImageResources.xaml" />
+                
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
+    
+ <!--TO DO: 
+    -Export existing styles to saparate dictionary and save it
+    -Remove my coolest "connect" button-->

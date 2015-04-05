@@ -226,7 +226,8 @@ namespace USBTetminal2.Graphs
         int graphNumber = 0;
         private string getRandomName()
         {
-            return "Graph " + graphNumber++;
+
+            return "Graph " + DateTime.Now.ToLongTimeString().Replace(':', ' ');
         }
 
         /// <summary>

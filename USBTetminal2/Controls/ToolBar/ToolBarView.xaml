@@ -4,13 +4,13 @@
         xmlns:commands="clr-namespace:USBTetminal2.Commands"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Height="32"
+        Height="42"
         MaxWidth="520"
-        Margin="10,0"
+        Margin="0,0"
         BorderBrush="White"
-        BorderThickness="2"
+        BorderThickness="0"
         CornerRadius="0,0,70,20"
-        d:DesignHeight="60"
+        d:DesignHeight="70"
         d:DesignWidth="500"
         mc:Ignorable="d">
     <Border.Resources>
@@ -18,11 +18,13 @@
 
     </Border.Resources>
     <!--  this used to add metal pattern to background  -->
+
     <!--
         <Border.Background>
         <ImageBrush AlignmentX="Left" ImageSource="/USBTetminal2;component/Res/Metal_plate520.jpg" Stretch="None"/>
         </Border.Background>
     -->
+
 
     <!--  <Border DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType={x:Type Border}, Mode=FindAncestor}}" >  -->
     <Border>
@@ -34,64 +36,32 @@
                     Content="ON/OFF &#xa;LEGEND"   Content="ON/OFF &#xa;POINTS"  Showcard Gothic
                     OCR A Extended
                 -->
-                <Button Width="50"
-                        Height="22"
+                <ToggleButton Width="75"
+                         Margin="15,5,0,3"
                         Command="{Binding ShowGraphCommand}"
                         FontFamily="Tele-Marines"
-                        Foreground="#7A0072"
-                        Style="{StaticResource FlatButtonStyle}">
+                        Foreground="#FFC705BA">
                     <TextBlock FontFamily="Gloucester MT Extra Condensed"
                                FontSize="16"
                                Text="Graph" />
-                </Button>
-                <!--
-                    <Button Width="50" Height="22" Margin="15,0,0,0" Style="{StaticResource FlatButtonStyle}" Command="{Binding ShowLegendCommand}" Foreground="#FF075100" FontFamily="Tele-Marines">
-                    <TextBlock Text="Legend" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
-                    </Button>
-                    <Button Width="50" Height="22" Margin="15,0,0,0"  Style="{StaticResource FlatButtonStyle}" Command="{x:Static commands:CustomCommands.ShowPoints}" Foreground="#FF00045D" FontSize="14">
-                    <TextBlock Text="Points" FontFamily="Gloucester MT Extra Condensed" FontSize="16"/>
-                    </Button>
-                -->
-                <Button Width="50"
-                        Height="22"
-                        Margin="15,0,0,0"
-                        Command="{x:Static commands:CustomCommands.Reset}"
-                        Foreground="#FF5D4002"
-                        Style="{StaticResource FlatButtonStyle}">
+                </ToggleButton>
+                <ToggleButton Width="75"
+                              Margin="15,5,0,3"
+                              Command="{Binding ShowSettingsCommand}"
+                              Foreground="Red">
                     <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                               FontSize="16"
-                               Text="Reset" />
-                </Button>
-                <Button Width="55"
-                        Height="22"
-                        Margin="15,0,0,0"
-                        Command="{Binding ShowSettingsCommand}"
-                        Foreground="#FF570000"
-                        Style="{StaticResource FlatButtonStyle}">
-                    <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                               FontSize="16"
+                               FontSize="14"
                                Text="Settings" />
-                </Button>
-                <Button Width="55"
-                        Height="22"
-                        Margin="15,0,0,0"
+                </ToggleButton>
+                <ToggleButton Width="75"
+                        Margin="15,5,0,3"
                         Command="{Binding ShowConsoleCommand}"
-                        Foreground="#FF004291"
-                        Style="{StaticResource FlatButtonStyle}">
+                        Foreground="#FF004291">
                     <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                               FontSize="16"
-                               Text="Console" />
-                </Button>
-                <Button Width="55"
-                        Height="22"
-                        Margin="15,0,0,0"
-                        Command="{x:Static commands:CustomCommands.ConsoleVisibility}"
-                        Foreground="#FF004291"
-                        Style="{StaticResource FlatButtonStyle}">
-                    <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                               FontSize="16"
-                               Text="Excel" />
-                </Button>
+                               FontSize="14"
+                               Text="Console" Foreground="#FF0074FF" />
+                </ToggleButton>
+
             </StackPanel>
         </Grid>
 

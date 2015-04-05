@@ -16,7 +16,7 @@ using WpfDocumentPreviewer;
 
 namespace ExportModule.Views
 {
-    public class ExcelPreviewViewModel : ViewModelBase
+    public class ExcelPreviewViewModel_OLD : ViewModelBase
     {
 
         private ILoggerFacade _logger;
@@ -24,7 +24,7 @@ namespace ExportModule.Views
         //private IGraphModule _grahpModule;
         private IExcelService _excelService;
         private string _tempExcelFileName;
-        public ExcelPreviewViewModel(ILoggerFacade logger, IRegionManager regionManager, IExcelService excelService)
+        public ExcelPreviewViewModel_OLD(ILoggerFacade logger, IRegionManager regionManager, IExcelService excelService)
         {
             _logger = logger;
             _regionManager = regionManager;
@@ -38,7 +38,7 @@ namespace ExportModule.Views
             //_tempExcelFileName = Path.Combine(folder, Properties.Settings.Default.TempFolder, string.Format(@"{0}.xlsx", Guid.NewGuid()));
             //_tempExcelFileName = Path.Combine(folder, Properties.Settings.Default.TempFolder, string.Format(@"{0}.xlsx", DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss")));
             //_tempExcelFileName = Path.Combine(folder, Properties.Settings.Default.TempFolder, string.Format(@"{0}.xlsx", 1));
-            _tempExcelFileName = Path.Combine(folder, Properties.Settings.Default.TempFolder, string.Format(@"{0}.xls", 1));
+            _tempExcelFileName = Path.Combine(folder, AppDirectories.TempFolder, string.Format(@"{0}.xls", 1));
              //_tempExcelFileName = Path.Combine(specificFolder string.Format(@"{0}.xlsx", Guid.NewGuid());
             // Check if folder exists and if not, create it
             //if (!Directory.Exists(specificFolder))
@@ -82,7 +82,7 @@ namespace ExportModule.Views
         private ICommand _closeCommand;
         public ICommand CloseCommand
         {
-            get { return _closeCommand ?? (_closeCommand = new RelayCommand(OnClose)); }
+            get { return _closeCommand ?? (_closeCommand = new FolderBrowser.Command.RelayCommand(OnClose)); }
         }
 
         private void OnClose()

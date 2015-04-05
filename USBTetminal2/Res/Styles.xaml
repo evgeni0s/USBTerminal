@@ -27,10 +27,11 @@
         </GradientBrush.GradientStops>
     </LinearGradientBrush>
 
+    <!--Toolbar gradient blue
     <LinearGradientBrush x:Key="headerBarBG" EndPoint="0.5,1" StartPoint="0.5,0">
         <GradientStop Color="#FF284292"/>
         <GradientStop Color="#FF2175B8" Offset="0.26499998569488525"/>
-    </LinearGradientBrush>
+    </LinearGradientBrush>-->
 
     <LinearGradientBrush x:Key="sideBarHeaderBarBG" EndPoint="0.5,1" StartPoint="0.5,0">
         <GradientStop Color="#FF4A5470"/>
@@ -272,7 +273,7 @@
 
     <!-- TabControl -->
 
-    <Style  TargetType="{x:Type TabControl}">
+    <Style  TargetType="{x:Type TabControl}" x:Key="TabControl_NotUsed">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -319,7 +320,7 @@
 
     <!-- TabItem -->
 
-    <Style TargetType="{x:Type TabItem}">
+    <Style TargetType="{x:Type TabItem}" x:Key="TabItem_NotUsed">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">

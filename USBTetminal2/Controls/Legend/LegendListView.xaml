@@ -92,7 +92,7 @@
                                 HorizontalAlignment="Right"
                                 Command="{Binding RemoveLegendCommand}"
                                 CommandParameter="{Binding}"
-                                Style="{StaticResource FlatButtonStyle}">
+                                Style="{DynamicResource MetroCircleButtonStyle}">
                             <Image Width="Auto"
                                    Height="20"
                                    SnapsToDevicePixels="True"

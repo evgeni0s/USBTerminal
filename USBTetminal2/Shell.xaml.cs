@@ -87,7 +87,7 @@ namespace USBTetminal2
         //FOR DEBUG ONLY
         private void onLoaded(object sender, RoutedEventArgs e)
         {
-            ((MainWindowViewModel)DataContext).showAllPorts() ;
+            ((MainWindowViewModel)DataContext).showAllPorts(); 
         }
     }
 }

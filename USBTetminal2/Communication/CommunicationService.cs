@@ -55,11 +55,14 @@ namespace USBTetminal2.Communication
                     port.Dispose();
                 }
             }
-            foreach (var item in SerialPort.GetPortNames().Except(openedPorts))
+            List<string> closedPortsNames = SerialPort.GetPortNames().Except(openedPorts).ToList();
+            foreach (var portName in closedPortsNames)
             {
-                PortModel model = new PortModel() { Name = item, BoudRate = 19200, DataBits = 8, StopBits = StopBits.One, DataMode = DataMode.Hex };
+                PortModel model = new PortModel() { Name = portName, BoudRate = 19200, DataBits = 8, StopBits = StopBits.One, DataMode = DataMode.Hex };
                 CustomSerialPort port = _viewModelProvider.GetViewModel<CustomSerialPort>(model);//Injects logger
-                _cash.Add(port.PortName, port);
+                //While using com0com, I found that ports can have same names
+                if (!_cash.ContainsKey(portName))
+                    _cash.Add(portName, port);
             }
             if (OnPortsRefreshed != null)
             {

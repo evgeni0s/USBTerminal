@@ -10,6 +10,7 @@ using System.Windows.Input;
 
 namespace USBTetminal2
 {
+    //TO DO: replace this class with Infrastructure.RelayCommand
    public class RelayCommand : ICommand
     {
         readonly Action<object> _execute;

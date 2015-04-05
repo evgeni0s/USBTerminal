@@ -29,14 +29,6 @@ namespace USBTetminal2
 
     public class Bootstrapper : UnityBootstrapper
     {
-        //private readonly Logger _logger = new Logger();
-
-        //protected override ILoggerFacade CreateLogger()
-        //{
-        //    return this._logger;
-        //}
-
-        //CallbackLogger in tutorial
         private readonly CustomRichTextBox _logger = new CustomRichTextBox();
         protected override ILoggerFacade CreateLogger()
         {

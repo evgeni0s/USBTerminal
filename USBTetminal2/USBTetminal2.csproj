@@ -153,6 +153,8 @@
     <Compile Include="Communication\CustomSerialPort.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Decorations\AccentColorMenuData.cs" />
+    <Compile Include="Decorations\AppThemeMenuData.cs" />
     <Compile Include="Graphs\GraphAxisHelper.cs" />
     <Compile Include="Graphs\GraphsManager.cs" />
     <Compile Include="Graphs\IGraphModule.cs" />
@@ -202,6 +204,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ToolBar\ToolBarView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Res\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Res\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -280,6 +290,10 @@
     <Resource Include="Res\Metal_plate820.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Res\save_as.png" />
+    <Resource Include="Res\markers_graph.png" />
+    <Resource Include="Res\integrated-circuit-256-Orange.png" />
+    <Resource Include="Res\integrated-circuit-256.png" />
     <Resource Include="Res\excel-icon.png" />
     <Resource Include="Res\Notepad_icon.png" />
     <Resource Include="Res\Refresh.png" />
@@ -289,6 +303,8 @@
     <Resource Include="Res\AppIcon.ico" />
     <Resource Include="AppIcon.ico" />
     <Resource Include="Res\Close.png" />
+    <Resource Include="Res\circle_more_detail-512.png" />
+    <Resource Include="Res\clean_brush-512.png" />
     <Content Include="Res\DynamicDataDisplay.dll" />
   </ItemGroup>
   <ItemGroup>

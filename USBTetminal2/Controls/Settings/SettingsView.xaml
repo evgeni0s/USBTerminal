@@ -50,55 +50,8 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Canvas.ZIndex="1"
-                Command="{Binding RefreshCommand}">
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Grid Background="Transparent">
-                        <Border x:Name="outer_PART"
-                                Background="Transparent"
-                                CornerRadius="15" />
-                        <Image x:Name="AnimatedRotateTransform"
-                               Width="20"
-                               Height="20"
-                               RenderTransformOrigin=".5,.5"
-                               Source="/USBTetminal2;component/Res/Refresh.png">
-                            <Image.RenderTransform>
-                                <RotateTransform Angle="0" />
-                            </Image.RenderTransform>
-                        </Image>
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <!--  <Setter TargetName="outer_PART" Property="Background" Value="#7F00FF3A"/>  -->
-                        <!--
-                            <Trigger Property="IsMouseOver" Value="True">
-                            <Trigger.EnterActions>
-                        -->
-                        <EventTrigger RoutedEvent="MouseEnter">
-                            <BeginStoryboard x:Name="RotationStoryboard">
-                                <Storyboard>
-                                    <DoubleAnimation Duration="0:0:1"
-                                                     From="0"
-                                                     RepeatBehavior="Forever"
-                                                     Storyboard.TargetName="AnimatedRotateTransform"
-                                                     Storyboard.TargetProperty="RenderTransform.Angle"
-                                                     To="360" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="MouseLeave">
-                            <StopStoryboard BeginStoryboardName="RotationStoryboard" />
-                        </EventTrigger>
-                        <!--
-                            </Trigger.EnterActions>
-                            </Trigger>
-                        -->
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="outer_PART" Property="Background" Value="#7FE8FF00" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
+                Command="{Binding RefreshCommand}"
+                Style="{StaticResource RefreshButtonStyle}" />
         <ListView VerticalAlignment="Top" ItemsSource="{Binding AvailablePorts}">
             <ListView.View>
                 <GridView>

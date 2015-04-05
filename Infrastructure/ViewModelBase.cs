@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure
 {
-    public class ViewModelBase : INotifyPropertyChanged, IDisposable, IViewModel
+    public class ViewModelBase : INotifyPropertyChanged, IViewModel
     {
 
         public event PropertyChangedEventHandler PropertyChanged;

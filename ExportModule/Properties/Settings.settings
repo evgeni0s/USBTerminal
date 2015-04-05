@@ -5,8 +5,5 @@
     <Setting Name="SaveFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="TempFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Excel Preview Files</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

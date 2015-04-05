@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml" />
+                <!--<ResourceDictionary Source="/USBTetminal2;component/Res/MyDictionary.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
             <LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1">
                 <GradientBrush.GradientStops>
@@ -48,9 +48,10 @@
                                 Command="{Binding CloseCommand}"
                                 CommandParameter="{Binding}"/>
 
-        <chart:ChartPlotter x:Name="mPlotter"   LegendVisible="False" FontWeight="Bold" FontSize="14"/>
+        <chart:ChartPlotter x:Name="mPlotter"  Background="Transparent"  BorderBrush="LightBlue" LegendVisible="False" FontWeight="Bold" FontSize="14"/>
         <legend:LegendListView x:Name="legendBox"  Margin="50,10,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.ZIndex="1" DataContext="{Binding Legend}"/>
-
+        <Border Canvas.ZIndex="2" HorizontalAlignment="Right" BorderThickness="0.5" BorderBrush="{Binding Background, ElementName=toolBox}"/>
+        <Border Canvas.ZIndex="2" HorizontalAlignment="Left" BorderThickness="0.5" BorderBrush="{Binding Background, ElementName=toolBox}"/>
         <ListView Grid.Column="1" 
                   Grid.RowSpan="2"
                   Margin="10,0,0,0"
@@ -59,6 +60,10 @@
                   DataContext="{Binding Legend}" 
                    
                   ItemsSource="{Binding SelectedLegend.Points}">
+            <ListView.Resources>
+                     <!--default style overlaps with Merto style. This returns Metro back on-->
+                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            </ListView.Resources>
             <ListView.Visibility>
                 <MultiBinding Converter="{StaticResource LegendDetailsVisibilityConverter}">
                     <Binding Path="LegendVisibility" />
@@ -72,57 +77,46 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Border Grid.Row="1">
-            <Border Background="LightBlue" CornerRadius="0,0,20,20">
+        <Border Grid.Row="1" >
+            <Border Background="LightBlue" x:Name="toolBox" CornerRadius="0,0,20,20">
                 <Grid>
                     <StackPanel Width="Auto"
                                 Margin="20,3"
                                 Orientation="Horizontal">
-                        <Button Width="55"
-                                Height="18"
+                        <Button Width="35"
+                                Height="35"
+                                ToolTip="Clear All Charts"
                                 Command="{Binding ClearCommand}"
-                                FontFamily="Tele-Marines"
-                                Foreground="#002AFF"
-                                Style="{StaticResource FlatButtonStyle}">
-                            <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                                       FontSize="16"
-                                       Text="Clear" />
+                                Style="{DynamicResource MetroCircleButtonStyle}">
+                            <Image Source="/USBTetminal2;component/Res/clean_brush-512.png" Width="17"></Image>
                         </Button>
-                        <Button Width="55"
-                                Height="18"
+
+                        <Button Width="35"
+                                Height="35"
                                 Margin="10,0,0,0"
+                                ToolTip="Show Save Menu"
                                 Command="{Binding SaveCommand}"
-                                FontFamily="Tele-Marines"
-                                Foreground="#002AFF"
-                                Style="{StaticResource FlatButtonStyle}">
-                            <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                                       FontSize="16"
-                                       Text="Save" />
+                                Style="{DynamicResource MetroCircleButtonStyle}">
+                            <Image Source="/USBTetminal2;component/Res/save_as.png" Width="17"></Image>
                         </Button>
 
-                        <Button Width="55"
-                                Height="18"
+                        <ToggleButton Width="35"
+                                Height="35"
                                 Margin="10,0,0,0"
+                                ToolTip="Show Details"
                                 Command="{Binding LegendVisibilityCommand}"
-                                FontFamily="Tele-Marines"
-                                Foreground="#002AFF"
-                                Style="{StaticResource FlatButtonStyle}">
-                            <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                                       FontSize="16"
-                                       Text="Legend" />
-                        </Button>
+                                Style="{DynamicResource MetroCircleToggleButtonStyle}">
+                            <Image Source="/USBTetminal2;component/Res/circle_more_detail-512.png" ></Image>
+                        </ToggleButton>
 
-                        <Button Width="55"
-                                Height="18"
+                        <ToggleButton Width="35"
+                                Height="35"
                                 Margin="10,0,0,0"
+                                ToolTip="Show Markers"
                                 Command="{Binding ChangeMarkersVisibilityCommand}"
-                                FontFamily="Tele-Marines"
-                                Foreground="#002AFF"
-                                Style="{StaticResource FlatButtonStyle}">
-                            <TextBlock FontFamily="Gloucester MT Extra Condensed"
-                                       FontSize="16"
-                                       Text="Markers" />
-                        </Button>
+                                Style="{DynamicResource MetroCircleToggleButtonStyle}">
+                            <Image Source="/USBTetminal2;component/Res/markers_graph.png" Width="28"></Image>
+                        </ToggleButton>
                     </StackPanel>
                 </Grid>
             </Border>

@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.IO;
+using Infrastructure;
 
 namespace USBTetminal2
 {
@@ -27,11 +29,11 @@ namespace USBTetminal2
             //e.Handled = true;
 
 
-
+           
 
         }
 
-
+        Bootstrapper bootstrapper = new Bootstrapper();
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -40,8 +42,23 @@ namespace USBTetminal2
 
             //  Ошибка при создании обработчика раздела конфигурации для modules: Не удалось загрузить файл или сборку "Microsoft.Practices.Prism" либо одну из их зависимостей. Не удается найти указанный файл. (C:\Users\Zhenja\Documents\Visual Studio 2012\Projects\MyFirstPrismUnityApp\MyFirstPrismUnityApp\bin\Debug\MyFirstPrismUnityApp.vshost.exe.Config line 7)
             // The boostrapper will create the Shell instance, so the App.xaml does not have a StartupUri.
-            Bootstrapper bootstrapper = new Bootstrapper();
+
             bootstrapper.Run();
+
+            //DO TO: create installer and export this code to installer
+            string root = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string myAppData = Path.Combine(root, AppDirectories.AppDataFolder);
+
+            if (!Directory.Exists(myAppData))
+            {
+                Directory.CreateDirectory(myAppData);
+            }
+
+            string excelTempFolder = Path.Combine(myAppData, AppDirectories.TempFolder);
+            if (!Directory.Exists(excelTempFolder))
+            {
+                Directory.CreateDirectory(excelTempFolder);
+            }
         }
     }
 }

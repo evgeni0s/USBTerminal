@@ -1,0 +1,267 @@
+﻿<UserControl x:Class="ExportModule.Views.SelectExportTemplateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="600"
+             d:DesignWidth="600"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <!--  this heilights tabs content area from strip panel  -->
+            <Style TargetType="{x:Type TabControl}">
+                <Setter Property="BorderThickness" Value="1 0 0 0" />
+            </Style>
+            <Style x:Key="fileLabelStyle" TargetType="{x:Type Label}">
+                <Setter Property="FontFamily" Value="{DynamicResource ContentFontFamily}" />
+                <Setter Property="FontSize" Value="{DynamicResource WindowTitleFontSize}" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding ElementName=excelTab, Path=Width}" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label HorizontalAlignment="Right" Style="{StaticResource fileLabelStyle}">File path:</Label>
+            <Label Grid.Column="1" Style="{StaticResource fileLabelStyle}">
+                <Label.Content>
+                    <PriorityBinding FallbackValue="Not defined">
+                        <Binding ElementName="tabControl"
+                                 IsAsync="True"
+                                 Path="SelectedItem.DataContext.FilePath" />
+                    </PriorityBinding>
+                </Label.Content>
+            </Label>
+        </Grid>
+        <Button Height="30"
+                Margin="5,0"
+                HorizontalAlignment="Right"
+                Command="{Binding BrowseCommand}"
+                Style="{DynamicResource SquareButtonStyle}">
+            <Rectangle Width="25" Height="15">
+                <Rectangle.Fill>
+                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder_open}" />
+                </Rectangle.Fill>
+            </Rectangle>
+        </Button>
+        <TabControl x:Name="tabControl"
+                    Grid.Row="1"
+                    TabStripPlacement="Left">
+            <TabItem x:Name="excelTab"
+                     Width="130"
+                     Header="Excel">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
+                    <ContentControl x:Name="ExcelPreviewRegion"
+                                    Background="Red"
+                                    Content="{Binding ExcelPreviewControl}" />
+                    <!--
+                        <Button Margin="5"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Canvas.ZIndex="1"
+                        Command="{Binding RefreshCommand}"
+                        Style="{StaticResource RefreshButtonStyle}"
+                        ToolTip="Refresh preview" />
+                    -->
+                    <StackPanel x:Name="pleaseWaitControl"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="16" Text="Generating preview. Please wait" />
+                        <Controls:MetroProgressBar Width="200"
+                                                   Margin="0, 10, 0, 0"
+                                                   EllipseDiameter="6"
+                                                   Foreground="{DynamicResource AccentColorBrush}"
+                                                   IsIndeterminate="True"
+                                                   Maximum="100"
+                                                   Minimum="0" />
+                    </StackPanel>
+                    <Grid x:Name="toolsGrid" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="90" />
+                            <!--  <RowDefinition Height="90" />  -->
+                            <RowDefinition />
+                            <RowDefinition Height="90" />
+                        </Grid.RowDefinitions>
+                        <Label  Opacity="0.65"  FontSize="{DynamicResource MenuFontSize}">Select chart</Label>
+
+                        <ComboBox x:Name="availableChartsComboBox"
+                                  VerticalAlignment="Center"
+                                  DisplayMemberPath="ChartTitle"
+                                  ItemsSource="{Binding Model}"
+                                  SelectedIndex="0"
+                                  SelectedItem="{Binding CurrentChart,
+                                                         Mode=OneWayToSource}" />
+                        <Button VerticalAlignment="Bottom"
+                                Command="{Binding RenameChartCommand}"
+                                Style="{DynamicResource AccentedSquareButtonStyle}">
+                            Rename
+                        </Button>
+
+
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <!--<Label>Chart position</Label>
+                                <Controls:NumericUpDown Grid.Row="1"
+                                                        Margin="0 5"
+                                                        Maximum="1000"
+                                                        Speedup="True"
+                                                        StringFormat="x {0:N2} px."
+                                                        Value="{Binding ElementName=availableChartsComboBox,
+                                                                        Path=SelectedValue.XOffset_Chart}" />
+
+                                <Controls:NumericUpDown Grid.Row="1"
+                                                        VerticalAlignment="Bottom"
+                                                        Maximum="1000"
+                                                        Speedup="True"
+                                                        StringFormat="y {0:N2} px."
+                                                        Value="{Binding ElementName=availableChartsComboBox,
+                                                                        Path=SelectedValue.YOffset_Chart}" />-->
+
+                                <UniformGrid Columns="1">
+                                    
+                                    <Label Opacity="0.65"  FontSize="{DynamicResource MenuFontSize}">Size</Label>
+                                    <Controls:NumericUpDown Grid.Row="1"
+                                                        Maximum="1000"
+                                                            Margin="1"
+                                                        Speedup="True"
+                                                        StringFormat="x {0:N2} px."
+                                                        Value="{Binding ElementName=availableChartsComboBox,
+                                                                        Path=SelectedValue.XOffset_Chart}" />
+
+                                    <Controls:NumericUpDown Grid.Row="1"
+                                                        VerticalAlignment="Bottom"
+                                                             Margin="1"
+                                                        Maximum="1000"
+                                                        Speedup="True"
+                                                        StringFormat="y {0:N2} px."
+                                                        Value="{Binding ElementName=availableChartsComboBox,
+                                                                        Path=SelectedValue.YOffset_Chart}" />
+
+
+                                </UniformGrid>
+                                <UniformGrid Columns="1">
+                                    <Label Opacity="0.65"  FontSize="{DynamicResource MenuFontSize}">Position</Label>
+
+                                    <Controls:NumericUpDown Grid.Row="1"
+                                                        VerticalAlignment="Bottom"
+                                                             Margin="1"
+                                                        Maximum="1000"
+                                                        Speedup="True"
+                                                        StringFormat="h {0:N2} px."
+                                                        Value="{Binding ElementName=availableChartsComboBox,
+                                                                        Path=SelectedValue.Height}" /> 
+                                <Controls:NumericUpDown Grid.Row="1"
+                                                        VerticalAlignment="Bottom"
+                                                             Margin="1"
+                                                        Maximum="1000"
+                                                        Speedup="True"
+                                                        StringFormat="w {0:N2} px."
+                                                        Value="{Binding ElementName=availableChartsComboBox,
+                                                                        Path=SelectedValue.Width}" />
+                                </UniformGrid>
+
+                                <UniformGrid Margin="0 5"
+                                             Columns="2"
+                                             Rows="2">
+                                    <Label Opacity="0.65"  FontSize="{DynamicResource MenuFontSize}">x axis name</Label>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding ElementName=availableChartsComboBox, Path=SelectedValue.XAxis_AxisTitle}" />
+                                    <Label Opacity="0.65"  FontSize="{DynamicResource MenuFontSize}">y axis name</Label>
+                                    <TextBox Text="{Binding ElementName=availableChartsComboBox, Path=SelectedValue.YAxis_AxisTitle}" />
+                                </UniformGrid>
+
+                                <Controls:ToggleSwitch IsChecked="{Binding ElementName=availableChartsComboBox,
+                                                                        Path=SelectedValue.HasLegend}"
+                                   Header="Legend" />
+
+                                <Controls:ToggleSwitch IsChecked="{Binding ElementName=availableChartsComboBox,
+                                                                        Path=SelectedValue.HasTitle}"
+                                   Header="Title" />
+
+                            </StackPanel>
+
+                        </ScrollViewer>
+
+                        <Grid x:Name="bottomPanel" Grid.Row="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="1"
+                                    Margin="5"
+                                    Command="{Binding ApplyToAllCommand}"
+                                    Style="{DynamicResource SquareButtonStyle}">
+                                Apply To All
+                            </Button>
+                            <Button Margin="5"
+                                    Command="{Binding ApplyToCurrentCommand}"
+                                    Style="{DynamicResource SquareButtonStyle}">
+                                Apply
+                            </Button>
+
+                            <Button Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Margin="50,5,50,5"
+                                    Command="{Binding RefreshCommand}"
+                                    Style="{DynamicResource AccentedSquareButtonStyle}">
+                                Refresh
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Text">
+                <Grid>
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="Not implimented" />
+                    <Controls:MetroProgressBar Width="200"
+                                               Margin="156,310,156,266"
+                                               Foreground="{DynamicResource AccentColorBrush}"
+                                               IsIndeterminate="True"
+                                               Maximum="100"
+                                               Minimum="0"
+                                               Value="{Binding ElementName=horizSlider,
+                                                               Path=Value}" />
+                    <ContentControl Content="{Binding TextPreview}" />
+                </Grid>
+            </TabItem>
+
+
+        </TabControl>
+
+        <Button Grid.Row="2"
+                Width="75"
+                Margin="15,5,0,3"
+                HorizontalAlignment="Right"
+                Command="{Binding DoneCommand}"
+                Foreground="#FF004291">
+            <TextBlock FontFamily="Gloucester MT Extra Condensed"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       Foreground="#FF0074FF"
+                       Text="Done!" />
+        </Button>
+    </Grid>
+</UserControl>

@@ -12,7 +12,7 @@
 
 
     <utils:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
-    
+
     <DataTemplate x:Key="legendTemplate" >
         <Grid HorizontalAlignment="Stretch">
             <!--uncomment to enable color effect <Grid.Background>
@@ -128,7 +128,7 @@
                         <ControlTemplate TargetType="ToggleButton">
                             <Grid Background="Transparent">
                                 <Path x:Name="PART_PATH" Data="M96,180 C183.0265,178.36055 242.20029,172.28545 233,207 C74.999939,225.00015 96,180 96,180 z" Stretch="Fill" UseLayoutRounding="False" Fill="{StaticResource ConnectButton_PressedNormal_Brush}"/>
-                                    <!--<Path.Fill>
+                                <!--<Path.Fill>
                                         <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                                             <GradientStop Color="#00FF0606" Offset="1"/>
                                             <GradientStop Color="#DAFB0000" Offset="0.749"/>
@@ -151,31 +151,34 @@
     </Style>
 
 
-
-    <Style x:Key="FlatButtonStyle" TargetType="Button">
+    <!--DO NOT DELETE THIS! It is my own steam punk button style. With metal plate. I just do not need it in METRO app-->
+    <Style x:Key="FlatButtonStyle_NOT_USED" TargetType="Button">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid Margin="-2,-2,0,0"><!--Margin="-2,-2,0,0"-->
+                    <Grid Margin="-2,-2,0,0">
+                        <!--Margin="-2,-2,0,0"-->
                         <!--common container for 2 borders: first cintains text and gradient. The second is just a shadow-->
                         <!--Margin="2,2,-2,-2"-->
-                        <Border CornerRadius="5" Margin="2,2,-4,-2"  Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" Background="{TemplateBinding Foreground}" >  <!--I am binding backdround to Text color-->
-                            
+                        <Border CornerRadius="5" Margin="2,2,-4,-2"  Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" Background="{TemplateBinding Foreground}" >
+                            <!--I am binding backdround to Text color-->
+
                         </Border>
-                    <Border  CornerRadius="5" Height="{TemplateBinding Height}"  > <!--No margin here-->
-                        <Border.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <LinearGradientBrush.RelativeTransform>
-                                    <RotateTransform Angle="14"/>
-                                </LinearGradientBrush.RelativeTransform>
-                                <GradientStop Color="#FFEDEDED" Offset="0.312"/>
-                                <GradientStop Color="#FF9F9F9F"/>
-                                <GradientStop Color="#FF9B9B9B" Offset="0.983"/>
-                                <GradientStop Color="#FEFFFFFF" Offset="0.583"/>
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                    </Border>
+                        <Border  CornerRadius="5" Height="{TemplateBinding Height}"  >
+                            <!--No margin here-->
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <RotateTransform Angle="14"/>
+                                    </LinearGradientBrush.RelativeTransform>
+                                    <GradientStop Color="#FFEDEDED" Offset="0.312"/>
+                                    <GradientStop Color="#FF9F9F9F"/>
+                                    <GradientStop Color="#FF9B9B9B" Offset="0.983"/>
+                                    <GradientStop Color="#FEFFFFFF" Offset="0.583"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -210,27 +213,78 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                <Grid Background="Transparent">
-                    <Border x:Name="outer_PART"
+                    <Grid Background="Transparent">
+                        <Border x:Name="outer_PART"
                                 Background="Transparent"
                                 CornerRadius="15" />
                         <Image Width="Auto"
                                    Height="20"
                                    SnapsToDevicePixels="True"
                                    Source="/USBTetminal2;component/Res/Close.png" />
-                </Grid>
-                <ControlTemplate.Triggers>
-                    <Trigger Property="IsPressed" Value="True">
-                        <Setter TargetName="outer_PART" Property="Background" Value="Red" />
-                    </Trigger>
-                </ControlTemplate.Triggers>
-            </ControlTemplate>
-           </Setter.Value>
-      </Setter>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="outer_PART" Property="Background" Value="Red" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
+    <Style TargetType="Button" x:Key="RefreshButtonStyle" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid Background="Transparent">
+                        <Border x:Name="outer_PART"
+                                Background="Transparent"
+                                CornerRadius="15" />
+                        <Image x:Name="AnimatedRotateTransform"
+                               Width="20"
+                               Height="20"
+                               RenderTransformOrigin=".5,.5"
+                               Source="/USBTetminal2;component/Res/Refresh.png">
+                            <Image.RenderTransform>
+                                <RotateTransform Angle="0" />
+                            </Image.RenderTransform>
+                        </Image>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!--  <Setter TargetName="outer_PART" Property="Background" Value="#7F00FF3A"/>  -->
+                        <!--
+                            <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                        -->
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard x:Name="RotationStoryboard">
+                                <Storyboard>
+                                    <DoubleAnimation Duration="0:0:1"
+                                                     From="0"
+                                                     RepeatBehavior="Forever"
+                                                     Storyboard.TargetName="AnimatedRotateTransform"
+                                                     Storyboard.TargetProperty="RenderTransform.Angle"
+                                                     To="360" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <StopStoryboard BeginStoryboardName="RotationStoryboard" />
+                        </EventTrigger>
+                        <!--
+                            </Trigger.EnterActions>
+                            </Trigger>
+                        -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="outer_PART" Property="Background" Value="#7FE8FF00" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-        <LinearGradientBrush x:Key="headerBarBG" EndPoint="0.5,1" StartPoint="0.5,0">
+    <LinearGradientBrush x:Key="headerBarBG" EndPoint="0.5,1" StartPoint="0.5,0">
         <GradientStop Color="#FF284292"/>
         <GradientStop Color="#FF2175B8" Offset="0.26499998569488525"/>
     </LinearGradientBrush>

@@ -20,7 +20,7 @@
                                 Command="{Binding CloseCommand}"
                                 CommandParameter="{Binding}"/>
             
-            <Button Style="{StaticResource FlatButtonStyle}"
+            <Button Style="{DynamicResource MetroCircleButtonStyle}"
                     Command="{Binding TextCommand}"
                     Margin="30" MaxWidth="200"  Grid.Row="1" HorizontalContentAlignment="Stretch" Foreground="Black">
                 <Grid>
@@ -32,7 +32,7 @@
                     <Image Source="{StaticResource Notepad_icon}" />
                 </Grid>
             </Button>
-            <Button Style="{StaticResource FlatButtonStyle}"
+            <Button Style="{DynamicResource MetroCircleButtonStyle}"
                     Command="{Binding ExcelCommand}"
                     Margin="30" Height="70" MaxWidth="200"  VerticalAlignment="Top"
                     HorizontalContentAlignment="Stretch" Grid.Row="2" Foreground="#FF058723">

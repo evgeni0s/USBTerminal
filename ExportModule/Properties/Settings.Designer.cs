@@ -34,17 +34,5 @@ namespace ExportModule.Properties {
                 this["SaveFolder"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Excel Preview Files")]
-        public string TempFolder {
-            get {
-                return ((string)(this["TempFolder"]));
-            }
-            set {
-                this["TempFolder"] = value;
-            }
-        }
     }
 }

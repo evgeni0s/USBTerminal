@@ -7,13 +7,10 @@ namespace ExportModule.Services
     //Do not inject it to for view models outside this module
     public interface IExcelService
     {
-        //void AddItem(string id);
-        //void Export();
-        //void ExportTo();
-
-        /// <returns>result true if document was successfully exported</returns>
-        //bool CreateDocument(List<LineGraph> selectedGraphs, string path);
         bool CreateExcelFile(string path);
-        void ExportToExcelFile(string path);
+
+        void ExportToExcelFile(string path, List<ChartExportArguments> args);
+
+
     }
 }

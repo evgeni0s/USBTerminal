@@ -21,5 +21,7 @@ namespace ExportModule
         //void Export(List<LineGraph> LineGraph);
         void Export(List<ChartExportArguments> exportData);
 
+
+        void ShowFileBrowserView(Action<string> selectedPathCallback);
     }
 }

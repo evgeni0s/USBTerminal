@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using ExcelNamespace = Microsoft.Office.Interop.Excel;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
+using System.Reflection;
+using ExportModule.Sevices;
 //using Microsoft.Office.Interop.Excel;
 
 namespace ExportModule.Services
@@ -207,7 +209,34 @@ namespace ExportModule.Services
             _logger = logger;
         }
 
+        private bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
 
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return false;
+        }
+
+
+        //creating excel file is more complicated then File.Create(path); it needs template
         public bool CreateExcelFile(string path)
         {
             ExcelNamespace.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
@@ -219,13 +248,25 @@ namespace ExportModule.Services
             }
             bool result = true;
 
+            try
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+            catch
+            {
+                //file is locked. Solution needs time, which do not have right now
+            }
+
             ExcelNamespace.Workbook xlWorkBook;
-            ExcelNamespace.Worksheet xlWorkSheet;
+            //ExcelNamespace.Worksheet xlWorkSheet;
             object misValue = System.Reflection.Missing.Value;
 
             xlWorkBook = xlApp.Workbooks.Add(misValue);
-            xlWorkSheet = (ExcelNamespace.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-            xlWorkSheet.Cells[1, 1] = "Sheet 1 content";
+            //xlWorkSheet = (ExcelNamespace.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+            //xlWorkSheet.Cells[1, 1] = "Sheet 1 content";
             try
             {
                 xlWorkBook.SaveAs(path, ExcelNamespace.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, ExcelNamespace.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
@@ -242,12 +283,192 @@ namespace ExportModule.Services
                 xlWorkBook.Close(true, misValue, misValue);
                 xlApp.Quit();
             }
-            releaseObject(xlWorkSheet);
+            //releaseObject(xlWorkSheet);
             releaseObject(xlWorkBook);
             releaseObject(xlApp);
             _logger.Log("Excel file created , you can find the file: " + path, Category.Debug, Priority.Medium);
             return result;
         }
+
+        #region works perfect backup
+        //public void ExportToExcelFile(string path, List<ChartExportArguments> args)
+        //{
+        //    object misValue = System.Reflection.Missing.Value;
+        //    ExcelNamespace.Application excelApp = new ExcelNamespace.Application();
+        //    ExcelNamespace.Workbook excelWorkBook = excelApp.Workbooks.Open(path);
+        //    /*algo: write cells to worksheet
+        //     * 
+        //     * 
+        //     * get them
+        //     chartRange = xlWorkSheet.get_Range("B137:Y137, B139:Y139, B141:Y141", Missing.Value);  I need only 2 columns
+        //     * 
+        //     * 
+
+        //     */
+        //    DataSet ds = new DataSet("Organization");
+        //        //Works perfect, but I do not have acces to other props
+        //    foreach (var item in args)
+        //    {
+        //        ds.Tables.Add(item.Points.ToDataTable());
+        //    }
+        //    //DO NOT DELETE this comment. I can use Name of DataTable and name on rows in Data and even name of properties to reflect them in table
+        //    //I started with List<Point> and ended up with excel that had 2 rows with titles "X" and "Y", because class point has props int X and int Y
+        //    foreach (DataTable table in ds.Tables)
+        //    {
+        //        //Add a new worksheet to workbook with the Datatable name
+        //        ExcelNamespace.Worksheet excelWorkSheet = excelWorkBook.Sheets.Add();
+        //        excelWorkSheet.Name = table.TableName;
+
+        //        for (int i = 1; i < table.Columns.Count + 1; i++)
+        //        {
+        //            excelWorkSheet.Cells[1, i] = table.Columns[i - 1].ColumnName;
+        //        }
+
+        //        for (int j = 0; j < table.Rows.Count; j++)
+        //        {
+        //            for (int k = 0; k < table.Columns.Count; k++)
+        //            {
+        //                excelWorkSheet.Cells[j + 2, k + 1] = table.Rows[j].ItemArray[k].ToString();
+        //            }
+        //        }
+        //        ExcelNamespace.ChartObjects xlCharts = (ExcelNamespace.ChartObjects)excelWorkSheet.ChartObjects(Type.Missing);
+        //        ExcelNamespace.ChartObject myChart = (ExcelNamespace.ChartObject)xlCharts.Add(40, 20, 300, 300);
+        //        ExcelNamespace.Chart xlChart = myChart.Chart;
+        //        ExcelNamespace.Range chartRange = excelWorkSheet.getRange(table.Rows.Count - 1, 2);
+        //        xlChart.SetSourceData(chartRange, Type.Missing);
+        //        xlChart.ChartType = Microsoft.Office.Interop.Excel.XlChartType.xlLine;
+        //        releaseObject(excelWorkSheet);
+        //    }
+
+
+
+        //    //foreach (var item in args)
+        //    //{
+        //    //ExcelNamespace.Worksheet xlWorkSheet = excelWorkBook.Sheets.Add();
+        //    //xlWorkSheet.Name = item.ChartId;
+        //    //ExcelNamespace.Range chartRange;
+
+        //    //ExcelNamespace.ChartObjects xlCharts = (ExcelNamespace.ChartObjects)xlWorkSheet.ChartObjects(Type.Missing);
+        //    //ExcelNamespace.ChartObject myChart = (ExcelNamespace.ChartObject)xlCharts.Add(10, 80, 300, 250);
+        //    //ExcelNamespace.Chart chartPage = myChart.Chart;
+
+        //    //xlWorkSheet.Cells[1, 1] = item.XName;
+        //    //xlWorkSheet.Cells[1, 2] = item.YName;
+
+        //    //int rangeHeight = item.Points.Count();
+
+
+
+        //    //chartRange = xlWorkSheet.get_Range("A2", "B" + (rangeHeight + 1).ToString());
+        //    //chartPage.SetSourceData(chartRange, misValue);
+        //    //chartPage.ChartType = ExcelNamespace.XlChartType.xlColumnClustered;
+
+
+
+
+        //    //excelWorkBook.Save();
+        //    excelWorkBook.Close(true, misValue, misValue);
+        //    excelApp.Quit();
+        //    releaseObject(excelWorkBook);
+        //    releaseObject(excelApp);
+
+
+        //    //}
+
+
+        //}
+        #endregion
+
+        public void ExportToExcelFile(string path, List<ChartExportArguments> args)
+        {
+            object misValue = System.Reflection.Missing.Value;
+            ExcelNamespace.Application excelApp = new ExcelNamespace.Application();
+            ExcelNamespace.Workbook excelWorkBook = excelApp.Workbooks.Open(path);
+            /*algo: write cells to worksheet
+             * 
+             * 
+             * get them
+             chartRange = xlWorkSheet.get_Range("B137:Y137, B139:Y139, B141:Y141", Missing.Value);  I need only 2 columns
+             * 
+             * 
+
+             */
+            //DO NOT DELETE this comment. I can use Name of DataTable and name on rows in Data and even name of properties to reflect them in table
+            //I started with List<Point> and ended up with excel that had 2 rows with titles "X" and "Y", because class point has props int X and int Y
+
+
+            foreach (var item in args)
+            {
+                DataTable table = item.Points.ToDataTable();
+                //Add a new worksheet to workbook with the Datatable name
+                ExcelNamespace.Worksheet excelWorkSheet = excelWorkBook.Sheets.Add();
+                excelWorkSheet.Name = item.ChartTitle;
+
+                for (int i = 1; i < table.Columns.Count + 1; i++)
+                {
+                    excelWorkSheet.Cells[1, i] = table.Columns[i - 1].ColumnName;
+                }
+
+                for (int j = 0; j < table.Rows.Count; j++)
+                {
+                    for (int k = 0; k < table.Columns.Count; k++)
+                    {
+                        excelWorkSheet.Cells[j + 2, k + 1] = table.Rows[j].ItemArray[k].ToString();
+                    }
+                }
+                ExcelNamespace.ChartObjects xlCharts = (ExcelNamespace.ChartObjects)excelWorkSheet.ChartObjects(Type.Missing);
+                ExcelNamespace.ChartObject myChart = (ExcelNamespace.ChartObject)xlCharts.Add(item.XOffset_Chart, item.YOffset_Chart, item.Width, item.Height);
+                ExcelNamespace.Chart xlChart = myChart.Chart;
+                // *******************Set Range: ***********************
+                ExcelNamespace.Range chartRange = excelWorkSheet.getRange(table.Rows.Count - 1, 2);
+                xlChart.SetSourceData(chartRange, Type.Missing);
+                xlChart.ChartType = Microsoft.Office.Interop.Excel.XlChartType.xlLine;
+
+                // *******************Customize axes: ***********************
+                ExcelNamespace.Axis xAxis = (ExcelNamespace.Axis)xlChart.Axes(ExcelNamespace.XlAxisType.xlCategory,
+                     ExcelNamespace.XlAxisGroup.xlPrimary);
+                xAxis.HasTitle = item.XAxis_HasTitle;
+                xAxis.AxisTitle.Text = item.XAxis_AxisTitle;
+
+                //error ... this is actual Z. 
+                //ExcelNamespace.Axis yAxis = (ExcelNamespace.Axis)xlChart.Axes(ExcelNamespace.XlAxisType.xlSeriesAxis,
+                // ExcelNamespace.XlAxisGroup.xlPrimary);
+                //yAxis.HasTitle = item.yAxis_HasTitle;
+                //yAxis.AxisTitle.Text = item.yAxis_AxisTitle;
+
+
+                //this works as normal Y axis
+                ExcelNamespace.Axis zAxis = (ExcelNamespace.Axis)xlChart.Axes(ExcelNamespace.XlAxisType.xlValue,
+                     ExcelNamespace.XlAxisGroup.xlPrimary);
+                zAxis.HasTitle = item.YAxis_HasTitle;
+                zAxis.AxisTitle.Text = item.YAxis_AxisTitle;
+
+                // *********************Add title: *******************************
+                xlChart.HasTitle = item.HasTitle;
+                if (item.HasTitle)
+                {
+                    xlChart.ChartTitle.Text = item.ChartTitle;
+                }
+
+                // *****************Set legend:***************************
+                xlChart.HasLegend = item.HasLegend;
+
+                releaseObject(excelWorkSheet);
+            }
+            excelWorkBook.Close(true, misValue, misValue);
+            excelApp.Quit();
+            releaseObject(excelWorkBook);
+            releaseObject(excelApp);
+
+        }
+
+        //private void writeRangeVerticaly(ExcelNamespace.Worksheet xlWorkSheet, List<Point> points, int verticalOffSet)
+        //{
+        //    for (int i = verticalOffSet; i < points.Count; i++)
+        //    {
+        //         xlWorkSheet.Cells[i,
+        //    }
+        //}
 
         public void ExportToExcelFile(string path)
         {
@@ -275,5 +496,7 @@ namespace ExportModule.Services
             }
         }
         #endregion
+
+
     }
 }

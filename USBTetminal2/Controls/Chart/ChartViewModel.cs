@@ -83,15 +83,23 @@ namespace USBTetminal2.Controls.Chart
 
             //could use this, but want to provide more complex display of color and lables
             //IEnumerable<IEnumerable<System.Windows.Point>>  Legend.LegendsList.Where(legendItem => legendItem.IsChecked).Select(legend => legend.Points);
-
+            //<Controls:Flyout Header="Modal"
+            //                 Position="Right"
+            //                 IsModal="True">
+            //    <StackPanel Height="80"
+            //                Margin="5,5,5,5"
+            //                Orientation="Horizontal">
+            //        <TextBlock>Modal Flyout</TextBlock>
+            //    </StackPanel>
+            //</Controls:Flyout>
           
             List<LegendListViewModel.LegendListItem> checkedLegends = Legend.LegendsList.Where(legendItem => legendItem.IsChecked).ToList();
             List<ChartExportArguments> exportList = new List<ChartExportArguments>();
             foreach (LegendListViewModel.LegendListItem legend in checkedLegends)
             {
                 ChartExportArguments args = new ChartExportArguments();
-                args.Points = legend.Points;
-                args.ChartId = legend.Description;
+                args.Points = legend.Points.ToList();
+                args.ChartTitle = legend.Description;
                 exportList.Add(args);
             }
             _exportModule.Export(exportList);

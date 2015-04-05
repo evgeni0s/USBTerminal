@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure
 {
-    public interface IViewModel
+    public interface IViewModel : IDisposable
     {
         object Model { get; set; }
     }

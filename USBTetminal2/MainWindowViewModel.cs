@@ -34,6 +34,8 @@ using Microsoft.Practices.Unity;
 using USBTetminal2.Communication;
 using Modbus.Utility;
 using System.Threading;
+using USBTetminal2.Decorations;
+using MahApps.Metro;
 
 namespace USBTetminal2
 {
@@ -41,11 +43,7 @@ namespace USBTetminal2
     {
 
         #region fields
-        // private ObservableCollection<CLegendItemViewModel> legendsList;
-        private CustomSerialPort _selectedPort;
-        //private ChartPlotter _plotter;
         private IGraphModule _graphModule;
-        private LegendListViewModel _legendListViewModel;
         private ObservableCollection<Point> _graphData;
         private ILoggerFacade _logger;
         private ICommunicationService _communicationService;
@@ -56,7 +54,11 @@ namespace USBTetminal2
         private object _rightPanel;
         private object _bottomPanel;
 
+        private int _themeIndex = 1;
+        private int _accentIndex = 0;
 
+        private List<AccentColorMenuData> _accentColors;
+        private List<AppThemeMenuData> _appThemes;
 
         private string errMSG;
         Shell _mainWindow;
@@ -67,18 +69,52 @@ namespace USBTetminal2
             _logger = logger;
             _mainWindow = App.Current.MainWindow as Shell;
             _regionManager = regionManager;
-            //Bolongs to Module responsibility
-            //_regionManager.RegisterViewWithRegion(RegionNames.BottomPanelRegion, typeof(SettingsView));
             _container = container;
             _communicationService = communicationService;
             _graphModule = graphModule;
-            //_plotter = new ChartPlotter();//_mainWindow.mPlotter;
+            // create accent color menu items for the demo
+            this._accentColors = ThemeManager.Accents
+                                            .Select(a => new AccentColorMenuData() { Name = a.Name, ColorBrush = a.Resources["AccentColorBrush"] as Brush })
+                                            .ToList();
+
+            // create metro theme color menu items for the demo
+            this._appThemes = ThemeManager.AppThemes
+                                           .Select(a => new AppThemeMenuData() { Name = a.Name, BorderColorBrush = a.Resources["BlackColorBrush"] as Brush, ColorBrush = a.Resources["WhiteColorBrush"] as Brush })
+                                           .ToList();
+            //restore user settings
+            _themeIndex = Properties.Settings.Default.ThemeIndex;
+            _accentIndex = Properties.Settings.Default.AccentIndex;
+            //apply user settings at startup
+            _accentColors.ElementAt(_accentIndex).ChangeAccentCommand.Execute(null);
+            _appThemes.ElementAt(_themeIndex).ChangeAccentCommand.Execute(null);
 
             initializeCommandBindings();
             initPseudoBroadCast();
+
+            App.Current.Exit += Current_Exit;
+        }
+
+        //there is issue with export module, so that is does not close excel files properly
+        //I desided to dispose all viewmodels malualy
+        void Current_Exit(object sender, ExitEventArgs e)
+        {
+            App.Current.Exit -= Current_Exit;
+           var vmprovider =  _container.Resolve<IViewModelProvider>();
+           vmprovider.Dispose();
         }
 
         #region public properties
+
+        private bool _isModalOpen;
+
+	public bool IsModalOpen
+	{
+		get { return _isModalOpen;}
+		set { _isModalOpen = value;
+        OnPropertyChanged("IsModalOpen");
+        }
+	}
+
 
         public string ErrMSG
         {
@@ -326,11 +362,6 @@ namespace USBTetminal2
         }
         #endregion
 
-
-
-
-
-
         #region ErrorReportCommand
         //Provides Loging functional
         private void onErrorReportCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -508,6 +539,7 @@ namespace USBTetminal2
 
             //NotifyAllBroadcastListeners(CommonBroadcastType.BUILD_GRAPH_FROM_Y_POINTS, GraphsManager.TestData);
             ////works perfect
+
             foreach (var port in _communicationService.Ports)
             {
                 if (!port.IsOpen) continue;
@@ -552,6 +584,46 @@ namespace USBTetminal2
         }
         #endregion
 
+
+        #region AccentCommand
+        private ICommand _accentCommand;
+        public ICommand AccentCommand
+        {
+            get { return _accentCommand ?? (_accentCommand = new RelayCommand(OnAccentCommand)); }
+        }
+        
+        private void OnAccentCommand(object obj)
+        {
+            if (_accentIndex >= _accentColors.Count)
+            {
+                _accentIndex = 0;
+            }
+            Properties.Settings.Default.AccentIndex = _accentIndex;
+            Properties.Settings.Default.Save();
+            var nextAccend = _accentColors.ElementAt(_accentIndex++);
+            nextAccend.ChangeAccentCommand.Execute(null);
+        }
+        #endregion
+
+        #region ThemeCommand
+        private ICommand _themeCommand;
+        public ICommand ThemeCommand
+        {
+            get { return _themeCommand ?? (_themeCommand = new RelayCommand(OnThemeCommand)); }
+        }
+        private void OnThemeCommand(object obj)
+        {
+            if (_themeIndex >= _appThemes.Count)
+            {
+                _themeIndex = 0;
+            }
+            Properties.Settings.Default.ThemeIndex = _themeIndex;
+            Properties.Settings.Default.Save();
+            var nextAccend = _appThemes.ElementAt(_themeIndex++);
+            nextAccend.ChangeAccentCommand.Execute(null);
+        }
+        #endregion
+		 
 
         protected void createCommandBinding(ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute)
         {

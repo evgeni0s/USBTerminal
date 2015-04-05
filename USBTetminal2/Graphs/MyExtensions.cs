@@ -53,7 +53,7 @@ namespace USBTetminal2.Graphs
             plotter.Viewport.AutoFitToView = true;
             GraphAxisHelper.ViewportAxesRangeRestriction restr = new GraphAxisHelper.ViewportAxesRangeRestriction();
             restr.XRange = new GraphAxisHelper.DisplayRange(0, 200, GraphAxisHelper.DisplayRange.DisplayRangeType.Min);
-            restr.YRange = new GraphAxisHelper.DisplayRange(300, 10000, GraphAxisHelper.DisplayRange.DisplayRangeType.Min);
+            restr.YRange = new GraphAxisHelper.DisplayRange(0, 10000, GraphAxisHelper.DisplayRange.DisplayRangeType.Min);
             plotter.Viewport.Restrictions.Add(restr);
         }
     }

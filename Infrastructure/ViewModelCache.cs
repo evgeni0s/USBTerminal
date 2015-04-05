@@ -7,7 +7,7 @@ using System.Text;
 namespace Infrastructure
 {
     //TO DO: redesign it all to support new demands. read comments 
-    internal class ViewModelCache: IDisposable
+    internal class ViewModelCache : IDisposable
     {
         Dictionary<object, IViewModel> _cash = new Dictionary<object, IViewModel>();
 
@@ -24,7 +24,11 @@ namespace Infrastructure
         {
             //Do not remove comments here!
             //return _cash.ContainsKey(model);  this did not work decause I wanted to create 2 different viewmodels with the same model
-            return _cash.Where(kvp => kvp.Value is T).Select(kvp => kvp.Value).FirstOrDefault() is T;
+            //return _cash.Where(kvp => kvp.Value is T).Select(kvp => kvp.Value).FirstOrDefault() is T; in settings there are 2 ports with same name. Need other solution
+            //             1) filter items of same class  2) filter class by model 
+            return _cash.Where(kvp => kvp.Value is T).Where(kvp => kvp.Value.Model == model)
+                //3) trash
+                .Select(kvp => kvp.Value).FirstOrDefault() is T;
         }
 
         internal void Cache(IViewModel viewModel)
@@ -43,10 +47,12 @@ namespace Infrastructure
 
         public void Dispose()
         {
-            if (_cash != null && _cash.Count>0)
+            if (_cash != null)
             {
-                int i = 0;
-                i++;
+                foreach (var item in _cash.Values)
+                {
+                    item.Dispose();
+                }
             }
         }
     }

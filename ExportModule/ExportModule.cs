@@ -14,6 +14,7 @@ using System.IO;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Practices.Unity;
 using ExportModule.Services;
+using System.Collections.ObjectModel;
 
 namespace ExportModule
 {
@@ -35,7 +36,7 @@ namespace ExportModule
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
             // Combine the base folder with your specific folder....
-            string specificFolder = Path.Combine(folder, Properties.Settings.Default.TempFolder);
+            string specificFolder = Path.Combine(folder, AppDirectories.TempFolder);
 
             // Check if folder exists and if not, create it
             if (!Directory.Exists(specificFolder))
@@ -53,7 +54,6 @@ namespace ExportModule
 
 
             _container.RegisterType(typeof(IExcelService), typeof(ExcelService));
-            //_container.RegisterTypeIfMissing(typeof(IGraphModule), typeof(GraphsManager), true);
         }
 
         public void ShowFolderBrowserView(Action<string> selectedPathCallback)
@@ -87,8 +87,8 @@ namespace ExportModule
             var view = main.GetView("ChooseExportTypeKey");
             if (view == null)
             {
-                var v = new ChooseExportTypeView();
-                var vm = _viewModelProvider.GetViewModel<ChooseExportTypeViewModel>(exportData);//new ChooseExportTypeViewModel(selectedPathCallback, main);
+                var v = new SelectExportTemplateView();
+                var vm = _viewModelProvider.GetViewModel<SelectExportTemplateViewModel>(exportData);
                 v.DataContext = vm;
                 foreach (var otherView in main.Views)
                 {
@@ -96,6 +96,31 @@ namespace ExportModule
                 }
                 main.Add(v, "ChooseExportTypeKey");
                 view = main.GetView("ChooseExportTypeKey");
+               
+                vm.Initialize();
+               //will be exception. do not register region if it is alreadyregistered
+
+                //RegionManager.SetRegionName(v, "YourNewRegion");
+            }
+            main.Activate(view);
+
+        }
+
+        public void ShowFileBrowserView(Action<string> selectedPathCallback)
+        {
+            IRegion main = _regionManager.Regions[RegionNames.MainRegion];
+            var view = main.GetView("FileBrowserKey");
+            if (view == null)
+            {
+                var v = new FolderBrowseView();
+                var vm = new FileBrowseViewModel(selectedPathCallback, main);
+                v.DataContext = vm;
+                foreach (var otherView in main.Views)
+                {
+                    main.Deactivate(otherView);
+                }
+                main.Add(v, "FileBrowserKey");
+                view = main.GetView("FileBrowserKey");
             }
             main.Activate(view);
         }
@@ -104,6 +129,8 @@ namespace ExportModule
         {
             
         }
+
+
 
 
     }
